@@ -40,3 +40,27 @@ def coulomb_law(q1, q2, r):
 def E_field(q, r):
     K = 9e9
     return (K * abs(q))/(r**2)
+def mag(a = 0, b = 0, c = 0, l = 0):
+    distance = sqrt(a**2 + b**2 + c**2)
+    if type(l) == list or type(l) == tuple:
+        distance = sqrt(sum(i**2 for i in l))
+    return distance
+
+class Vector(list):
+    def __init__(self, vector):
+        vector = list(vector)
+        while len(vector) != 3:
+            vector.append(0)
+        for i in range(len(vector)):
+            self.append(vector[i])
+        self.mag = mag(l=vector)
+
+    def cross(self, vector):
+        x = self[1]*vector[2] - self[2]*vector[1]
+        y = -(self[0]*vector[2] - self[2]*vector[0])
+        z = self[0]*vector[1] - self[1]*vector[0]
+        return (x, y ,z)
+
+    def dot(self, vector):
+        product = vector[0]*self[0] + vector[1]*self[1] + vector[2]*self[2]
+        return product
