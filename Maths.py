@@ -25,6 +25,58 @@ def db_volts_find_initial(db, output):
     return output / 10**db
 
 # Data Presentation
+class myStats:
+    mean = 0
+    mode = 0
+    median = 0
+    iqr = 0
+    upper_quartile = 0
+    lowwer_quartile = 0
+    variance = 0
+    std = 0
+    range = 0
+    data = []
+    def __init__(self, data):
+        self.data = data
+
+        self.mean = mean(data)
+        self.mode = mode(data)
+        self.median = median(data)
+
+        self.iqr = IQR(data)
+        quartiles = quantiles(data)
+        self.upper_quartile = quantiles[2]
+        self.lower_quartile = quantiles[0]
+
+        self.variance = variance(data)
+        self.std = stdev(data)
+
+        self.range = stat_range(data)
+    def __get_mean():
+        self.mean = mean(data)
+
+class myStatsGrouped(myStats):
+    freq_data = {}
+    def __init__(self, data):
+        self.freq_data = data
+        for value in data.keys():
+            for frequency in range(data[value]):
+                self.data.append(value)
+
+        self.mean = mean(self.data)
+        self.mode = mode(self.data)
+        self.median = median(self.data)
+
+        self.iqr = IQR(self.data)
+        quartiles = quantiles(data)
+        self.upper_quartile = quantiles[2]
+        self.lower_quartile = quantiles[0]
+
+        self.variance = variance(self.data)
+        self.std = stdev(self.data)
+
+        self.range = stat_range(self.data)
+
 def stat_range(data):
     minimum = min(data)
     maximum = max(data)
