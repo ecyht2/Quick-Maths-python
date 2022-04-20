@@ -30,7 +30,7 @@ def stat_range(data):
     maximum = max(data)
     return maximum - minimum
 def IQR(data):
-        quartiles = quantile(data)
+        quartiles = quantiles(data)
         return quartiles[2] - quartiles[0]
 
 # Vectors
