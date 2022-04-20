@@ -116,3 +116,17 @@ class Vector(list):
     def dot(self, vector):
         product = vector[0]*self[0] + vector[1]*self[1] + vector[2]*self[2]
         return product
+
+    def add(self, vector):
+        return_vector = []
+        for i in range(3):
+            return_vector.append(self[i] + Vector[i])
+
+        return return_vector
+
+    def subtract(self, vector):
+        return_vector = []
+        for i in range(3):
+            return_vector.append(self[i] - Vector[i])
+
+        return return_vector
