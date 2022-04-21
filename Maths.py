@@ -100,13 +100,14 @@ def mag(a = 0, b = 0, c = 0, l = 0):
     return distance
 
 class Vector(list):
+    mag = 0
     def __init__(self, vector):
         vector = list(vector)
         while len(vector) != 3:
             vector.append(0)
         for i in range(len(vector)):
             self.append(vector[i])
-        self.mag = mag(l=vector)
+        self.mag = mag(vector=vector)
 
     def cross(self, vector):
         x = self[1]*vector[2] - self[2]*vector[1]
