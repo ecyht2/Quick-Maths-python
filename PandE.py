@@ -1,5 +1,5 @@
 import math
-from math import pi
+from Constants import *
 
 def par_res(resistors, *res):
     if type(resistors) == list:
