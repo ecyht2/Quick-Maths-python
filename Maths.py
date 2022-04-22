@@ -110,12 +110,14 @@ class Vector(list):
         self.mag = mag(vector=vector)
 
     def cross(self, vector):
+        # a x b = absin(thetha)c
         x = self[1]*vector[2] - self[2]*vector[1]
         y = -(self[0]*vector[2] - self[2]*vector[0])
         z = self[0]*vector[1] - self[1]*vector[0]
-        return (x, y ,z)
+        return Vector(x, y ,z)
 
     def dot(self, vector):
+        # a.b = |a||b|cos(thetha)
         product = vector[0]*self[0] + vector[1]*self[1] + vector[2]*self[2]
         return product
 
@@ -124,11 +126,11 @@ class Vector(list):
         for i in range(3):
             return_vector.append(self[i] + Vector[i])
 
-        return return_vector
+        return Vector(return_vector)
 
     def subtract(self, vector):
         return_vector = []
         for i in range(3):
             return_vector.append(self[i] - Vector[i])
 
-        return return_vector
+        return Vector(return_vector)
