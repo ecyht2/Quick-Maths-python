@@ -4,5 +4,5 @@ Programs to do quick maths. This is a special branch in which python modules wer
 # Requirements
 matplotlib
 
-## Instalation
+## Installation
 pip install -r requirements.txt
