@@ -1,2 +1,8 @@
 # Quick-Maths-python
-Programs to do quick maths
+Programs to do quick maths. This is a special branch in which python modules were used.
+
+# Requirements
+matplotlib
+
+## Instalation
+pip install -r requirements.txt

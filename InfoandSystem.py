@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 from string import ascii_uppercase
 
 def kMap(size, equation):
@@ -130,3 +132,34 @@ def moving_average_filter(x: list, n: int) -> list:
 
     # Returning result
     return result
+
+# Signal Plotting
+def plot_signal():
+    fig, ax = plt.subplots()
+    xs = range(10)
+    ys = [i%2 for i in range(10)]
+
+    # Formatting function
+    def format_fn(tick_val, tick_pos):
+        if int(tick_val) == 1:
+            return "V+"
+        elif int(tick_val) == -1:
+            return "V-"
+        else:
+            return '0'
+
+    # Setting up axis
+    # plt.axis([0, 9, -1.1, 1.1])
+    ax.axis([0, 9, -1.1, 1.1])
+    # Setting up axis ticks
+    # plt.yticks([1, 0, -1])
+    ax.yaxis.set_ticks([1, 0, -1])
+    # Setting up grid
+    # plt.grid(axis='x', color='b', linestyle='--')
+    ax.grid(axis='x', color='b', linestyle='--', linewidth=1)
+
+    # A FuncFormatter is created automatically.
+    ax.yaxis.set_major_formatter(format_fn)
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.step(xs, ys)
+    plt.show()
