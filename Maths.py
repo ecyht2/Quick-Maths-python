@@ -125,6 +125,14 @@ def mag(a = 0, b = 0, c = 0, vector = []) -> float:
     return distance
 
 class Vector(list):
+    """
+    Create a Vector
+
+    Parameters
+    ----------
+    vector
+        A list or tuple with the values of (x, y, z), 0 will be added for the z value if only x and y are given
+    """
     mag = 0
     def __init__(self, vector):
         vector = list(vector)
