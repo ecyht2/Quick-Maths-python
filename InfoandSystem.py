@@ -49,7 +49,7 @@ def convolution(x: list, h: list) -> list:
     Returns
     -------
     list
-        The convolution
+        The convoluted result
     """
     # Can be achieved via numpy.convolve(x, h)
     result = []
