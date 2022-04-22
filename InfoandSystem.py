@@ -4,7 +4,20 @@ from string import ascii_uppercase
 def kMap(size, equation):
     pass
 
-def letter_to_binary(equation):
+def letter_to_binary(equation: str) -> str:
+    """
+    Convert equations writen in letters into it's binary form
+
+    Parameters
+    ----------
+    equation
+        The equation to convert to binary
+
+    Returns
+    -------
+    str
+        The equation converted to binary
+    """
     eq = ""
     for i in range(len(equation)):
         letter = equation[i]
