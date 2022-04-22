@@ -81,3 +81,52 @@ def convolution(x: list, h: list) -> list:
 
     # Returning result
     return result
+
+def filter(b: list, a: list, x: list) -> list:
+    """
+    Filters the input data x using "FIR or IIR"
+
+    Parameters
+    ----------
+    b
+        Numerator coefficient
+    a
+        Denominator coefficient
+    x
+        An array that contains the intput data
+
+    Returns
+    -------
+    list
+        The output of the filter
+    """
+    pass
+
+def moving_average_filter(x: list, n: int) -> list:
+    """
+    Find the mean average filter for data x
+
+    Parameters
+    ----------
+    x
+        An array that contains the input data
+    n
+        The number of points to average
+
+    Returns
+    -------
+    list
+        The result of the moving_average_filter
+    """
+    # Getting the impulse response needed for convolution
+    h = []
+    for i in range(n):
+        h.append(1/n)
+
+    # Getting the moving average result array
+    result = convolution(x, h)
+    while len(result) > len(x):
+        result.pop()
+
+    # Returning result
+    return result
