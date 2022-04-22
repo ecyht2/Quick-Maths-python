@@ -87,16 +87,41 @@ def IQR(data):
         return quartiles[2] - quartiles[0]
 
 # Vectors
-def coulomb_law(q1, q2, r):
-    K = 9e9
-    return (K * abs(q1) * abs(q2))/(r**2)
-def E_field(q, r):
-    K = 9e9
-    return (K * abs(q))/(r**2)
-def mag(a = 0, b = 0, c = 0, l = 0):
-    distance = sqrt(a**2 + b**2 + c**2)
-    if type(l) == list or type(l) == tuple:
-        distance = sqrt(sum(i**2 for i in l))
+def coulomb_law(q1, q2, r, k = k):
+    return (k * abs(q1) * abs(q2))/(r**2)
+def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = k):
+    eField = 0
+    if sigma == 0:
+        eField = (k * abs(q))/(r**2)
+    else:
+        eField = sigma / (2*epsilon0)
+    return eField
+def EMF(v = 0, B = 0, L = 0, E = 0):
+    if E == 0:
+        return v*B*L
+    else:
+        return E*L
+def mag(a = 0, b = 0, c = 0, vector = []) -> float:
+    """
+    Finds the magnitude of any vector of (a, b, c) or vector
+
+    Parameters
+    ----------
+    a
+    b
+    c
+    vector
+        A vector of type tuple, list or Vector
+
+    Returns
+    -------
+    float
+        The magnitude of the Vector
+    """
+    if len(vector) == 0:
+        distance = sqrt(sum(i**2 for i in vector))
+    else:
+        distance = sqrt(a**2 + b**2 + c**2)
     return distance
 
 class Vector(list):
