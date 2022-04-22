@@ -53,8 +53,6 @@ class myStats:
         self.std = stdev(data)
 
         self.range = stat_range(data)
-    def __get_mean():
-        self.mean = mean(data)
 
 class myStatsGrouped(myStats):
     freq_data = {}
