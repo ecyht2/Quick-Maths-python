@@ -134,7 +134,14 @@ def moving_average_filter(x: list, n: int) -> list:
     return result
 
 # Signal Plotting
-def plot_signal():
+def plot_signal(signal, encoding):
+    """
+    Plot the signal using a specific encoding
+
+    Parameters
+    ----------
+
+    """
     fig, ax = plt.subplots()
     xs = range(10)
     ys = [i%2 for i in range(10)]
