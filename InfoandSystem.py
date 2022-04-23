@@ -136,7 +136,7 @@ def moving_average_filter(x: list, n: int) -> list:
     return result
 
 # Signal Plotting
-def plot_digital_signal(signal, modulation: str) -> None:
+def plot_digital_signal(signal, modulation: str, vMode: bool = True) -> None:
     """
     Plot a digital signal that is transmitted is as a digital signal
 
@@ -236,7 +236,8 @@ def plot_digital_signal(signal, modulation: str) -> None:
     ax.grid(axis='x', color='b', linestyle='--', linewidth=1)
 
     # A FuncFormatter is created automatically.
-    ax.yaxis.set_major_formatter(format_fn)
-    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+    if vMode:
+        ax.yaxis.set_major_formatter(format_fn)
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
     ax.step(xs, ys)
     plt.show()
