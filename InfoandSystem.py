@@ -39,52 +39,7 @@ def letter_to_binary(equation: str) -> str:
         eq = "".join([eq, letter])
     return eq
 
-def convolution(x: list, h: list) -> list:
-    """
-    Find the convolution of data stream x given impulse response h
-
-    Parameters
-    ----------
-    x
-        A list containing all the data of the data stream
-    h
-        A list containing all the impulse response
-
-    Returns
-    -------
-    list
-        The convoluted result
-    """
-    # Can be achieved via numpy.convolve(x, h)
-    result = []
-    row = []
-    xSize = len(x)
-    hSize = len(h)
-
-    # Finding y per sample
-    for rows in range(xSize):
-        # Appending leading 0
-        column = [0 for i in range(rows)]
-        # Finding output of x[n]
-        for i in h:
-            column.append(i * x[rows])
-        # Appending trailing 0
-        while len(column) < xSize + hSize - 1:
-            column.append(0)
-        # Appending row to column
-        row.append(column)
-
-    # Summing y per sample
-    for columns in range(xSize + hSize - 1):
-        # Summing the columns
-        total = 0
-        for rows in range(xSize):
-            total += row[rows][columns]
-        # Appending to rsult
-        result.append(total)
-
-    # Returning result
-    return result
+convolution = np.convolve
 
 def filter(b: list, a: list, x: list) -> list:
     """
@@ -152,14 +107,14 @@ def plot_digital_signal(signal, modulation: str, vMode: bool = True) -> None:
     -------
     None
     """
-    modulation_key = {
+    modulationKey = {
         "NRZ unipolar": 0,
         "NRZ bipolar": 1,
         "RZ unipolar": 2,
         "RZ bipolar": 3,
         "Manchester": 4,
     }
-    modulation_type = modulation_key[modulation]
+    modulationType = modulationKey[modulation]
     # Creating subplots
     fig, ax = plt.subplots()
 
@@ -180,22 +135,22 @@ def plot_digital_signal(signal, modulation: str, vMode: bool = True) -> None:
     ys = [0]
     for i in signal_array:
         # Decides what to append
-        if modulation_type == 0:
+        if modulationType == 0:
             if i == 0:
                 append_no = [0, 0]
             else:
                 append_no = [1, 1]
-        elif modulation_type == 1:
+        elif modulationType == 1:
             if i == 0:
                 append_no = [-1, -1]
             else:
                 append_no = [1, 1]
-        elif modulation_type == 2:
+        elif modulationType == 2:
             if i == 0:
                 append_no = [0, 0]
             else:
                 append_no = [1, 0]
-        elif modulation_type == 3:
+        elif modulationType == 3:
             if i == 0:
                 append_no = [0, 0]
             else:
@@ -204,7 +159,7 @@ def plot_digital_signal(signal, modulation: str, vMode: bool = True) -> None:
                 else:
                     append_no = [-1, 0]
                 state = not state
-        elif modulation_type == 4:
+        elif modulationType == 4:
             if i == 0:
                 append_no = [0, 1]
             else:
