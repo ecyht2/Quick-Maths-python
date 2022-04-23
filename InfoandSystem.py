@@ -2,6 +2,8 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from string import ascii_uppercase
+import numpy as np
+from string import digits
 
 def kMap(size, equation):
     pass
@@ -134,14 +136,15 @@ def moving_average_filter(x: list, n: int) -> list:
     return result
 
 # Signal Plotting
-def plot_digital_signal(signal, modulation):
+def plot_digital_signal(signal, modulation: str) -> None:
     """
-    Plot a signal that is transmitted is as a digital signal
+    Plot a digital signal that is transmitted is as a digital signal
 
     Parameters
     ----------
     signal
         The signal being transmitted
+        It can be in a str or a array_like
     modulation
         The type ofmodulation used
 
@@ -149,9 +152,68 @@ def plot_digital_signal(signal, modulation):
     -------
     None
     """
+    modulation_key = {
+        "NRZ unipolar": 0,
+        "NRZ bipolar": 1,
+        "RZ unipolar": 2,
+        "RZ bipolar": 3,
+        "Manchester": 4,
+    }
+    modulation_type = modulation_key[modulation]
+    # Creating subplots
     fig, ax = plt.subplots()
-    xs = range(10)
-    ys = [i%2 for i in range(10)]
+
+    # Finding the axis values
+    # Converting string to array
+    if type(signal) == str:
+        signal_array = []
+        for i in signal:
+            if i in digits:
+                signal_array.append(int(i))
+    else:
+        signal_array = signal
+    # x values
+    xs = np.arange(0, len(signal_array) + 1, 0.5)
+    # Required for RZ bipolar
+    state = True
+    # y values
+    ys = [0]
+    for i in signal_array:
+        # Decides what to append
+        if modulation_type == 0:
+            if i == 0:
+                append_no = [0, 0]
+            else:
+                append_no = [1, 1]
+        elif modulation_type == 1:
+            if i == 0:
+                append_no = [-1, -1]
+            else:
+                append_no = [1, 1]
+        elif modulation_type == 2:
+            if i == 0:
+                append_no = [0, 0]
+            else:
+                append_no = [1, 0]
+        elif modulation_type == 3:
+            if i == 0:
+                append_no = [0, 0]
+            else:
+                if state == True:
+                    append_no = [1, 0]
+                else:
+                    append_no = [-1, 0]
+                state = not state
+        elif modulation_type == 4:
+            if i == 0:
+                append_no = [0, 1]
+            else:
+                append_no = [1, 0]
+
+        # Appending numbers to y list
+        for j in append_no:
+            ys.append(j)
+    ys.append(0)
 
     # Formatting function
     def format_fn(tick_val, tick_pos):
@@ -164,10 +226,11 @@ def plot_digital_signal(signal, modulation):
 
     # Setting up axis
     # plt.axis([0, 9, -1.1, 1.1])
-    ax.axis([0, 9, -1.1, 1.1])
+    ax.axis([0, len(xs)/2 - 1, min(ys) - 0.1, max(ys) + 0.1])
     # Setting up axis ticks
     # plt.yticks([1, 0, -1])
-    ax.yaxis.set_ticks([1, 0, -1])
+    ax.yaxis.set_ticks([max(ys), 0, min(ys)])
+    ax.xaxis.set_ticks(np.arange(0, len(xs)/2, 1))
     # Setting up grid
     # plt.grid(axis='x', color='b', linestyle='--')
     ax.grid(axis='x', color='b', linestyle='--', linewidth=1)
