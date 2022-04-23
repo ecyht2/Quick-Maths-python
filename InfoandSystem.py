@@ -230,7 +230,7 @@ def plot_digital_signal(signal, modulation: str) -> None:
     # Setting up axis ticks
     # plt.yticks([1, 0, -1])
     ax.yaxis.set_ticks([max(ys), 0, min(ys)])
-    ax.xaxis.set_ticks(np.arange(0, len(xs)/2, 1))
+    ax.xaxis.set_ticks(np.arange(0, len(xs)/2, 1), ["" for i in range(int(len(xs)/2))])
     # Setting up grid
     # plt.grid(axis='x', color='b', linestyle='--')
     ax.grid(axis='x', color='b', linestyle='--', linewidth=1)
