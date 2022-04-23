@@ -54,6 +54,34 @@ class myStats:
 
         self.range = stat_range(data)
 
+    def __str__(self):
+        info = {
+            "mean": self.mean,
+            "mode": self.mode,
+            "median": self.median,
+            "iqr": self.iqr,
+            "upper quartile": self.upper_quartile,
+            "lower quartile": self.lower_quartile,
+            "variance": self.variance,
+            "std": self.std,
+            "range": self.range,
+        }
+        return str(info)
+
+    def __repr__(self):
+        info = {
+            "mean": self.mean,
+            "mode": self.mode,
+            "median": self.median,
+            "iqr": self.iqr,
+            "upper quartile": self.upper_quartile,
+            "lower quartile": self.lower_quartile,
+            "variance": self.variance,
+            "std": self.std,
+            "range": self.range,
+        }
+        return str(info)
+
 class myStatsGrouped(myStats):
     freq_data = {}
     def __init__(self, data):
