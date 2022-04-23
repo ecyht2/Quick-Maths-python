@@ -46,8 +46,8 @@ class myStats:
 
         self.iqr = IQR(data)
         quartiles = quantiles(data)
-        self.upper_quartile = quantiles[2]
-        self.lower_quartile = quantiles[0]
+        self.upper_quartile = quartiles[2]
+        self.lower_quartile = quartiles[0]
 
         self.variance = variance(data)
         self.std = stdev(data)
@@ -68,8 +68,8 @@ class myStatsGrouped(myStats):
 
         self.iqr = IQR(self.data)
         quartiles = quantiles(data)
-        self.upper_quartile = quantiles[2]
-        self.lower_quartile = quantiles[0]
+        self.upper_quartile = quartiles[2]
+        self.lower_quartile = quartiles[0]
 
         self.variance = variance(self.data)
         self.std = stdev(self.data)
