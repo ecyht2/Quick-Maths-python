@@ -134,13 +134,20 @@ def moving_average_filter(x: list, n: int) -> list:
     return result
 
 # Signal Plotting
-def plot_signal(signal, encoding):
+def plot_digital_signal(signal, modulation):
     """
-    Plot the signal using a specific encoding
+    Plot a signal that is transmitted is as a digital signal
 
     Parameters
     ----------
+    signal
+        The signal being transmitted
+    modulation
+        The type ofmodulation used
 
+    Returns
+    -------
+    None
     """
     fig, ax = plt.subplots()
     xs = range(10)
