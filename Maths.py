@@ -86,6 +86,7 @@ class myStatsGrouped(myStats):
     freq_data = {}
     def __init__(self, data):
         self.freq_data = data
+        self.data = []
         for value in data.keys():
             for frequency in range(data[value]):
                 self.data.append(value)
