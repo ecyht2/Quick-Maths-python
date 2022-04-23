@@ -91,7 +91,7 @@ def moving_average_filter(x: list, n: int) -> list:
     return result
 
 # Signal Plotting
-def plot_digital_signal(signal, modulation: str, vMode: bool = True) -> None:
+def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None:
     """
     Plot a digital signal that is transmitted is as a digital signal
 
