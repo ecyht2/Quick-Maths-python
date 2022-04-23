@@ -152,16 +152,18 @@ class Vector(list):
         product = vector[0]*self[0] + vector[1]*self[1] + vector[2]*self[2]
         return product
 
-    def add(self, vector):
+    def __add__(self, vector):
+        vector = Vector(vector)
         return_vector = []
         for i in range(3):
-            return_vector.append(self[i] + Vector[i])
+            return_vector.append(self[i] + vector[i])
 
         return Vector(return_vector)
 
-    def subtract(self, vector):
+    def __sub__(self, vector):
+        vector = Vector(vector)
         return_vector = []
         for i in range(3):
-            return_vector.append(self[i] - Vector[i])
+            return_vector.append(self[i] - vector[i])
 
         return Vector(return_vector)
