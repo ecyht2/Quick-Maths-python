@@ -163,13 +163,16 @@ class Vector(list):
     mag = 0
     def __init__(self, vector):
         # Checking if parameter is valid
+        # Type
         if not (type(vector) == list or type(vector) == tuple or type(vector) == Vector):
             raise TypeError("Vector() argument must be an array_like (list, tuple, Vector) object")
+        # Size
         if len(vector) > 3:
             raise ValueError("Invalid vector to be converted")
+        # Indexes
         else:
             for i in vector:
-                if not type(i) == int:
+                if not (type(i) == int or type(i) == float):
                     raise ValueError("Invalid vector to be converted")
 
         vector = list(vector)
