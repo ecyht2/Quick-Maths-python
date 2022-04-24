@@ -123,7 +123,7 @@ def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None
     fig, ax = plt.subplots()
 
     # Finding the axis values
-    # Converting string to array
+    # Only extracting 0 and 1 (IDK if I should raise and error or not)
     signal_array = []
     for i in signal:
         if i in "01":
