@@ -46,18 +46,47 @@ class myStats:
 
         self.iqr = IQR(data)
         quartiles = quantiles(data)
-        self.upper_quartile = quantiles[2]
-        self.lower_quartile = quantiles[0]
+        self.upper_quartile = quartiles[2]
+        self.lower_quartile = quartiles[0]
 
         self.variance = variance(data)
         self.std = stdev(data)
 
         self.range = stat_range(data)
 
+    def __str__(self):
+        info = {
+            "mean": self.mean,
+            "mode": self.mode,
+            "median": self.median,
+            "iqr": self.iqr,
+            "upper quartile": self.upper_quartile,
+            "lower quartile": self.lower_quartile,
+            "variance": self.variance,
+            "std": self.std,
+            "range": self.range,
+        }
+        return str(info)
+
+    def __repr__(self):
+        info = {
+            "mean": self.mean,
+            "mode": self.mode,
+            "median": self.median,
+            "iqr": self.iqr,
+            "upper quartile": self.upper_quartile,
+            "lower quartile": self.lower_quartile,
+            "variance": self.variance,
+            "std": self.std,
+            "range": self.range,
+        }
+        return str(info)
+
 class myStatsGrouped(myStats):
     freq_data = {}
     def __init__(self, data):
         self.freq_data = data
+        self.data = []
         for value in data.keys():
             for frequency in range(data[value]):
                 self.data.append(value)
@@ -68,8 +97,8 @@ class myStatsGrouped(myStats):
 
         self.iqr = IQR(self.data)
         quartiles = quantiles(data)
-        self.upper_quartile = quantiles[2]
-        self.lower_quartile = quantiles[0]
+        self.upper_quartile = quartiles[2]
+        self.lower_quartile = quartiles[0]
 
         self.variance = variance(self.data)
         self.std = stdev(self.data)
@@ -133,6 +162,19 @@ class Vector(list):
     """
     mag = 0
     def __init__(self, vector):
+        # Checking if parameter is valid
+        # Type
+        if not (type(vector) == list or type(vector) == tuple or type(vector) == Vector):
+            raise TypeError("Vector() argument must be an array_like (list, tuple, Vector) object")
+        # Size
+        if len(vector) > 3:
+            raise ValueError("Invalid vector to be converted")
+        # Indexes
+        else:
+            for i in vector:
+                if not (type(i) == int or type(i) == float):
+                    raise ValueError("Invalid vector to be converted")
+
         vector = list(vector)
         while len(vector) != 3:
             vector.append(0)
@@ -141,6 +183,10 @@ class Vector(list):
         self.mag = mag(vector=vector)
 
     def cross(self, vector):
+        # Checking vector type
+        if not type(vector) == Vector:
+            raise TypeError("Only a type Vector can be crossed with a Vector")
+
         # a x b = absin(thetha)c
         x = self[1]*vector[2] - self[2]*vector[1]
         y = -(self[0]*vector[2] - self[2]*vector[0])
@@ -148,11 +194,19 @@ class Vector(list):
         return Vector(x, y ,z)
 
     def dot(self, vector):
+        # Checking vector type
+        if not type(vector) == Vector:
+            raise TypeError("Only a type Vector can be dot with a Vector")
+
         # a.b = |a||b|cos(thetha)
         product = vector[0]*self[0] + vector[1]*self[1] + vector[2]*self[2]
         return product
 
     def __add__(self, vector):
+        # Checking vector type
+        if not type(vector) == Vector:
+            raise TypeError("Only a type Vector can be added with a Vector")
+
         vector = Vector(vector)
         return_vector = []
         for i in range(3):
@@ -161,6 +215,10 @@ class Vector(list):
         return Vector(return_vector)
 
     def __sub__(self, vector):
+        # Checking vector type
+        if not type(vector) == Vector:
+            raise TypeError("Only a type Vector can be subtracted with a Vector")
+
         vector = Vector(vector)
         return_vector = []
         for i in range(3):
