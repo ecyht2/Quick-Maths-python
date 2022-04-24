@@ -162,6 +162,16 @@ class Vector(list):
     """
     mag = 0
     def __init__(self, vector):
+        # Checking if parameter is valid
+        if not (type(vector) == list or type(vector) == tuple or type(vector) == Vector):
+            raise TypeError("Vector() argument must be an array_like (list, tuple, Vector) object")
+        if len(vector) > 3:
+            raise ValueError("Invalid vector to be converted")
+        else:
+            for i in vector:
+                if not type(i) == int:
+                    raise ValueError("Invalid vector to be converted")
+
         vector = list(vector)
         while len(vector) != 3:
             vector.append(0)
