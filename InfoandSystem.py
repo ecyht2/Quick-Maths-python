@@ -99,9 +99,10 @@ def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None
     ----------
     signal
         The signal being transmitted
-        It can be in a str or a array_like
+        It can be in a str or an array_like
+        Only 0 and 1 will be considered if a string is passed in
     modulation
-        The type ofmodulation used
+        The type of modulation used
 
     Returns
     -------
