@@ -171,7 +171,7 @@ class Vector(list):
 
     def cross(self, vector):
         # Checking vector type
-        if type(vector) != Vector:
+        if not type(vector) == Vector:
             raise TypeError("Only a type Vector can be crossed with a Vector")
 
         # a x b = absin(thetha)c
@@ -182,7 +182,7 @@ class Vector(list):
 
     def dot(self, vector):
         # Checking vector type
-        if type(vector) != Vector:
+        if not type(vector) == Vector:
             raise TypeError("Only a type Vector can be dot with a Vector")
 
         # a.b = |a||b|cos(thetha)
@@ -191,7 +191,7 @@ class Vector(list):
 
     def __add__(self, vector):
         # Checking vector type
-        if type(vector) != Vector:
+        if not type(vector) == Vector:
             raise TypeError("Only a type Vector can be added with a Vector")
 
         vector = Vector(vector)
@@ -203,7 +203,7 @@ class Vector(list):
 
     def __sub__(self, vector):
         # Checking vector type
-        if type(vector) != Vector:
+        if not type(vector) == Vector:
             raise TypeError("Only a type Vector can be subtracted with a Vector")
 
         vector = Vector(vector)
