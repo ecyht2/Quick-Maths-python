@@ -170,6 +170,10 @@ class Vector(list):
         self.mag = mag(vector=vector)
 
     def cross(self, vector):
+        # Checking vector type
+        if type(vector) != Vector:
+            raise TypeError("Only a type Vector can be crossed with a Vector")
+
         # a x b = absin(thetha)c
         x = self[1]*vector[2] - self[2]*vector[1]
         y = -(self[0]*vector[2] - self[2]*vector[0])
@@ -177,11 +181,19 @@ class Vector(list):
         return Vector(x, y ,z)
 
     def dot(self, vector):
+        # Checking vector type
+        if type(vector) != Vector:
+            raise TypeError("Only a type Vector can be dot with a Vector")
+
         # a.b = |a||b|cos(thetha)
         product = vector[0]*self[0] + vector[1]*self[1] + vector[2]*self[2]
         return product
 
     def __add__(self, vector):
+        # Checking vector type
+        if type(vector) != Vector:
+            raise TypeError("Only a type Vector can be added with a Vector")
+
         vector = Vector(vector)
         return_vector = []
         for i in range(3):
@@ -190,6 +202,10 @@ class Vector(list):
         return Vector(return_vector)
 
     def __sub__(self, vector):
+        # Checking vector type
+        if type(vector) != Vector:
+            raise TypeError("Only a type Vector can be subtracted with a Vector")
+
         vector = Vector(vector)
         return_vector = []
         for i in range(3):
