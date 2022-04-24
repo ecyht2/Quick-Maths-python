@@ -100,7 +100,7 @@ def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None
     signal
         The signal being transmitted
         It can be in a str or an array_like
-        Only 0 and 1 will be considered if a string is passed in
+        Only 0 and 1 will be considered
     modulation
         The type of modulation used
 
@@ -124,13 +124,10 @@ def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None
 
     # Finding the axis values
     # Converting string to array
-    if type(signal) == str:
-        signal_array = []
-        for i in signal:
-            if i in digits:
-                signal_array.append(int(i))
-    else:
-        signal_array = signal
+    signal_array = []
+    for i in signal:
+        if i in "01":
+            signal_array.append(int(i))
     # x values
     xs = np.arange(0, len(signal_array) + 1, 0.5)
     # Required for RZ bipolar
