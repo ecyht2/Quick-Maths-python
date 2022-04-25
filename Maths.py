@@ -240,6 +240,8 @@ class Vector(list):
     def unit_vector(self):
         unit_vector = []
 
+        # Finding values of x, y  and z
+        # (x̂ + ŷ + ẑ)/(sqrt(x̂ + ŷ + ẑ))
         for i in self:
             unit_vector.append(i/self.mag)
 
