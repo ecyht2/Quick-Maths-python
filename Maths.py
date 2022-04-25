@@ -225,3 +225,11 @@ class Vector(list):
             return_vector.append(self[i] - vector[i])
 
         return Vector(return_vector)
+
+    def unit_vector(self):
+        unit_vector = []
+
+        for i in self:
+            unit_vector.append(i/self.mag)
+
+        return Vector(unit_vector)
