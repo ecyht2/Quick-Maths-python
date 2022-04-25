@@ -163,7 +163,7 @@ def mag(a = 0, b = 0, c = 0, vector = None) -> float:
     """
     if not vector == None:
         if type(vector) == list or type(vector) == tuple or type(vector) == Vector:
-            raise TypeError("Invalid vector passed in. It must be an array_like object")
+            raise TypeError("Invalid vector passed in. It must be an array_like (list, tuple, Vector) object")
         if len(vector) > 3:
             raise ValueError("Invalid vector, a vector must include at most 3 values")
         distance = sqrt(sum(i**2 for i in vector))
@@ -185,7 +185,7 @@ class Vector(list):
         # Checking if parameter is valid
         # Type
         if not (type(vector) == list or type(vector) == tuple or type(vector) == Vector):
-            raise TypeError("Vector() argument must be an array_like (list, tuple, Vector) object")
+            raise TypeError("A vector must be an array_like (list, tuple, Vector) object")
         # Size
         if len(vector) > 3:
             raise ValueError("Invalid vector to be converted")
