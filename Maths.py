@@ -203,6 +203,19 @@ class Vector(list):
         self.mag = mag(vector=vector)
 
     def cross(self, vector):
+        """
+        Returns the cross product of the vectors (self)x(vector)
+
+        Parameters
+        ----------
+        vector
+            The vector to perform the cross product with
+
+        Returns
+        -------
+        Vector
+            The cross product
+        """
         # Checking vector type
         if not type(vector) == Vector:
             raise TypeError("Only a type Vector can be crossed with a Vector")
@@ -214,6 +227,19 @@ class Vector(list):
         return Vector([x, y ,z])
 
     def dot(self, vector):
+        """
+        Returns the dot product of the vectors (self).(vector)
+
+        Parameters
+        ----------
+        vector
+            The vector to perform the dot product with
+
+        Returns
+        -------
+        float
+            The dot product
+        """
         # Checking vector type
         if not type(vector) == Vector:
             raise TypeError("Only a type Vector can be dot with a Vector")
@@ -223,6 +249,9 @@ class Vector(list):
         return product
 
     def __add__(self, vector):
+        """
+        Returns self + vector
+        """
         # Checking vector type
         if not type(vector) == Vector:
             raise TypeError("Only a type Vector can be added with a Vector")
@@ -235,6 +264,9 @@ class Vector(list):
         return Vector(return_vector)
 
     def __sub__(self, vector):
+        """
+        Returns self - vector
+        """
         # Checking vector type
         if not type(vector) == Vector:
             raise TypeError("Only a type Vector can be subtracted with a Vector")
@@ -247,6 +279,9 @@ class Vector(list):
         return Vector(return_vector)
 
     def __mul__(self, scalar):
+        """
+        Returns self * scalar
+        """
         # Checking vector type
         if not (type(scalar) == int or type(scalar) == float):
             raise TypeError("Invalid scalar value for scalar multiplication")
@@ -258,6 +293,14 @@ class Vector(list):
         return Vector(return_vector)
 
     def unit_vector(self):
+        """
+        Returns the unit vector of self
+
+        Returns
+        -------
+        Vector
+            The unit vector
+        """
         unit_vector = []
 
         # Finding values of x, y  and z
