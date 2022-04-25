@@ -122,7 +122,14 @@ def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = k):
         eField = (k * abs(q))/(r**2)
     else:
         eField = sigma / (2*epsilon0)
-    return eField
+
+    if not vector == None:
+        vector = Vector(vector)
+        return_value = vector.unit_vector() * eField
+    else:
+        return_value = eField
+
+    return return_value
 def EMF(v = 0, B = 0, L = 0, E = 0):
     if E == 0:
         return v*B*L
