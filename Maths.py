@@ -184,7 +184,7 @@ class Vector(list):
     def __init__(self, vector):
         # Checking if parameter is valid
         # Type
-        if not (type(vector) == list or type(vector) == tuple or type(vector) == Vector):
+        if not (type(vector) == list or type(vector) == tuple or type(vector) == type(self)):
             raise TypeError("A vector must be an array_like (list, tuple, Vector) object")
         # Size
         if len(vector) > 3:
@@ -217,14 +217,14 @@ class Vector(list):
             The cross product
         """
         # Checking vector type
-        if not type(vector) == Vector:
+        if not type(vector) == type(self):
             raise TypeError("Only a type Vector can be crossed with a Vector")
 
         # a x b = absin(thetha)c
         x = self[1]*vector[2] - self[2]*vector[1]
         y = -(self[0]*vector[2] - self[2]*vector[0])
         z = self[0]*vector[1] - self[1]*vector[0]
-        return Vector([x, y ,z])
+        return Vector(return_vector)
 
     def dot(self, vector):
         """
@@ -241,7 +241,7 @@ class Vector(list):
             The dot product
         """
         # Checking vector type
-        if not type(vector) == Vector:
+        if not type(vector) == type(self):
             raise TypeError("Only a type Vector can be dot with a Vector")
 
         # a.b = |a||b|cos(thetha)
@@ -253,7 +253,7 @@ class Vector(list):
         Returns self + vector
         """
         # Checking vector type
-        if not type(vector) == Vector:
+        if not type(vector) == type(self):
             raise TypeError("Only a type Vector can be added with a Vector")
 
         vector = Vector(vector)
@@ -268,7 +268,7 @@ class Vector(list):
         Returns self - vector
         """
         # Checking vector type
-        if not type(vector) == Vector:
+        if not type(vector) == type(self):
             raise TypeError("Only a type Vector can be subtracted with a Vector")
 
         vector = Vector(vector)
@@ -309,3 +309,93 @@ class Vector(list):
             unit_vector = self * (1 / self.mag)
 
         return Vector(unit_vector)
+
+class Charge(Vector):
+    """
+    Create a charge object
+
+    Parameters
+    ----------
+    q
+        The charge of the charge in coulomb (C)
+    vector
+        The vector location of the charge
+    """
+    q = 0
+    def __init__(self, q, vector):
+        self.q = q
+        # Checking if parameter is valid
+        # Type
+        if not (type(vector) == list or type(vector) == tuple or type(vector) == type(self)):
+            raise TypeError("A vector must be an array_like (list, tuple, Vector) object")
+        # Size
+        if len(vector) > 3:
+            raise ValueError("Invalid vector to be converted")
+        # Indexes
+        else:
+            for i in vector:
+                if not (type(i) == int or type(i) == float):
+                    raise ValueError("Invalid vector to be converted")
+
+        vector = list(vector)
+        while len(vector) != 3:
+            vector.append(0)
+        for i in range(len(vector)):
+            self.append(vector[i])
+        self.mag = mag(vector=vector)
+
+    def E_Field(self, location: Vector):
+        """
+        Calculates the Electric Field produced by the charge at a point
+
+        Parameters
+        ----------
+        location
+            The location vector
+
+        Returns
+        -------
+        Vector
+            The Electric Field Vector
+        """
+        # Converting to required format
+        location = Vector(location)
+        self_vector = list(self)
+        self_vector = Vector(self_vector)
+
+        # Determining force direction
+        if self.q > 0:
+            diff = location - self_vector
+        else:
+            diff = self_vector - location
+        r = diff.mag
+
+        # Returning result
+        return E_field(self.q, r = r, vector=diff)
+
+    def Electric_Force(self, charge):
+        """
+        Calculates the Electric Force Caused by this charge to another
+
+        Parameters
+        ----------
+        charge
+            The charge which the force is act apon
+        """
+        # Checking if parameters is a compatible type
+        if not type(charge) == type(self):
+            raise TypeError("Charge given must be of type Charge")
+
+        # Converting to required format
+        charge_vector = Vector(list(charge))
+        self_vector = Vector(list(self))
+
+        # Determine force direction
+        if (self.q > 0 and charge.q > 0) or (self.q < 0 and charge.q < 0):
+            diff = charge_vector - self_vector
+        else:
+            diff = self_vector - charge_vector
+        r = diff.mag
+
+        # Returning result
+        return coulomb_law(self.q, charge.q, r=r, vector=diff)
