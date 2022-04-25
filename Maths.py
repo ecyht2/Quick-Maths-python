@@ -141,7 +141,7 @@ def EMF(v = 0, B = 0, L = 0, E = 0):
         return v*B*L
     else:
         return E*L
-def mag(a = 0, b = 0, c = 0, vector = []) -> float:
+def mag(a = 0, b = 0, c = 0, vector = None) -> float:
     """
     Finds the magnitude of any vector of (a, b, c) or vector
 
@@ -158,7 +158,11 @@ def mag(a = 0, b = 0, c = 0, vector = []) -> float:
     float
         The magnitude of the Vector
     """
-    if not len(vector) == 0:
+    if not vector == None:
+        if type(vector) == list or type(vector) == tuple or type(vector) == Vector:
+            raise TypeError("Invalid vector passed in. It must be an array_like object")
+        if len(vector) > 3:
+            raise ValueError("Invalid vector, a vector must include at most 3 values")
         distance = sqrt(sum(i**2 for i in vector))
     else:
         distance = sqrt(a**2 + b**2 + c**2)
