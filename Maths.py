@@ -145,7 +145,7 @@ def mag(a = 0, b = 0, c = 0, vector = []) -> float:
     float
         The magnitude of the Vector
     """
-    if len(vector) == 0:
+    if not len(vector) == 0:
         distance = sqrt(sum(i**2 for i in vector))
     else:
         distance = sqrt(a**2 + b**2 + c**2)
