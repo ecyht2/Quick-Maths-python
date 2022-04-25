@@ -191,7 +191,7 @@ class Vector(list):
         x = self[1]*vector[2] - self[2]*vector[1]
         y = -(self[0]*vector[2] - self[2]*vector[0])
         z = self[0]*vector[1] - self[1]*vector[0]
-        return Vector(x, y ,z)
+        return Vector([x, y ,z])
 
     def dot(self, vector):
         # Checking vector type
