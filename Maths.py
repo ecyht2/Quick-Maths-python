@@ -162,7 +162,7 @@ def mag(a = 0, b = 0, c = 0, vector = None) -> float:
         The magnitude of the Vector
     """
     if not vector == None:
-        if type(vector) == list or type(vector) == tuple or type(vector) == Vector:
+        if not (type(vector) == list or type(vector) == tuple or type(vector) == Vector):
             raise TypeError("Invalid vector passed in. It must be an array_like (list, tuple, Vector) object")
         if len(vector) > 3:
             raise ValueError("Invalid vector, a vector must include at most 3 values")
