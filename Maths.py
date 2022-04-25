@@ -148,8 +148,11 @@ def mag(a = 0, b = 0, c = 0, vector = None) -> float:
     Parameters
     ----------
     a
+        x̂ value of the vector
     b
+        ŷ value of the vector
     c
+        ẑ value of the vector
     vector
         A vector of type tuple, list or Vector
 
