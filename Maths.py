@@ -114,9 +114,15 @@ def IQR(data):
         return quartiles[2] - quartiles[0]
 
 # Vectors
-def coulomb_law(q1, q2, r, k = k):
-    return (k * abs(q1) * abs(q2))/(r**2)
-def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = k):
+def coulomb_law(q1, q2, r, vector = None, k = k):
+    magnitude = (k * abs(q1) * abs(q2))/(r**2)
+    if not vector == None:
+        vector = Vector(vector)
+        force = vector.unit_vector() * magnitude
+        return force
+    else:
+        return magnitude
+def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = k, vector = None):
     eField = 0
     if sigma == 0:
         eField = (k * abs(q))/(r**2)
@@ -250,6 +256,6 @@ class Vector(list):
         # Finding values of x, y  and z
         # (x̂ + ŷ + ẑ)/(sqrt(x̂ + ŷ + ẑ))
         for i in self:
-            unit_vector.append(i/self.mag)
+            unit_vector = self * (1 / self.mag)
 
         return Vector(unit_vector)
