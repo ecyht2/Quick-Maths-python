@@ -145,7 +145,7 @@ def mag(a = 0, b = 0, c = 0, vector = []) -> float:
     float
         The magnitude of the Vector
     """
-    if len(vector) == 0:
+    if not len(vector) == 0:
         distance = sqrt(sum(i**2 for i in vector))
     else:
         distance = sqrt(a**2 + b**2 + c**2)
@@ -191,7 +191,7 @@ class Vector(list):
         x = self[1]*vector[2] - self[2]*vector[1]
         y = -(self[0]*vector[2] - self[2]*vector[0])
         z = self[0]*vector[1] - self[1]*vector[0]
-        return Vector(x, y ,z)
+        return Vector([x, y ,z])
 
     def dot(self, vector):
         # Checking vector type
@@ -225,3 +225,11 @@ class Vector(list):
             return_vector.append(self[i] - vector[i])
 
         return Vector(return_vector)
+
+    def unit_vector(self):
+        unit_vector = []
+
+        for i in self:
+            unit_vector.append(i/self.mag)
+
+        return Vector(unit_vector)
