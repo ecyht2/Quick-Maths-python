@@ -3,7 +3,16 @@ from Constants import *
 
 def par_res(resistors, *res):
     if type(resistors) == list:
-        sum(resisstors**-1)**-1
+        flipped = []
+        for i in resistors:
+            flipped.append(1/i)
+        total = sum(flipped)**-1
+    else:
+        flipped = [1/resistors]
+        for i in res:
+            flipped.append(1/i)
+        total = sum(flipped)**-1
+    return total
 
 def imp_cap(capacitor, freq):
     return 1/(2*pi*freq*capacitor*1j)
