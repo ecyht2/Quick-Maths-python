@@ -4,6 +4,17 @@ from statistics import quantiles, variance, stdev
 from math import sqrt, atan, sin, cos
 from Constants import *
 
+# Helper
+def product(iterable, start = 0):
+    """
+
+    """
+    result = 1
+    for i in range(len(iterable) + start):
+        result *= iterable[i]
+
+    return result
+
 # db Functions
 # Power
 def db_power(input, output):
@@ -114,7 +125,7 @@ def IQR(data):
         return quartiles[2] - quartiles[0]
 
 # Vectors
-def coulomb_law(q1, q2, r, vector = None, k = k):
+def coulomb_law(q1, q2, r, vector = None, k = kCoulomb):
     magnitude = (k * abs(q1) * abs(q2))/(r**2)
     if not vector == None:
         vector = Vector(vector)
@@ -122,7 +133,7 @@ def coulomb_law(q1, q2, r, vector = None, k = k):
         return force
     else:
         return magnitude
-def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = k, vector = None):
+def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = kCoulomb, vector = None):
     eField = 0
     if sigma == 0:
         eField = (k * abs(q))/(r**2)
