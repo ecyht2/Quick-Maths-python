@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from string import ascii_uppercase
+from Constants import *
+from Maths import db_power, db_volts, db_power_reverse, product
 
 def kMap(size, equation):
     pass
@@ -130,3 +132,81 @@ def moving_average_filter(x: list, n: int) -> list:
 
     # Returning result
     return result
+
+# Noise
+def thermal_noise(T, B, k = kBolzman):
+    return k*T*B
+
+def C_to_kelvin(T):
+    return T + 273
+def kelvin_to_C(T):
+    return T - 273
+
+# SNR
+def SNR(S, N, dB = True, power=True):
+    returnValue = 0
+    if dB:
+        if power:
+            returnValue = db_power(N, S)
+        else:
+            returnValue = db_volts(N, S)
+    else:
+        returnValue = S/N
+
+    return returnValue
+
+# NF
+def NF(inputSNR, outputSNR, NoiseFigure: bool = True):
+    returnValue = 0
+    if NoiseFigure:
+        returnValue = db_power(inputSNR, outputSNR)
+    else:
+        returnValue = inputSNR/outputSNR
+
+    return returnValue
+def noise_factor_internal(internal, inputNoise):
+    return 1 + internal/inputNoise
+def NF_cascade(gain: iter, NF: iter, NoiseFigureIn: bool = True, NoiseFigureReturn: bool = True):
+    # Checking for conditions
+    if not len(gain) == len(NF):
+        raise ValueError("Size of gain and NF aren't equal")
+
+    # Changing to noise figure into noise factor
+    if NoiseFigureIn:
+        for i in range(len(gain)):
+            gain[i] = db_power_reverse(gain[i], 1)
+    # Using absolute values
+    for i in range(len(gain)):
+        gain[i] = abs(gain[i])
+        NF[i] = abs(NF[i])
+
+    # Calculating NF
+    totalNF = NF[0]
+    for i in range(len(NF) - 1):
+        totalNF += (NF[i+1] - 1) / product(gain[:i+1])
+
+    returnNF = 0
+    if NoiseFigureReturn:
+        returnNF = db_power(1, totalNF)
+    else:
+        returnNF = totalNF
+
+    return returnNF
+
+def effective_noise_temperature_NF(T, NF, kelvin: bool = True, NoiseFigure: bool = True):
+    if not kelvin:
+        T = C_to_kelvin(T)
+    if NoiseFigure:
+        NF = db_power_reverse(NF, 1)
+
+    return T * (NF - 1)
+def effective_noise_temperature_gain(T, gain, kelvin: bool = True):
+    if not kelvin:
+        for i in range(len(T)):
+            T[i] = C_to_kelvin(T[i])
+
+    totalT = T[0]
+    for i in range(len(T) - 1):
+        totalT += T[i+1] / product(gain[:i+1])
+
+    return totalT
