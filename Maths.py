@@ -4,6 +4,17 @@ from statistics import quantiles, variance, stdev
 from math import sqrt, atan, sin, cos
 from Constants import *
 
+# Helper
+def product(iterable, start = 0):
+    """
+
+    """
+    result = 1
+    for i in range(len(iterable) + start):
+        result *= iterable[i]
+
+    return result
+
 # db Functions
 # Power
 def db_power(input, output):
