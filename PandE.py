@@ -1,6 +1,7 @@
 import math
 from Constants import *
 
+# Circuit Analysis
 def par_res(resistors, *res):
     if type(resistors) == list:
         flipped = []
@@ -13,6 +14,13 @@ def par_res(resistors, *res):
             flipped.append(1/i)
         total = sum(flipped)**-1
     return total
+
+def ohms_V(I, R):
+    return I*R
+def ohms_I(V, R):
+    return V/R
+def ohms_R(V, I):
+    return V/I
 
 def imp_cap(capacitor, freq):
     return 1/(2*pi*freq*capacitor*1j)
