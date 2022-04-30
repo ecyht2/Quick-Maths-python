@@ -204,16 +204,16 @@ def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None
     plt.show()
 
 # Noise
-def thermal_noise(T, B, k = kBolzman):
+def thermal_noise(T: float, B: float, k: float = kBolzman) -> float:
     return k*T*B
 
-def C_to_kelvin(T):
+def C_to_kelvin(T: float):
     return T + 273
-def kelvin_to_C(T):
+def kelvin_to_C(T: float):
     return T - 273
 
 # SNR
-def SNR(S, N, dB = True, power=True):
+def SNR(S: float, N: float, dB: bool = True, power: bool = True):
     returnValue = 0
     if dB:
         if power:
