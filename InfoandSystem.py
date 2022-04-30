@@ -112,18 +112,18 @@ def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None
     """
     # Setting up ID for each type of modulation
     modulationKey = {
-        "NRZ unipolar": 0,
-        "NRZ bipolar": 1,
-        "RZ unipolar": 2,
-        "RZ bipolar": 3,
-        "Manchester": 4,
+        "nrz unipolar": 0,
+        "nrz bipolar": 1,
+        "rz unipolar": 2,
+        "rz bipolar": 3,
+        "manchester": 4,
     }
     # Checking if the modulation given is valid or not
-    if modulation not in modulationKey:
+    if modulation.lower() not in modulationKey:
         raise ValueError("Invalid Modulation Type")
 
     # Saving modulation ID
-    modulationType = modulationKey[modulation]
+    modulationType = modulationKey[modulation.lower()]
     # Creating subplots
     fig, ax = plt.subplots()
 
