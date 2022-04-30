@@ -47,6 +47,8 @@ class myStats:
     variance = 0
     std = 0
     range = 0
+    max = 0
+    min = 0
     data = []
     def __init__(self, data):
         self.data = data
@@ -64,6 +66,9 @@ class myStats:
         self.std = stdev(data)
 
         self.range = stat_range(data)
+
+        self.max = max(data)
+        self.min = min(data)
 
     def __str__(self):
         info = {
@@ -95,7 +100,7 @@ class myStats:
 
 class myStatsGrouped(myStats):
     freq_data = {}
-    def __init__(self, data):
+    def __init__(self, data: dict):
         self.freq_data = data
         self.data = []
         for value in data.keys():
@@ -115,6 +120,9 @@ class myStatsGrouped(myStats):
         self.std = stdev(self.data)
 
         self.range = stat_range(self.data)
+
+        self.max = max(data)
+        self.min = min(data)
 
 def stat_range(data):
     minimum = min(data)
