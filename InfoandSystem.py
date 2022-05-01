@@ -203,6 +203,44 @@ def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None
     ax.step(xs, ys)
     plt.show()
 
+
+def plot_error_bar(x: iter, y: iter,
+                   xerr: iter, yerr: iter,
+                   xLabel: str = "x", yLabel: str = "y",
+                   showGraph: bool = True) -> None:
+    """
+    Plot a graph with an errorbar
+
+    Parameters
+    ----------
+    x
+        An array_like containing all the x values
+    y
+        An array_like containing all the y values
+    xerr
+        An array_like containing all error of the x values
+    yerr
+        An array_like containing all error of the y values
+    xLabel
+        The label for x-axis
+    yLabel
+        The label for y-axis
+    showGraph
+        To show the graph or not
+
+    Returns
+    -------
+    None
+    """
+    fig = plt.figure()
+    plt.xlabel(xLabel)
+    plt.ylabel(yLabel)
+
+    plt.errorbar(x, y, xerr=xerr, yerr=yerr, capsize=2)
+
+    if showGraph:
+        plt.show()
+
 # Noise
 def thermal_noise(T: float, B: float, k: float = kBolzman) -> float:
     return k*T*B
