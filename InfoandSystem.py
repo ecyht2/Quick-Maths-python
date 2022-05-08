@@ -203,7 +203,6 @@ def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None
     ax.step(xs, ys)
     plt.show()
 
-
 def plot_error_bar(x: iter, y: iter,
                    xerr: iter, yerr: iter,
                    xLabel: str = "x", yLabel: str = "y",

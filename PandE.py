@@ -15,12 +15,25 @@ def par_res(resistors, *res):
         total = sum(flipped)**-1
     return total
 
+# Ohm's Law
 def ohms_V(I, R):
     return I*R
 def ohms_I(V, R):
     return V/R
 def ohms_R(V, I):
     return V/I
+
+# Voltage Divider
+def voltage_divider(V_total, R_out, R_rest, *res):
+    v_out = 0
+
+    v_out = V_total * R_out
+    if type(R_rest) == list:
+        v_out = v_out/(R_out + sum(R_rest))
+    else:
+        v_out = v_out/(R_out + R_rest + sum(res))
+
+    return v_out
 
 def imp_cap(capacitor, freq):
     return 1/(2*pi*freq*capacitor*1j)
