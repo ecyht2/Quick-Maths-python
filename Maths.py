@@ -134,161 +134,7 @@ def IQR(data):
         return quartiles[2] - quartiles[0]
 
 # Vectors
-# Electric Field
-def coulomb_law(q1, q2, r, vector = None, k = kCoulomb):
-    magnitude = (k * abs(q1) * abs(q2))/(r**2)
-    if not vector == None:
-        vector = Vector(vector)
-        force = vector.unit_vector() * magnitude
-        return force
-    else:
-        return magnitude
-def electric_force(q: float, E: float) -> float:
-    F = 0
-    F = abs(q)*abs(E)
-    return F
-def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = kCoulomb, vector = None):
-    eField = 0
-    if sigma == 0:
-        eField = (k * abs(q))/(r**2)
-    else:
-        eField = sigma / (2*epsilon0)
-
-    if not vector == None:
-        vector = Vector(vector)
-        return_value = vector.unit_vector() * eField
-    else:
-        return_value = eField
-
-    return return_value
-
-# Magnetic Field
-def B_field(H: float = 0, I: float = 0, r: float = 0, mu0: float = mu0, mur: float = 1) -> float:
-    """
-    Calculates the magnetic field
-    """
-    B = 0
-    if I == 0 and H == 0:
-        raise ValueError("No I or H was given")
-    elif H == 0:
-        B = B_field_I(r, I, mu0, mur)
-    elif I == 0:
-        B = B_field_H(r, H, mu0, mur)
-
-    return B
-def B_field_H(H: float, mu0: float = mu0, mur: float = 1) -> float:
-    """
-    Calculates the magnetic field given H
-    """
-    B = mu0*mur*H
-    return B
-def B_field_I(r: float, I: float, mu0: float = mu0, mur: float = 1) -> float:
-    """
-    Calculates the magnetic field given the current
-    """
-    H = I/(2*pi*r)
-    B = mu0*mur*H
-    return B
-def magnetic_force(q, v, B):
-    """
-    Calculate the magnetic force on charge q caused by B
-    """
-    F = abs(q)*v*abs(B)
-    return F
-def EMF(v = 0, B = 0, L = 0, E = 0):
-    if E == 0:
-        return v*B*L
-    else:
-        return E*L
-
-# Electromagnetic Waves
-def energy_density_E(E: float, epsilon0: float = epsilon0) -> float:
-    """
-    Calculate the energy density for the electric field of the EM wave
-    """
-    uE = 0.5 * epsilon0*E**2
-    return uE
-def energy_density_B(B: float, mu0: float = mu0) -> float:
-    """
-    Calculate the energy density for the magnetic field of the EM wave
-    """
-    uB = 0.5 * E**2/mu0
-    return uB
-def energy_density(B: float = 0, E: float = 0,
-                   mu0: float = mu0, epsilon0: float = epsilon0,
-                   uE: float = 0, uB: float = 0) -> float:
-    """
-    Calculate the energy density of the EM wave
-    """
-    u = 0
-
-    if E > 0:
-        uE = energy_density_E(E, epsilon0)
-    if B > 0:
-        uB = energy_density_B(B, mu0)
-
-    if uE == 0 and uB > 0:
-        u = 2*uB
-    elif uB == 0 and uE > 0:
-        u = 2*uE
-    elif uB > 0 and uE > 0:
-        u = uB + uE
-    else:
-        raise ValueError("Atleast one of these: B, E, uE or uB must be passed in")
-
-    return u
-def EM_E_field(B: float, c: float = c) -> float:
-    """
-    Calculates the Electric Field of an EM wave
-    """
-    E = c*B
-    return E
-def EM_B_field(E: float, c: float = c,
-               epsilon0: float = epsilon0, mu0: float = mu0) -> float:
-    """
-    Calculates the Magnetic Field of an EM wave
-    """
-    B = epsilon0 * mu0 * c * E
-    # B = sqrt(mu0*epsilon0) * E
-    return B
-def poynting_vector(E: Vector, B: Vector, mu0: float = mu0) -> float:
-    """
-    Calculates the poynting vector of and EM wave
-    """
-    S = 1/mu0 * E.cross(B)
-    return S
-
-# Vector Maths
-def mag(a = 0, b = 0, c = 0, vector = None) -> float:
-    """
-    Finds the magnitude of any vector of (a, b, c) or vector
-
-    Parameters
-    ----------
-    a
-        x̂ value of the vector
-    b
-        ŷ value of the vector
-    c
-        ẑ value of the vector
-    vector
-        A vector of type tuple, list or Vector
-
-    Returns
-    -------
-    float
-        The magnitude of the Vector
-    """
-    if not vector == None:
-        if not (type(vector) == list or type(vector) == tuple or type(vector) == Vector):
-            raise TypeError("Invalid vector passed in. It must be an array_like (list, tuple, Vector) object")
-        if len(vector) > 3:
-            raise ValueError("Invalid vector, a vector must include at most 3 values")
-        distance = sqrt(sum(i**2 for i in vector))
-    else:
-        distance = sqrt(a**2 + b**2 + c**2)
-    return distance
-
+# Classes
 class Vector(list):
     """
     Create a Vector
@@ -518,3 +364,158 @@ class Charge(Vector):
 
         # Returning result
         return coulomb_law(self.q, charge.q, r=r, vector=diff)
+
+# Electric Field
+def coulomb_law(q1, q2, r, vector = None, k = kCoulomb):
+    magnitude = (k * abs(q1) * abs(q2))/(r**2)
+    if not vector == None:
+        vector = Vector(vector)
+        force = vector.unit_vector() * magnitude
+        return force
+    else:
+        return magnitude
+def electric_force(q: float, E: float) -> float:
+    F = 0
+    F = abs(q)*abs(E)
+    return F
+def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = kCoulomb, vector = None):
+    eField = 0
+    if sigma == 0:
+        eField = (k * abs(q))/(r**2)
+    else:
+        eField = sigma / (2*epsilon0)
+
+    if not vector == None:
+        vector = Vector(vector)
+        return_value = vector.unit_vector() * eField
+    else:
+        return_value = eField
+
+    return return_value
+
+# Magnetic Field
+def B_field(H: float = 0, I: float = 0, r: float = 0, mu0: float = mu0, mur: float = 1) -> float:
+    """
+    Calculates the magnetic field
+    """
+    B = 0
+    if I == 0 and H == 0:
+        raise ValueError("No I or H was given")
+    elif H == 0:
+        B = B_field_I(r, I, mu0, mur)
+    elif I == 0:
+        B = B_field_H(r, H, mu0, mur)
+
+    return B
+def B_field_H(H: float, mu0: float = mu0, mur: float = 1) -> float:
+    """
+    Calculates the magnetic field given H
+    """
+    B = mu0*mur*H
+    return B
+def B_field_I(r: float, I: float, mu0: float = mu0, mur: float = 1) -> float:
+    """
+    Calculates the magnetic field given the current
+    """
+    H = I/(2*pi*r)
+    B = mu0*mur*H
+    return B
+def magnetic_force(q, v, B):
+    """
+    Calculate the magnetic force on charge q caused by B
+    """
+    F = abs(q)*v*abs(B)
+    return F
+def EMF(v = 0, B = 0, L = 0, E = 0):
+    if E == 0:
+        return v*B*L
+    else:
+        return E*L
+
+# Electromagnetic Waves
+def energy_density_E(E: float, epsilon0: float = epsilon0) -> float:
+    """
+    Calculate the energy density for the electric field of the EM wave
+    """
+    uE = 0.5 * epsilon0*E**2
+    return uE
+def energy_density_B(B: float, mu0: float = mu0) -> float:
+    """
+    Calculate the energy density for the magnetic field of the EM wave
+    """
+    uB = 0.5 * E**2/mu0
+    return uB
+def energy_density(B: float = 0, E: float = 0,
+                   mu0: float = mu0, epsilon0: float = epsilon0,
+                   uE: float = 0, uB: float = 0) -> float:
+    """
+    Calculate the energy density of the EM wave
+    """
+    u = 0
+
+    if E > 0:
+        uE = energy_density_E(E, epsilon0)
+    if B > 0:
+        uB = energy_density_B(B, mu0)
+
+    if uE == 0 and uB > 0:
+        u = 2*uB
+    elif uB == 0 and uE > 0:
+        u = 2*uE
+    elif uB > 0 and uE > 0:
+        u = uB + uE
+    else:
+        raise ValueError("Atleast one of these: B, E, uE or uB must be passed in")
+
+    return u
+def EM_E_field(B: float, c: float = c) -> float:
+    """
+    Calculates the Electric Field of an EM wave
+    """
+    E = c*B
+    return E
+def EM_B_field(E: float, c: float = c,
+               epsilon0: float = epsilon0, mu0: float = mu0) -> float:
+    """
+    Calculates the Magnetic Field of an EM wave
+    """
+    B = epsilon0 * mu0 * c * E
+    # B = sqrt(mu0*epsilon0) * E
+    return B
+def poynting_vector(E: Vector, B: Vector, mu0: float = mu0) -> float:
+    """
+    Calculates the poynting vector of and EM wave
+    """
+    S = 1/mu0 * E.cross(B)
+    return S
+
+# Vector Maths
+def mag(a = 0, b = 0, c = 0, vector = None) -> float:
+    """
+    Finds the magnitude of any vector of (a, b, c) or vector
+
+    Parameters
+    ----------
+    a
+        x̂ value of the vector
+    b
+        ŷ value of the vector
+    c
+        ẑ value of the vector
+    vector
+        A vector of type tuple, list or Vector
+
+    Returns
+    -------
+    float
+        The magnitude of the Vector
+    """
+    if not vector == None:
+        if not (type(vector) == list or type(vector) == tuple or type(vector) == Vector):
+            raise TypeError("Invalid vector passed in. It must be an array_like (list, tuple, Vector) object")
+        if len(vector) > 3:
+            raise ValueError("Invalid vector, a vector must include at most 3 values")
+        distance = sqrt(sum(i**2 for i in vector))
+    else:
+        distance = sqrt(a**2 + b**2 + c**2)
+    return distance
