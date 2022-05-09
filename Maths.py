@@ -141,6 +141,10 @@ def coulomb_law(q1, q2, r, vector = None, k = kCoulomb):
         return force
     else:
         return magnitude
+def electric_force(q: float, E: float) -> float:
+    F = 0
+    F = q*E
+    return F
 def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = kCoulomb, vector = None):
     eField = 0
     if sigma == 0:
