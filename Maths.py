@@ -237,6 +237,20 @@ def energy_density(B: float = 0, E: float = 0,
         raise ValueError("Atleast one of these: B, E, uE or uB must be passed in")
 
     return u
+def EM_E_field(B: float, c: float = c) -> float:
+    """
+    Calculates the Electric Field of an EM wave
+    """
+    E = c*B
+    return E
+def EM_B_field(E: float, c: float = c,
+               epsilon0: float = epsilon0, mu0: float = mu0) -> float:
+    """
+    Calculates the Magnetic Field of an EM wave
+    """
+    B = epsilon0 * mu0 * c * E
+    # B = sqrt(mu0*epsilon0) * E
+    return B
 
 # Vector Maths
 def mag(a = 0, b = 0, c = 0, vector = None) -> float:
