@@ -159,6 +159,32 @@ def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = kCoulomb, vector =
         return_value = eField
 
     return return_value
+def B_field(H: float = 0, I: float = 0, r: float = 0, mu0: float = mu0, mur: float = 1) -> float:
+    """
+    Calculates the magnetic field
+    """
+    B = 0
+    if I == 0 and H == 0:
+        raise ValueError("No I or H was given")
+    elif H == 0:
+        B = B_field_I(r, I, mu0, mur)
+    elif I == 0:
+        B = B_field_H(r, H, mu0, mur)
+
+    return B
+def B_field_H(H: float, mu0: float = mu0, mur: float = 1) -> float:
+    """
+    Calculates the magnetic field given H
+    """
+    B = mu0*mur*H
+    return B
+def B_field_I(r: float, I: float, mu0: float = mu0, mur: float = 1) -> float:
+    """
+    Calculates the magnetic field given the current
+    """
+    H = I/(2*pi*r)
+    B = mu0*mur*H
+    return B
 def EMF(v = 0, B = 0, L = 0, E = 0):
     if E == 0:
         return v*B*L
