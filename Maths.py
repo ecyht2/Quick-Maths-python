@@ -251,6 +251,12 @@ def EM_B_field(E: float, c: float = c,
     B = epsilon0 * mu0 * c * E
     # B = sqrt(mu0*epsilon0) * E
     return B
+def poynting_vector(E: Vector, B: Vector, mu0: float = mu0) -> float:
+    """
+    Calculates the poynting vector of and EM wave
+    """
+    S = 1/mu0 * E.cross(B)
+    return S
 
 # Vector Maths
 def mag(a = 0, b = 0, c = 0, vector = None) -> float:
