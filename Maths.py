@@ -443,7 +443,7 @@ def energy_density_B(B: float, mu0: float = mu0) -> float:
     """
     Calculate the energy density for the magnetic field of the EM wave
     """
-    uB = 0.5 * E**2/mu0
+    uB = 0.5 * B**2/mu0
     return uB
 def energy_density(B: float = 0, E: float = 0,
                    mu0: float = mu0, epsilon0: float = epsilon0,
