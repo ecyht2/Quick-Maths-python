@@ -133,6 +133,7 @@ def IQR(data):
         return quartiles[2] - quartiles[0]
 
 # Vectors
+# Electric Field
 def coulomb_law(q1, q2, r, vector = None, k = kCoulomb):
     magnitude = (k * abs(q1) * abs(q2))/(r**2)
     if not vector == None:
@@ -159,6 +160,8 @@ def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = kCoulomb, vector =
         return_value = eField
 
     return return_value
+
+# Magnetic Field
 def B_field(H: float = 0, I: float = 0, r: float = 0, mu0: float = mu0, mur: float = 1) -> float:
     """
     Calculates the magnetic field
@@ -185,11 +188,19 @@ def B_field_I(r: float, I: float, mu0: float = mu0, mur: float = 1) -> float:
     H = I/(2*pi*r)
     B = mu0*mur*H
     return B
+def magnetic_force(q, v, B):
+    """
+    Calculate the magnetic force on charge q caused by B
+    """
+    F = abs(q)*v*abs(B)
+    return F
+
 def EMF(v = 0, B = 0, L = 0, E = 0):
     if E == 0:
         return v*B*L
     else:
         return E*L
+# Vector Maths
 def mag(a = 0, b = 0, c = 0, vector = None) -> float:
     """
     Finds the magnitude of any vector of (a, b, c) or vector
