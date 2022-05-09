@@ -1,8 +1,9 @@
-from math import log10
+from math import log10, exp, factorial
 from statistics import mean,median,mode
 from statistics import quantiles, variance, stdev
 from math import sqrt, atan, sin, cos
 from Constants import *
+import numpy as np
 
 # Helper
 def product(iterable, start = 0):
@@ -194,12 +195,49 @@ def magnetic_force(q, v, B):
     """
     F = abs(q)*v*abs(B)
     return F
-
 def EMF(v = 0, B = 0, L = 0, E = 0):
     if E == 0:
         return v*B*L
     else:
         return E*L
+
+# Electromagnetic Waves
+def energy_density_E(E: float, epsilon0: float = epsilon0) -> float:
+    """
+    Calculate the energy density for the electric field of the EM wave
+    """
+    uE = 0.5 * epsilon0*E**2
+    return uE
+def energy_density_B(B: float, mu0: float = mu0) -> float:
+    """
+    Calculate the energy density for the magnetic field of the EM wave
+    """
+    uB = 0.5 * E**2/mu0
+    return uB
+def energy_density(B: float = 0, E: float = 0,
+                   mu0: float = mu0, epsilon0: float = epsilon0,
+                   uE: float = 0, uB: float = 0) -> float:
+    """
+    Calculate the energy density of the EM wave
+    """
+    u = 0
+
+    if E > 0:
+        uE = energy_density_E(E, epsilon0)
+    if B > 0:
+        uB = energy_density_B(B, mu0)
+
+    if uE == 0 and uB > 0:
+        u = 2*uB
+    elif uB == 0 and uE > 0:
+        u = 2*uE
+    elif uB > 0 and uE > 0:
+        u = uB + uE
+    else:
+        raise ValueError("Atleast one of these: B, E, uE or uB must be passed in")
+
+    return u
+
 # Vector Maths
 def mag(a = 0, b = 0, c = 0, vector = None) -> float:
     """
