@@ -39,15 +39,18 @@ def db_volts_find_initial(db, output):
 
 # Data Presentation
 class myStats:
+    # Measure of Location
     mean = 0
     mode = 0
     median = 0
+    # Measure of Spread
     iqr = 0
-    upper_quartile = 0
-    lowwer_quartile = 0
+    upperQuartile = 0
+    lowwerQuartile = 0
     variance = 0
     std = 0
     range = 0
+    # Other attributes
     max = 0
     min = 0
     data = []
@@ -60,8 +63,8 @@ class myStats:
 
         self.iqr = IQR(data)
         quartiles = quantiles(data)
-        self.upper_quartile = quartiles[2]
-        self.lower_quartile = quartiles[0]
+        self.upperQuartile = quartiles[2]
+        self.lowerQuartile = quartiles[0]
 
         self.variance = variance(data)
         self.std = stdev(data)
@@ -77,8 +80,8 @@ class myStats:
             "mode": self.mode,
             "median": self.median,
             "iqr": self.iqr,
-            "upper quartile": self.upper_quartile,
-            "lower quartile": self.lower_quartile,
+            "upper quartile": self.upperQuartile,
+            "lower quartile": self.lowerQuartile,
             "variance": self.variance,
             "std": self.std,
             "range": self.range,
@@ -91,8 +94,8 @@ class myStats:
             "mode": self.mode,
             "median": self.median,
             "iqr": self.iqr,
-            "upper quartile": self.upper_quartile,
-            "lower quartile": self.lower_quartile,
+            "upper quartile": self.upperQuartile,
+            "lower quartile": self.lowerQuartile,
             "variance": self.variance,
             "std": self.std,
             "range": self.range,
@@ -100,9 +103,9 @@ class myStats:
         return str(info)
 
 class myStatsGrouped(myStats):
-    freq_data = {}
+    freqData = {}
     def __init__(self, data: dict):
-        self.freq_data = data
+        self.freqData = data
         self.data = []
         for value in data.keys():
             for frequency in range(data[value]):
@@ -114,8 +117,8 @@ class myStatsGrouped(myStats):
 
         self.iqr = IQR(self.data)
         quartiles = quantiles(data)
-        self.upper_quartile = quartiles[2]
-        self.lower_quartile = quartiles[0]
+        self.upperQuartile = quartiles[2]
+        self.lowerQuartile = quartiles[0]
 
         self.variance = variance(self.data)
         self.std = stdev(self.data)
