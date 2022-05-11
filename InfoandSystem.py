@@ -18,6 +18,15 @@ def bolzmann_diode_equation_rev(ID: float, IS: float, VT: float = VT) -> float:
     VD = VT * (log1p(ID/IS + 1))
     return VD
 
+# Op-Amp
+def inverting_op_amp(R1: float, R2: float) -> float:
+    """
+    Calculates the gain and input resistance of an inverting Op-Amp
+    """
+    A = - R2/R1
+    R = R1
+    return {"Gain": A, "Input Resistance": R}
+
 # Number System
 # Commit # 0110 1001  Nice
 def decimal_to_bcd(number: int) -> str:
