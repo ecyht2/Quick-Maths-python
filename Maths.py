@@ -30,11 +30,11 @@ def db_power_find_initial(db, output):
 def db_volts(input, output):
     return 20*log10(output/input)
 def db_volts_reverse(db, initial):
-    db = number / 20
-    return 10**db * initial
+    db = db / 20
+    return 20**db * initial
 def db_volts_find_initial(db, output):
     db = db / 20
-    return output / 10**db
+    return output / 20**db
 
 # Data Presentation
 class myStats:

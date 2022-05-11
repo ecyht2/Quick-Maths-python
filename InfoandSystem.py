@@ -18,6 +18,29 @@ def bolzmann_diode_equation_rev(ID: float, IS: float, VT: float = VT) -> float:
     VD = VT * (log1p(ID/IS + 1))
     return VD
 
+# Number System
+# Commit # 0110 1001  Nice
+def decimal_to_bcd(number: int) -> str:
+    """
+    Converts Decimal Number to BCD
+    """
+    numberString = str(number)
+    BCD = ""
+    for place in numberString:
+        placeInt = int(place)
+        BCD += bin(placeInt)
+        BCD += " "
+
+    BCD = BCD.rstrip()
+    BCD = BCD.replace("0b", "")
+    splitedBCD = BCD.split(" ")
+    for i in range(len(splitedBCD)):
+        while len(splitedBCD[i]) < 4:
+            splitedBCD[i] = "0" + splitedBCD[i]
+    BCD = " ".join(splitedBCD)
+
+    return BCD
+
 def kMap(size, equation):
     pass
 
