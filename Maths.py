@@ -304,6 +304,20 @@ class Vector(list):
 
         return Vector(return_vector)
 
+    def __truediv__(self, scalar):
+        """
+        Returns self / scalar
+        """
+        # Checking vector type
+        if not (type(scalar) == int or type(scalar) == float):
+            raise TypeError("Invalid scalar value for scalar multiplication")
+
+        return_vector = []
+        for i in range(3):
+            return_vector.append(self[i] / scalar)
+
+        return Vector(return_vector)
+
     def unit_vector(self):
         """
         Returns the unit vector of self
