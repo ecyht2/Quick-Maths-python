@@ -11,7 +11,7 @@ def bolzmann_diode_equation(IS: float, VD: float, VT: float = VT) -> float:
     """
     ID = IS * (exp(VD/VT) - 1)
     return ID
-def bolzmann_diode_equation_rev(ID: float, IS: float, VT: float = VT) -> float:
+def bolzmann_diode_equation_reverse(ID: float, IS: float, VT: float = VT) -> float:
     """
     Calculates the voltage in a pn junction diode
     """
@@ -19,12 +19,19 @@ def bolzmann_diode_equation_rev(ID: float, IS: float, VT: float = VT) -> float:
     return VD
 
 # Op-Amp
-def inverting_op_amp(R1: float, R2: float) -> float:
+def inverting_op_amp(R1: float, R2: float) -> dict:
     """
-    Calculates the gain and input resistance of an inverting Op-Amp
+    Calculates the gain and input resistance of an Inverting Op-Amp
     """
     A = - R2/R1
     R = R1
+    return {"Gain": A, "Input Resistance": R}
+def non_inverting_op_amp(R1: float, R2: float) -> dict:
+    """
+    Calculates the gain and input resistance of a Non-Inverting Op-Amp
+    """
+    A = 1 + R2/R1
+    R = "Infinity"
     return {"Gain": A, "Input Resistance": R}
 
 # Number System
