@@ -318,6 +318,12 @@ class Vector(list):
 
         return Vector(return_vector)
 
+    def __abs__(self):
+        """
+        Returns the Magnitude of the Vector
+        """
+        return self.mag
+
     def unit_vector(self):
         """
         Returns the unit vector of self
