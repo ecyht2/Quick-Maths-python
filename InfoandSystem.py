@@ -24,6 +24,9 @@ def decimal_to_bcd(number: int) -> str:
     """
     Converts Decimal Number to BCD
     """
+    if not type(number) == int:
+        raise TypeError("Input number must be an integer")
+
     numberString = str(number)
     BCD = ""
     for place in numberString:
