@@ -1,7 +1,22 @@
 #!/usr/bin/env python
 from string import ascii_uppercase
 from Constants import *
-from Maths import db_power, db_volts, db_power_reverse, product
+from Maths import db_power, db_volts, db_power_reverse
+from Maths import exp, product, log1p
+
+# Diodes
+def bolzmann_diode_equation(IS: float, VD: float, VT: float = VT) -> float:
+    """
+    Calculates the current in a pn junction diode
+    """
+    ID = IS * (exp(VD/VT) - 1)
+    return ID
+def bolzmann_diode_equation_rev(ID: float, IS: float, VT: float = VT) -> float:
+    """
+    Calculates the voltage in a pn junction diode
+    """
+    VD = VT * (log1p(ID/IS + 1))
+    return VD
 
 def kMap(size, equation):
     pass

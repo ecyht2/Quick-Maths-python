@@ -1,7 +1,7 @@
-from math import log10
+from math import log10, log1p
 from statistics import mean,median,mode
 from statistics import quantiles, variance, stdev
-from math import sqrt, atan, sin, cos
+from math import sqrt, atan, sin, cos, exp
 from Constants import *
 
 # Helper

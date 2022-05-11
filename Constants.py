@@ -9,6 +9,7 @@ kCoulomb = 9e9          # Coulomb's Constant 1/(4*pi*epsilon0)
 c = 3e6                 # Speed of Light in air/vacuum
 
 # Info and System
+VT = 26e-3              # Thermal Voltage when T = 300 K (room temperature)
 kBolzman = 1.38e-23
 
 # Power and Energy
