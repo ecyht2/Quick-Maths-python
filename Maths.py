@@ -128,6 +128,111 @@ class myStatsGrouped(myStats):
         self.max = max(data)
         self.min = min(data)
 
+class myStatsGroupedRange():
+    freqData = {}
+    # Measure of Location
+    mean = 0
+    median = 0
+    medianClass = ""
+    mode = 0
+    # Measure of Spread
+    variance = 0
+    std = 0
+    def __init__(self, data: dict):
+        self.freqData = data
+
+        self.boundaries = dict()
+        for keys, values in data.items():
+            if "-" in keys:
+                tempData = keys.split("-")
+                self.boundaries[keys] = [int(tempData[0]), int(tempData[1])]
+
+        self.midpoints = dict()
+        for boundary in self.boundaries.values():
+            self.midpoints[keys] = mean(boundary)
+
+        self.observations = 0
+        for freq in data.values():
+            self.observations += freq
+
+        # Measure of Location
+        self.mean = self.__find_mean()
+        self.median = self.__find_median()
+        self.mode = max(data, key=data.get)
+
+        # Measure of Spread
+        self.variance = self.__find_variance()
+        self.std = sqrt(self.variance)
+
+    def __find_mean(self) -> float:
+        """
+        Finds the mean for the data of grouped data with ranges
+        """
+        products = []
+        for f, m in zip(self.midpoints.values(), self.freqData.values()):
+            products.append(f*m)
+        mean = sum(products)/self.observations
+        return mean
+
+    def __find_median(self) -> float:
+        """
+        Finds the mean for the data of grouped data with ranges
+        """
+        # Finding the median class
+        sumFreq = 0
+        for freqClass, freq in self.freqData.items():
+            sumFreq += freq
+            if sumFreq >= self.observations/2:
+                self.medianClass = freqClass
+                break
+            previousClass = freqClass
+
+        # Finding the median
+        boundary = self.boundaries[self.medianClass]
+        medianClass = self.freqData[self.medianClass]
+        freqPrevious = self.freqData[previousClass]
+        median = boundary[0] + (self.observations/2 - freqPrevious)*(boundary[1] - boundary[0])/medianClass
+        return median
+
+    def __find_variance(self) -> float:
+        """
+        Finds the variance for the data of grouped data with ranges
+        """
+        variance = 1/(self.observations - 1)
+        # Mean Square
+        meansquare = (self.mean*self.observations)**2 / self.observations
+
+        # Mean of x square
+        products = []
+        for m, f in zip(self.midpoints.values(), self.freqData.values()):
+            products.append(f*(m**2))
+        meanxsquare = sum(products)
+
+        variance *= (meanxsquare - meansquare)
+        return variance
+
+    def __str__(self):
+        info = {
+            "mean": self.mean,
+            "mode": self.mode,
+            "median": self.median,
+            "median class": self.medianClass,
+            "variance": self.variance,
+            "std": self.std,
+        }
+        return str(info)
+
+    def __repr__(self):
+        info = {
+            "mean": self.mean,
+            "mode": self.mode,
+            "median": self.median,
+            "median class": self.medianClass,
+            "variance": self.variance,
+            "std": self.std,
+        }
+        return str(info)
+
 def stat_range(data):
     minimum = min(data)
     maximum = max(data)
