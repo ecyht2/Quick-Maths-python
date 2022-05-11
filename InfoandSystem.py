@@ -33,6 +33,11 @@ def non_inverting_op_amp(R1: float, R2: float) -> dict:
     A = 1 + R2/R1
     R = "Infinity"
     return {"Gain": A, "Input Resistance": R}
+def transimpedence_op_amp(Iin: float, Rf: float) -> float:
+    """
+    Calculates the output voltage of a transimpedence Op-Amp given an input current
+    """
+    return Iin * Rf
 
 # Number System
 # Commit # 0110 1001  Nice
