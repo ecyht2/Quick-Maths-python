@@ -83,6 +83,8 @@ def transistor_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN"
         mode = -(mode + 1)
     elif transistorType.upper() == "NPN":
         mode = mode
+    else:
+        raise ValueError("Invalid BJT type")
     return modes[mode]
 
 # Number System
