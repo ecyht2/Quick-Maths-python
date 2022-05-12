@@ -55,6 +55,28 @@ def transistor_alpha(beta: float) -> float:
     """
     alpha = beta / (1 + beta)
     return alpha
+def transistor_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN") -> str:
+    """
+    Determines the mode the transistor is operating in given VE, VB and VC
+    """
+    # Defining Modes
+    modes = ["Active", "Saturation", "Cutoff", "Reverse"]
+
+    # Logic
+    if VC > VB and VB > VE:
+        mode = 0
+    elif VB > VE and VB > VC:
+        mode = 1
+    elif VE > VB and VB > VC:
+        mode = 2
+    elif VE > VB and VB > VC:
+        mode = 3
+
+    if transistorType.upper() == "PNP":
+        mode = -(mode + 1)
+    elif transistorType.upper() == "NPN":
+        mode = mode
+    return modes[mode]
 
 # Number System
 # Commit # 0110 1001  Nice
