@@ -86,6 +86,18 @@ def transistor_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN"
     else:
         raise ValueError("Invalid BJT type")
     return modes[mode]
+def drain_current_mosfet(K: float, VGS: float, VThresh: float, mosfetType: str) -> float:
+    """
+    Calculates the drain current (ID) of a mosfet
+    """
+    ID = 0
+    if mosfetType.upper() == "NMOS":
+        ID = K * (VGS - VThresh)**2
+    elif mosfetType.upper() == "PMOS":
+        ID = K * (VGS + VThresh)
+    else:
+        raise ValueError("Invalid MOSFET type")
+    return ID
 
 # Number System
 # Commit # 0110 1001  Nice
