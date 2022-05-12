@@ -55,6 +55,13 @@ def transistor_alpha(beta: float) -> float:
     """
     alpha = beta / (1 + beta)
     return alpha
+def transistor_alpha_IE(IC: float, IE: float) -> float:
+    """
+    Calculates the α common-base current gain using IC and IE
+    Should be slightly less than 1
+    """
+    alpha = IC/IE
+    return alpha
 def transistor_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN") -> str:
     """
     Determines the mode the transistor is operating in given VE, VB and VC
