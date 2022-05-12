@@ -40,6 +40,22 @@ def transimpedence_op_amp(Iin: float, Rf: float) -> float:
     """
     return Iin * Rf
 
+# Transistor
+def transistor_beta(IC: float, IB: float) -> float:
+    """
+    Calculates the β (common-emitter current gain) of a transistor
+    Should be between 50 and 200
+    """
+    beta = IC/IB
+    return beta
+def transistor_alpha(beta: float) -> float:
+    """
+    Calculates the α common-base current gain
+    Should be slightly less than 1
+    """
+    alpha = beta / (1 + beta)
+    return alpha
+
 # Number System
 # Commit # 0110 1001  Nice
 def decimal_to_bcd(number: int) -> str:
