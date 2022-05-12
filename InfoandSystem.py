@@ -89,6 +89,7 @@ def transistor_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN"
 
 # Number System
 # Commit # 0110 1001  Nice
+# BCD
 def decimal_to_bcd(number: float) -> str:
     """
     Converts Decimal Number to BCD
@@ -130,6 +131,27 @@ def bcd_to_decimal(number: str) -> float:
         digitInt = int(digit, base = 2)
         number += str(digitInt)
     return float(number)
+# Gray Code
+def binary_to_gray(number: str) -> str:
+    """
+    Converts binary number to gray code
+    """
+    grayCode = "1"
+    for i in range(len(number) - 1):
+        binary = int(number[i + 1])
+        binaryPrev = int(number[i])
+        grayCode += str(int(bool(binary) ^ bool(binaryPrev)))
+    return grayCode
+def gray_to_binary(number: str) -> str:
+    """
+    Converts gray code number to binary
+    """
+    binaryNumber = "1"
+    for i in range(len(number) - 1):
+        binary = int(number[i + 1])
+        binaryPrev = int(binaryNumber[i])
+        binaryNumber += str(int(bool(binary) ^ bool(binaryPrev)))
+    return binaryNumber
 
 def kMap(size, equation):
     pass
