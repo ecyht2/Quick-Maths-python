@@ -117,6 +117,19 @@ def decimal_to_bcd(number: float) -> str:
     BCD = " ".join(splitedBCD)
 
     return BCD
+def bcd_to_decimal(number: str) -> float:
+    """
+    Converts BCD Number to Decimal
+    """
+    splittedNumber: list[str] = number.split(" ")
+    number = ""
+    for digit in splittedNumber:
+        if digit == ".":
+            number += "."
+            continue
+        digitInt = int(digit, base = 2)
+        number += str(digitInt)
+    return float(number)
 
 def kMap(size, equation):
     pass
