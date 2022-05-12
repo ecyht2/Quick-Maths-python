@@ -67,7 +67,7 @@ def transistor_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN"
         mode = 0
     elif VB > VE and VB > VC:
         mode = 1
-    elif VE > VB and VB > VC:
+    elif VE > VB and VC > VB:
         mode = 2
     elif VE > VB and VB > VC:
         mode = 3
