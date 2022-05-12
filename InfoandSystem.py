@@ -89,16 +89,19 @@ def transistor_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN"
 
 # Number System
 # Commit # 0110 1001  Nice
-def decimal_to_bcd(number: int) -> str:
+def decimal_to_bcd(number: float) -> str:
     """
     Converts Decimal Number to BCD
     """
-    if not type(number) == int:
+    if not (type(number) == int or type(number) == float):
         raise TypeError("Input number must be an integer")
 
     numberString = str(number)
     BCD = ""
     for place in numberString:
+        if place == ".":
+            BCD += ". "
+            continue
         placeInt = int(place)
         BCD += bin(placeInt)
         BCD += " "
@@ -107,6 +110,8 @@ def decimal_to_bcd(number: int) -> str:
     BCD = BCD.replace("0b", "")
     splitedBCD = BCD.split(" ")
     for i in range(len(splitedBCD)):
+        if splitedBCD[i] == ".":
+            continue
         while len(splitedBCD[i]) < 4:
             splitedBCD[i] = "0" + splitedBCD[i]
     BCD = " ".join(splitedBCD)
