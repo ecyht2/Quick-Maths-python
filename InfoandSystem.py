@@ -210,12 +210,12 @@ def nyquist_shanon_sampling_frequency(fmax: float = 0, B: float = 0) -> float:
     elif B > 0:
         fs = 2 * B
     return fs
-def quantization_level(b: float) -> float:
+def quantization_level(b: int) -> int:
     """
     Find the number of quantization level for a b amount of bits ADC
     """
     return 2**b
-def quantization_level_reverse(m: float) -> float:
+def quantization_level_reverse(m: int) -> int:
     """
     Find the number of bits an ADC has given it has m number of quantization level
     """
