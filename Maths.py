@@ -1,4 +1,5 @@
-from math import log10, exp, factorial, log1p
+from math import exp, factorial
+from math import log10, log1p, log2
 from statistics import mean,median,mode
 from statistics import quantiles, variance, stdev
 from math import sqrt, atan, sin, cos, exp

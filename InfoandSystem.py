@@ -3,7 +3,7 @@ from string import ascii_uppercase
 from string import digits
 from Constants import *
 from Maths import db_power, db_volts, db_power_reverse
-from Maths import exp, product, log1p
+from Maths import exp, product, log1p, log2
 
 # Diodes
 def bolzmann_diode_equation(IS: float, VD: float, VT: float = VT) -> float:
@@ -40,18 +40,81 @@ def transimpedence_op_amp(Iin: float, Rf: float) -> float:
     """
     return Iin * Rf
 
+# Transistor
+def transistor_beta(IC: float, IB: float) -> float:
+    """
+    Calculates the β (common-emitter current gain) of a transistor
+    Should be between 50 and 200
+    """
+    beta = IC/IB
+    return beta
+def transistor_alpha(beta: float) -> float:
+    """
+    Calculates the α common-base current gain
+    Should be slightly less than 1
+    """
+    alpha = beta / (1 + beta)
+    return alpha
+def transistor_alpha_IE(IC: float, IE: float) -> float:
+    """
+    Calculates the α common-base current gain using IC and IE
+    Should be slightly less than 1
+    """
+    alpha = IC/IE
+    return alpha
+def transistor_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN") -> str:
+    """
+    Determines the mode the transistor is operating in given VE, VB and VC
+    """
+    # Defining Modes
+    modes = ["Active", "Saturation", "Cutoff", "Reverse"]
+
+    # Logic
+    if VC > VB and VB > VE:
+        mode = 0
+    elif VB > VE and VB > VC:
+        mode = 1
+    elif VE > VB and VC > VB:
+        mode = 2
+    elif VE > VB and VB > VC:
+        mode = 3
+
+    if transistorType.upper() == "PNP":
+        mode = -(mode + 1)
+    elif transistorType.upper() == "NPN":
+        mode = mode
+    else:
+        raise ValueError("Invalid BJT type")
+    return modes[mode]
+def drain_current_mosfet(K: float, VGS: float, VThresh: float, mosfetType: str) -> float:
+    """
+    Calculates the drain current (ID) of a mosfet
+    """
+    ID = 0
+    if mosfetType.upper() == "NMOS":
+        ID = K * (VGS - VThresh)**2
+    elif mosfetType.upper() == "PMOS":
+        ID = K * (VGS + VThresh)
+    else:
+        raise ValueError("Invalid MOSFET type")
+    return ID
+
 # Number System
 # Commit # 0110 1001  Nice
-def decimal_to_bcd(number: int) -> str:
+# BCD
+def decimal_to_bcd(number: float) -> str:
     """
     Converts Decimal Number to BCD
     """
-    if not type(number) == int:
+    if not (type(number) == int or type(number) == float):
         raise TypeError("Input number must be an integer")
 
     numberString = str(number)
     BCD = ""
     for place in numberString:
+        if place == ".":
+            BCD += ". "
+            continue
         placeInt = int(place)
         BCD += bin(placeInt)
         BCD += " "
@@ -60,12 +123,49 @@ def decimal_to_bcd(number: int) -> str:
     BCD = BCD.replace("0b", "")
     splitedBCD = BCD.split(" ")
     for i in range(len(splitedBCD)):
+        if splitedBCD[i] == ".":
+            continue
         while len(splitedBCD[i]) < 4:
             splitedBCD[i] = "0" + splitedBCD[i]
     BCD = " ".join(splitedBCD)
 
     return BCD
+def bcd_to_decimal(number: str) -> float:
+    """
+    Converts BCD Number to Decimal
+    """
+    splittedNumber: list[str] = number.split(" ")
+    number = ""
+    for digit in splittedNumber:
+        if digit == ".":
+            number += "."
+            continue
+        digitInt = int(digit, base = 2)
+        number += str(digitInt)
+    return float(number)
+# Gray Code
+def binary_to_gray(number: str) -> str:
+    """
+    Converts binary number to gray code
+    """
+    grayCode = "1"
+    for i in range(len(number) - 1):
+        binary = int(number[i + 1])
+        binaryPrev = int(number[i])
+        grayCode += str(int(bool(binary) ^ bool(binaryPrev)))
+    return grayCode
+def gray_to_binary(number: str) -> str:
+    """
+    Converts gray code number to binary
+    """
+    binaryNumber = "1"
+    for i in range(len(number) - 1):
+        binary = int(number[i + 1])
+        binaryPrev = int(binaryNumber[i])
+        binaryNumber += str(int(bool(binary) ^ bool(binaryPrev)))
+    return binaryNumber
 
+# Combinational Logic Circuit
 def kMap(size, equation):
     pass
 
@@ -100,7 +200,94 @@ def letter_to_binary(equation: str) -> str:
         eq = "".join([eq, letter])
     return eq
 
-convolution = np.convolve
+# A2D or ADC
+def nyquist_shanon_sampling_frequency(fmax: float = 0, B: float = 0) -> float:
+    """
+    Find the minimum sampling frequency required to digitize an analogue signal
+    """
+    fs = 0
+    if fmax > 0:
+        fs = 2 * fmax
+    elif B > 0:
+        fs = 2 * B
+    return fs
+def quantization_level(b: int) -> int:
+    """
+    Find the number of quantization level for a b amount of bits ADC
+    """
+    return 2**b
+def quantization_level_reverse(m: int) -> int:
+    """
+    Find the number of bits an ADC has given it has m number of quantization level
+    """
+    return log2(m)
+
+# BW
+def bandwidth(fmax: float, fmin: float) -> float:
+    """
+    Calculates the bandwidth of a signal
+    """
+    return fmax - fmin
+
+# Information
+def information_content(N: int, b: int = 0, P: float = 0) -> float:
+    """
+    Calculates the information content (H) of a digitalize signal
+    """
+    H = 0
+    if P == 0:
+        H = N * b
+    elif b == 0:
+        H = (N * P * -log2(P))
+    else:
+        raise ValueError("No b or P is given")
+    return H
+
+# Digital Filter
+def convolution(x: list, h: list) -> list:
+    """
+    Find the convolution of data stream x given impulse response h
+    Parameters
+    ----------
+    x
+        A list containing all the data of the data stream
+    h
+        A list containing all the impulse response
+    Returns
+    -------
+    list
+        The convoluted result
+    """
+    # Can be achieved via numpy.convolve(x, h)
+    result = []
+    row = []
+    xSize = len(x)
+    hSize = len(h)
+
+    # Finding y per sample
+    for rows in range(xSize):
+        # Appending leading 0
+        column = [0 for i in range(rows)]
+        # Finding output of x[n]
+        for i in h:
+            column.append(i * x[rows])
+        # Appending trailing 0
+        while len(column) < xSize + hSize - 1:
+            column.append(0)
+        # Appending row to column
+        row.append(column)
+
+    # Summing y per sample
+    for columns in range(xSize + hSize - 1):
+        # Summing the columns
+        total = 0
+        for rows in range(xSize):
+            total += row[rows][columns]
+        # Appending to rsult
+        result.append(total)
+
+    # Returning result
+    return result
 
 def filter(b: list, a: list, x: list) -> list:
     """
