@@ -4,6 +4,7 @@ from string import digits
 from Constants import *
 from Maths import db_power, db_volts, db_power_reverse
 from Maths import exp, product, log1p, log2
+import numpy as np
 
 # Diodes
 def bolzmann_diode_equation(IS: float, VD: float, VT: float = VT) -> float:
@@ -245,7 +246,8 @@ def information_content(N: int, b: int = 0, P: float = 0) -> float:
 
 # AM
 def AM_modulating_index(Vm: float = 0, Vc: float = 0,
-                        Vmax: float = 0, Vmin: float = 0) -> float:
+                        Vmax: float = 0, Vmin: float = 0,
+                        Pt: float = 0, Pc: float = 0) -> float:
     """
     Calculates the modulating index of an AM signal
     """
@@ -254,8 +256,11 @@ def AM_modulating_index(Vm: float = 0, Vc: float = 0,
         m = Vm / Vc
     elif Vmax > 0 and Vmin > 0:
         m = (Vmax - Vmin) / (Vmax + Vmin)
+    elif Pt > 0 and Pc > 0:
+        m = 2 * ((Pt / Pc) - 1)
+        m = m**0.5
     else:
-        raise ValueError("No (Vm and Vc) or (Vmax and Vmin) given")
+        raise ValueError("No (Vm and Vc) or (Vmax and Vmin) or (Pt and Pc) given")
     return m
 def AM_Vm(Vmax: float, Vmin: float) -> float:
     """
@@ -277,6 +282,16 @@ def AM_sidebands(fc: float, fm: float) -> tuple[float, float]:
     Calculates the sidebands of an AM signal
     """
     return (fc - fm, fc + fm)
+def AM_power_transmitted(Pc: float, m: float) -> float:
+    """
+    Calculates the power of the transmitted AM signal
+    """
+    return Pc * (1 + m**2 / 2)
+def AM_power_carrier(Pt: float, m: float) -> float:
+    """
+    Calculates the power of the carrier of an AM signal
+    """
+    return Pt / (1 + m**2 / 2)
 
 # Signal Plotting
 def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None:
