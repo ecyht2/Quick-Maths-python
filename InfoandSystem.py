@@ -257,6 +257,16 @@ def AM_modulating_index(Vm: float = 0, Vc: float = 0,
     else:
         raise ValueError("No (Vm and Vc) or (Vmax and Vmin) given")
     return m
+def AM_Vm(Vmax: float, Vmin: float) -> float:
+    """
+    Calculates the Voltage of the modulating signal (Vm)
+    """
+    return (Vmax - Vmin) / 2
+def AM_Vc(Vmax: float, Vmin: float) -> float:
+    """
+    Calculates the Voltage of the carrier signal (Vc)
+    """
+    return (Vmax + Vmin) / 2
 
 # Signal Plotting
 def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None:
