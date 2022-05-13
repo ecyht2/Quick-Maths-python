@@ -3,7 +3,7 @@ from string import ascii_uppercase
 from string import digits
 from Constants import *
 from Maths import db_power, db_volts, db_power_reverse
-from Maths import exp, product, log1p
+from Maths import exp, product, log1p, log2
 
 # Diodes
 def bolzmann_diode_equation(IS: float, VD: float, VT: float = VT) -> float:
@@ -199,6 +199,29 @@ def letter_to_binary(equation: str) -> str:
         eq = "".join([eq, letter])
     return eq
 
+# A2D or ADC
+def nyquist_shanon_sampling_frequency(fmax: float = 0, B: float = 0) -> float:
+    """
+    Find the minimum sampling frequency required to digitize an analogue signal
+    """
+    fs = 0
+    if fmax > 0:
+        fs = 2 * fmax
+    elif B > 0:
+        fs = 2 * B
+    return fs
+def quantization_level(b: float) -> float:
+    """
+    Find the number of quantization level for a b amount of bits ADC
+    """
+    return 2**b
+def quantization_level_reverse(m: float) -> float:
+    """
+    Find the number of bits an ADC has given it has m number of quantization level
+    """
+    return log2(m)
+
+# Digital Filter
 def convolution(x: list, h: list) -> list:
     """
     Find the convolution of data stream x given impulse response h
