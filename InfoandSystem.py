@@ -292,6 +292,36 @@ def AM_power_carrier(Pt: float, m: float) -> float:
     Calculates the power of the carrier of an AM signal
     """
     return Pt / (1 + m**2 / 2)
+def AM_modulating_index_sum(m: list or tuple, *argc: tuple[float]) -> float:
+    """
+    Calculates the total modulating index of mutiple AM singal simultaneously
+    """
+    mType = type(m)
+    mt: float = 0
+    if mType == list or mType == tuple:
+        for i in m:
+            mt += i**2
+    elif mType == int or mType == float:
+        mt += m**2
+        for i in argc:
+            mt += i**2
+
+    return mt**0.5
+def AM_modulating_index_sum_voltage(Vc: float, Vm: list or tuple, *argc: tuple[float]) -> float:
+    """
+    Calculates the total modulating index of mutiple AM singal simultaneously given the voltages
+    """
+    VType = type(Vm)
+    mt: float = 0
+    if VType == list or VType == tuple:
+        for i in Vm:
+            mt += i**2
+    elif VType == int or VType == float:
+        mt += Vm**2
+        for i in argc:
+            mt += i**2
+
+    return mt**0.5/Vc
 
 # Signal Plotting
 def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None:
