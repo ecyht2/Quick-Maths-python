@@ -267,6 +267,16 @@ def AM_Vc(Vmax: float, Vmin: float) -> float:
     Calculates the Voltage of the carrier signal (Vc)
     """
     return (Vmax + Vmin) / 2
+def AM_BW(fm: float) -> float:
+    """
+    Calculates the bandwidth of an AM signal
+    """
+    return 2 * fm
+def AM_sidebands(fc: float, fm: float) -> tuple[float, float]:
+    """
+    Calculates the sidebands of an AM signal
+    """
+    return (fc - fm, fc + fm)
 
 # Signal Plotting
 def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None:
