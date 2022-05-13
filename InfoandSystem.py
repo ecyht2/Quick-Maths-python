@@ -243,6 +243,21 @@ def information_content(N: int, b: int = 0, P: float = 0) -> float:
         raise ValueError("No b or P is given")
     return H
 
+# AM
+def AM_modulating_index(Vm: float = 0, Vc: float = 0,
+                        Vmax: float = 0, Vmin: float = 0) -> float:
+    """
+    Calculates the modulating index of an AM signal
+    """
+    m = 0
+    if Vm > 0 and Vc > 0:
+        m = Vm / Vc
+    elif Vmax > 0 and Vmin > 0:
+        m = (Vmax - Vmin) / (Vmax + Vmin)
+    else:
+        raise ValueError("No (Vm and Vc) or (Vmax and Vmin) given")
+    return m
+
 # Signal Plotting
 def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None:
     """
