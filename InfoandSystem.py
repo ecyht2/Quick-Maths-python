@@ -165,6 +165,7 @@ def gray_to_binary(number: str) -> str:
         binaryNumber += str(int(bool(binary) ^ bool(binaryPrev)))
     return binaryNumber
 
+# Combinational Logic Circuit
 def kMap(size, equation):
     pass
 
@@ -227,6 +228,20 @@ def bandwidth(fmax: float, fmin: float) -> float:
     Calculates the bandwidth of a signal
     """
     return fmax - fmin
+
+# Information
+def information_content(N: int, b: int = 0, P: float = 0) -> float:
+    """
+    Calculates the information content (H) of a digitalize signal
+    """
+    H = 0
+    if P == 0:
+        H = N * b
+    elif b == 0:
+        H = (N * P * -log2(P))
+    else:
+        raise ValueError("No b or P is given")
+    return H
 
 # Digital Filter
 def convolution(x: list, h: list) -> list:
