@@ -333,6 +333,46 @@ def FM_PM_modulating_index(delta: float, n: float) -> float:
     Calculates the modulating index of a FM or PM signal
     """
     return delta / n
+def FM_PM_J_values(m: float) -> tuple[float]:
+    """
+    Find the J values of a given modulating index
+    """
+    # TBD
+    pass
+def FM_PM_bandwidth_bessel(fm: float, n: float = 0, m: float = 0) -> float:
+    """
+    Find the bandwith of a given FM or PM signal using Bessel's frequency spectrum
+    """
+    bandwidth: float = 0
+    if n > 0:
+        bandwidth = 2*(n * fm)
+    elif m > 0:
+        n = len(FM_PM_J_values(m)) - 1
+        bandwidth = 2*(n * fm)
+    else:
+        raise ValueError("No n or m given")
+    return bandwidth
+def FM_PM_bandwidth_carson(fm: float, delta: float) -> float:
+    """
+    Find the bandwith of a given FM or PM signal using Carson's rule
+    """
+    return 2 * (fm + delta)
+def FM_PM_power_transmitted(R: float, Vcrms: float = 0,
+                            J: tuple[float] or list[float] = tuple()) -> float:
+    """
+    Find the transmitted power of a FM or PM signal
+    """
+    Pt: float = 0
+    if Vcrms > 0:
+        Pt = Vcrms**2 / R
+    elif len(J) > 0:
+        totalJ = J[0]**2
+        for i in J[1:]:
+            totalJ += 2 * i**2
+        Pt = totalJ / R
+    else:
+        raise ValueError("No Vcrms or J given")
+    return Pt
 
 # Digital Filter
 def convolution(x: list, h: list) -> list:
