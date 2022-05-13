@@ -221,6 +221,13 @@ def quantization_level_reverse(m: float) -> float:
     """
     return log2(m)
 
+# BW
+def bandwidth(fmax: float, fmin: float) -> float:
+    """
+    Calculates the bandwidth of a signal
+    """
+    return fmax - fmin
+
 # Digital Filter
 def convolution(x: list, h: list) -> list:
     """
