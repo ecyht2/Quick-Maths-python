@@ -3,7 +3,9 @@ from string import ascii_uppercase
 from string import digits
 from Constants import *
 from Maths import db_power, db_volts, db_power_reverse
-from Maths import exp, product, log1p, log2
+from Maths import product, log1p, log2
+from Maths import exp, factorial
+import csv
 import numpy as np
 
 # Diodes
@@ -323,153 +325,103 @@ def AM_modulating_index_sum_voltage(Vc: float, Vm: list or tuple, *argc: tuple[f
 
     return mt**0.5/Vc
 
-# Signal Plotting
-def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None:
+# Angle Modulation
+def FM_PM_deviation_sensitivity(delta: float, em: float) -> float:
     """
-    Plot a digital signal that is transmitted is as a digital signal
-
-    Parameters
-    ----------
-    signal
-        The signal being transmitted
-        It can be in a str or an array_like
-        Only 0 and 1 will be considered
-    modulation
-        The type of modulation used
-
-    Returns
-    -------
-    None
+    Calculates the deviation sensitivity of the modulator of a FM or PM signal (kf/kp)
     """
-    # Setting up ID for each type of modulation
-    modulationKey = {
-        "nrz unipolar": 0,
-        "nrz bipolar": 1,
-        "rz unipolar": 2,
-        "rz bipolar": 3,
-        "manchester": 4,
-    }
-    # Checking if the modulation given is valid or not
-    if modulation.lower() not in modulationKey:
-        raise ValueError("Invalid Modulation Type")
-
-    # Saving modulation ID
-    modulationType = modulationKey[modulation.lower()]
-    # Creating subplots
-    fig, ax = plt.subplots()
-
-    # Finding the axis values
-    # Only extracting 0 and 1 (IDK if I should raise and error or not)
-    signal_array = []
-    for i in signal:
-        if i in "01":
-            signal_array.append(int(i))
-    # x values
-    xs = np.arange(0, len(signal_array) + 1, 0.5)
-    # Required for RZ bipolar
-    state = True
-    # y values
-    ys = [0]
-    for i in signal_array:
-        # Decides what to append
-        if modulationType == 0:
-            if i == 0:
-                append_no = [0, 0]
-            else:
-                append_no = [1, 1]
-        elif modulationType == 1:
-            if i == 0:
-                append_no = [-1, -1]
-            else:
-                append_no = [1, 1]
-        elif modulationType == 2:
-            if i == 0:
-                append_no = [0, 0]
-            else:
-                append_no = [1, 0]
-        elif modulationType == 3:
-            if i == 0:
-                append_no = [0, 0]
-            else:
-                if state == True:
-                    append_no = [1, 0]
-                else:
-                    append_no = [-1, 0]
-                state = not state
-        elif modulationType == 4:
-            if i == 0:
-                append_no = [0, 1]
-            else:
-                append_no = [1, 0]
-
-        # Appending numbers to y list
-        for j in append_no:
-            ys.append(j)
-    ys.append(0)
-
-    # Formatting function
-    def format_fn(tick_val, tick_pos):
-        if int(tick_val) == 1:
-            return "V+"
-        elif int(tick_val) == -1:
-            return "V-"
-        else:
-            return '0'
-
-    # Setting up axis
-    # plt.axis([0, 9, -1.1, 1.1])
-    ax.axis([0, len(xs)/2 - 1, min(ys) - 0.1, max(ys) + 0.1])
-    # Setting up axis ticks
-    # plt.yticks([1, 0, -1])
-    ax.yaxis.set_ticks([max(ys), 0, min(ys)])
-    ax.xaxis.set_ticks(np.arange(0, len(xs)/2, 1), ["" for i in range(int(len(xs)/2))])
-    # Setting up grid
-    # plt.grid(axis='x', color='b', linestyle='--')
-    ax.grid(axis='x', color='b', linestyle='--', linewidth=1)
-
-    # A FuncFormatter is created automatically.
-    if vMode:
-        ax.yaxis.set_major_formatter(format_fn)
-        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-    ax.step(xs, ys)
-    plt.show()
-
-def plot_error_bar(x: iter, y: iter,
-                   xerr: iter, yerr: iter,
-                   xLabel: str = "x", yLabel: str = "y",
-                   showGraph: bool = True) -> None:
+    return delta / em
+def FM_PM_modulating_index(delta: float, n: float) -> float:
     """
-    Plot a graph with an errorbar
-
-    Parameters
-    ----------
-    x
-        An array_like containing all the x values
-    y
-        An array_like containing all the y values
-    xerr
-        An array_like containing all error of the x values
-    yerr
-        An array_like containing all error of the y values
-    xLabel
-        The label for x-axis
-    yLabel
-        The label for y-axis
-    showGraph
-        To show the graph or not
-
-    Returns
-    -------
-    None
+    Calculates the modulating index of a FM or PM signal
     """
-    fig = plt.figure()
-    plt.xlabel(xLabel)
-    plt.ylabel(yLabel)
+    return delta / n
+def bessel_function(x: float, v: int) -> float:
+    """
+    Calculates the J value of a given order v with the β value x
+    Jv(x)
+    """
+    if v < 0:
+        raise ValueError("v must be a positive integer number")
+    # Initializing variables
+    sValues:list = list()
+    ds: float = 10
+    s: int = 0
+    while ds > 0.0001:
+        # https://onlinelibrary.wiley.com/doi/pdf/10.1002/9780470054208.app3
+        sValues.append((x / 2)**(2 * s + v)*(-1)**s / (factorial(s) * factorial(s+v)))
+        # Updating change in the current value
+        if len(sValues) > 1:
+            ds = abs(sValues[-1] - sValues[-2])
+        # Going to next s
+        s += 1
+    # Summing up the values to get J
+    J = sum(sValues)
+    return J
 
-    plt.errorbar(x, y, xerr=xerr, yerr=yerr, capsize=2)
-
-    if showGraph:
-        plt.show()
+def FM_PM_J_values(m: float, cached: bool = True) -> tuple[float]:
+    """
+    Find the J values of a given modulating index
+    """
+    J = list()
+    # Getting items from cached
+    if m <= 5 and cached:
+        m = round(m, 1)
+        with open('bessel.csv', 'r') as csvfile:
+            bessel = csv.reader(csvfile)
+            for i in bessel:
+                for j in range(len(i)):
+                    try:
+                        i[j] = float(i[j])
+                    except ValueError:
+                        pass
+                if i[0] == m:
+                    J = i[1:]
+    # Calculating values manually
+    else:
+        Jvalue: float = 10
+        # Getting the first 14 J values
+        for v in range(15):
+            Jvalue = bessel_function(m, v)
+            J.append(round(Jvalue, 4))
+        # Removing trailing values that are < 0.01
+        while abs(J[-1]) < 0.01:
+            J.pop()
+    return tuple(J)
+def FM_PM_bandwidth_bessel(fm: float, n: float = 0, m: float = 0) -> float:
+    """
+    Find the bandwith of a given FM or PM signal using Bessel's frequency spectrum
+    """
+    bandwidth: float = 0
+    if n > 0:
+        bandwidth = 2*(n * fm)
+    elif m > 0:
+        n = len(FM_PM_J_values(m)) - 1
+        bandwidth = 2*(n * fm)
+    else:
+        raise ValueError("No n or m given")
+    return bandwidth
+def FM_PM_bandwidth_carson(fm: float, delta: float) -> float:
+    """
+    Find the bandwith of a given FM or PM signal using Carson's rule
+    """
+    return 2 * (fm + delta)
+def FM_PM_power_transmitted(R: float, Vcrms: float = 0,
+                            J: tuple[float] or list[float] = tuple()) -> float:
+    """
+    Find the transmitted power of a FM or PM signal
+    """
+    Pt: float = 0
+    if Vcrms > 0:
+        Pt = Vcrms**2 / R
+    elif len(J) > 0:
+        totalJ = J[0]**2
+        for i in J[1:]:
+            totalJ += 2 * i**2
+        Pt = totalJ / R
+    else:
+        raise ValueError("No Vcrms or J given")
+    return Pt
 
 # Digital Filter
 convolution = np.convolve
