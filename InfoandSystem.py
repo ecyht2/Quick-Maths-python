@@ -441,6 +441,33 @@ def shanon_limit(BW: float, SNR: float) -> float:
     """
     return BW * log2(1 + SNR)
 
+# Fourier Analysis
+def dft_number_of_samples(T: float, ts: float) -> float:
+    """
+    Calculates the amount of samples
+    """
+    return T / ts
+def dft_sampling_period(T: float, N: float) -> float:
+    """
+    Calculates the sampling period
+    """
+    return T / N
+def dft_sample_duration(N: float, ts: float) -> float:
+    """
+    Calculates the duration of the sampled data
+    """
+    return N * ts
+def dft_max_frequency(fs: float) -> float:
+    """
+    Calculates the max frequency that can be sampled
+    """
+    return fs /2
+def dft_min_frequency(T: float) -> float:
+    """
+    Calculates the min frequency that can be sampled
+    """
+    return 1 / T
+
 # Digital Filter
 convolution = np.convolve
 
