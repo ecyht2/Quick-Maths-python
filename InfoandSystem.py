@@ -547,13 +547,13 @@ def moving_average_filter(x: list, n: int) -> list:
 def thermal_noise(T: float, B: float, k: float = kBolzman) -> float:
     return k*T*B
 
-def C_to_kelvin(T: float):
+def C_to_kelvin(T: float) -> float:
     return T + 273
-def kelvin_to_C(T: float):
+def kelvin_to_C(T: float) -> float:
     return T - 273
 
 # SNR
-def SNR(S: float, N: float, dB: bool = True, power: bool = True):
+def SNR(S: float, N: float, dB: bool = True, power: bool = True) -> float:
     returnValue = 0
     if dB:
         if power:
@@ -566,17 +566,22 @@ def SNR(S: float, N: float, dB: bool = True, power: bool = True):
     return returnValue
 
 # NF
-def NF(inputSNR, outputSNR, NoiseFigure: bool = True):
+def NF(inputSNR: float = 0, outputSNR: float = 0,
+       Nai: float = 0, Ni: float = 0,
+       NoiseFigure: bool = True) -> float:
     returnValue = 0
-    if NoiseFigure:
-        returnValue = db_power(inputSNR, outputSNR)
-    else:
+    if inputSNR > 0 and outputSNR > 0:
         returnValue = inputSNR/outputSNR
+    elif Nai > 0 and Ni > 0:
+        returnValue = 1 + Nai / Ni
+    else:
+        raise ValueError("No (inputSNR and outputSNR) or (Nai and Ni) given")
+    if NoiseFigure:
+        returnValue = db_power(1, returnValue)
 
     return returnValue
-def noise_factor_internal(internal, inputNoise):
-    return 1 + internal/inputNoise
-def NF_cascade(gain: iter, NF: iter, NoiseFigureIn: bool = True, NoiseFigureReturn: bool = True):
+def NF_cascade(gain: list or tuple, NF: list or tuple,
+               NoiseFigureIn: bool = True, NoiseFigureReturn: bool = True) -> float:
     # Checking for conditions
     if not len(gain) == len(NF):
         raise ValueError("Size of gain and NF aren't equal")
@@ -589,6 +594,10 @@ def NF_cascade(gain: iter, NF: iter, NoiseFigureIn: bool = True, NoiseFigureRetu
     for i in range(len(gain)):
         gain[i] = abs(gain[i])
         NF[i] = abs(NF[i])
+
+    # Sorting values
+    gain.sort()
+    NF.sort()
 
     # Calculating NF
     totalNF = NF[0]
@@ -603,14 +612,16 @@ def NF_cascade(gain: iter, NF: iter, NoiseFigureIn: bool = True, NoiseFigureRetu
 
     return returnNF
 
-def effective_noise_temperature_NF(T, NF, kelvin: bool = True, NoiseFigure: bool = True):
+def effective_noise_temperature_NF(T: float, NF: float,
+                                   kelvin: bool = True, NoiseFigure: bool = True) -> float:
     if not kelvin:
         T = C_to_kelvin(T)
     if NoiseFigure:
         NF = db_power_reverse(NF, 1)
 
     return T * (NF - 1)
-def effective_noise_temperature_gain(T, gain, kelvin: bool = True):
+def effective_noise_temperature_gain(T: list or tuple, gain: list or tuple,
+                                     kelvin: bool = True) -> float:
     if not kelvin:
         for i in range(len(T)):
             T[i] = C_to_kelvin(T[i])
