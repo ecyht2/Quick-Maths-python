@@ -464,7 +464,6 @@ def convolution(x: list, h: list) -> list:
             total += row[rows][columns]
         # Appending to rsult
         result.append(total)
-
     # Returning result
     return result
 
