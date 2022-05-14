@@ -3,7 +3,9 @@ from string import ascii_uppercase
 from string import digits
 from Constants import *
 from Maths import db_power, db_volts, db_power_reverse
-from Maths import exp, product, log1p, log2
+from Maths import product, log1p, log2
+from Maths import exp, factorial
+import csv
 
 # Diodes
 def bolzmann_diode_equation(IS: float, VD: float, VT: float = VT) -> float:
@@ -321,6 +323,104 @@ def AM_modulating_index_sum_voltage(Vc: float, Vm: list or tuple, *argc: tuple[f
             mt += i**2
 
     return mt**0.5/Vc
+
+# Angle Modulation
+def FM_PM_deviation_sensitivity(delta: float, em: float) -> float:
+    """
+    Calculates the deviation sensitivity of the modulator of a FM or PM signal (kf/kp)
+    """
+    return delta / em
+def FM_PM_modulating_index(delta: float, n: float) -> float:
+    """
+    Calculates the modulating index of a FM or PM signal
+    """
+    return delta / n
+def bessel_function(x: float, v: int) -> float:
+    """
+    Calculates the J value of a given order v with the β value x
+    Jv(x)
+    """
+    if v < 0:
+        raise ValueError("v must be a positive integer number")
+    # Initializing variables
+    sValues:list = list()
+    ds: float = 10
+    s: int = 0
+    while ds > 0.0001:
+        # https://onlinelibrary.wiley.com/doi/pdf/10.1002/9780470054208.app3
+        sValues.append((x / 2)**(2 * s + v)*(-1)**s / (factorial(s) * factorial(s+v)))
+        # Updating change in the current value
+        if len(sValues) > 1:
+            ds = abs(sValues[-1] - sValues[-2])
+        # Going to next s
+        s += 1
+    # Summing up the values to get J
+    J = sum(sValues)
+    return J
+
+def FM_PM_J_values(m: float, cached: bool = True) -> tuple[float]:
+    """
+    Find the J values of a given modulating index
+    """
+    J = list()
+    # Getting items from cached
+    if m <= 5 and cached:
+        m = round(m, 1)
+        with open('bessel.csv', 'r') as csvfile:
+            bessel = csv.reader(csvfile)
+            for i in bessel:
+                for j in range(len(i)):
+                    try:
+                        i[j] = float(i[j])
+                    except ValueError:
+                        pass
+                if i[0] == m:
+                    J = i[1:]
+    # Calculating values manually
+    else:
+        Jvalue: float = 10
+        # Getting the first 14 J values
+        for v in range(15):
+            Jvalue = bessel_function(m, v)
+            J.append(round(Jvalue, 4))
+        # Removing trailing values that are < 0.01
+        while abs(J[-1]) < 0.01:
+            J.pop()
+    return tuple(J)
+def FM_PM_bandwidth_bessel(fm: float, n: float = 0, m: float = 0) -> float:
+    """
+    Find the bandwith of a given FM or PM signal using Bessel's frequency spectrum
+    """
+    bandwidth: float = 0
+    if n > 0:
+        bandwidth = 2*(n * fm)
+    elif m > 0:
+        n = len(FM_PM_J_values(m)) - 1
+        bandwidth = 2*(n * fm)
+    else:
+        raise ValueError("No n or m given")
+    return bandwidth
+def FM_PM_bandwidth_carson(fm: float, delta: float) -> float:
+    """
+    Find the bandwith of a given FM or PM signal using Carson's rule
+    """
+    return 2 * (fm + delta)
+def FM_PM_power_transmitted(R: float, Vcrms: float = 0,
+                            J: tuple[float] or list[float] = tuple()) -> float:
+    """
+    Find the transmitted power of a FM or PM signal
+    """
+    Pt: float = 0
+    if Vcrms > 0:
+        Pt = Vcrms**2 / R
+    elif len(J) > 0:
+        totalJ = J[0]**2
+        for i in J[1:]:
+            totalJ += 2 * i**2
+        Pt = totalJ / R
+    else:
+        raise ValueError("No Vcrms or J given")
+    return Pt
 
 # Digital Filter
 def convolution(x: list, h: list) -> list:
