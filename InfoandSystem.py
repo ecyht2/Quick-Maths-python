@@ -361,9 +361,9 @@ def FM_PM_J_values(m: float, cached: bool = True) -> tuple[float]:
     Find the J values of a given modulating index
     """
     J = list()
-    m = round(m, 1)
     # Getting items from cached
     if m <= 5 and cached:
+        m = round(m, 1)
         with open('bessel.csv', 'r') as csvfile:
             bessel = csv.reader(csvfile)
             for i in bessel:
