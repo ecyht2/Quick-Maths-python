@@ -3,7 +3,9 @@ from string import ascii_uppercase
 from string import digits
 from Constants import *
 from Maths import db_power, db_volts, db_power_reverse
-from Maths import exp, product, log1p, log2
+from Maths import product, log1p, log2
+from Maths import exp, factorial
+import csv
 
 # Diodes
 def bolzmann_diode_equation(IS: float, VD: float, VT: float = VT) -> float:
@@ -333,12 +335,56 @@ def FM_PM_modulating_index(delta: float, n: float) -> float:
     Calculates the modulating index of a FM or PM signal
     """
     return delta / n
-def FM_PM_J_values(m: float) -> tuple[float]:
+def bessel_function(x: float, v: float) -> float:
+    """
+    Calculates the J value of a given order v with the β value x
+    Jv(x)
+    """
+    # Initializing variables
+    sValues:list = list()
+    ds: float = 10
+    s: int = 0
+    while ds > 0.0001:
+        # https://onlinelibrary.wiley.com/doi/pdf/10.1002/9780470054208.app3
+        sValues.append((x / 2)**(2 * s + v)*(-1)**s / (factorial(s) * factorial(s+v)))
+        # Updating change in the current value
+        if len(sValues) > 1:
+            ds = abs(sValues[-1] - sValues[-2])
+        # Going to next s
+        s += 1
+    # Summing up the values to get J
+    J = sum(sValues)
+    return J
+
+def FM_PM_J_values(m: float, cached: bool = True) -> tuple[float]:
     """
     Find the J values of a given modulating index
     """
-    # TBD
-    pass
+    J = list()
+    m = round(m, 1)
+    # Getting items from cached
+    if m <= 5 and cached:
+        with open('bessel.csv', 'r') as csvfile:
+            bessel = csv.reader(csvfile)
+            for i in bessel:
+                for j in range(len(i)):
+                    try:
+                        i[j] = float(i[j])
+                    except ValueError:
+                        pass
+                if i[0] == m:
+                    J = i[1:]
+    # Calculating values manually
+    else:
+        Jvalue: float = 10
+        # Getting the first 14 J values
+        for v in range(15):
+            Jvalue = bessel_function(m, v)
+            J.append(round(Jvalue, 4))
+        # Removing trailing values that are < 0.01
+        while abs(J[-1]) < 0.01:
+            J.pop()
+    return tuple(J)
 def FM_PM_bandwidth_bessel(fm: float, n: float = 0, m: float = 0) -> float:
     """
     Find the bandwith of a given FM or PM signal using Bessel's frequency spectrum
