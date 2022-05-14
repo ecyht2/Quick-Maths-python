@@ -611,10 +611,14 @@ def NF(inputSNR: float = 0, outputSNR: float = 0,
        Nai: float = 0, Ni: float = 0,
        NoiseFigure: bool = True) -> float:
     returnValue = 0
-    if NoiseFigure:
-        returnValue = db_power(inputSNR, outputSNR)
-    else:
+    if inputSNR > 0 and outputSNR > 0:
         returnValue = inputSNR/outputSNR
+    elif Nai > 0 and Ni > 0:
+        returnValue = 1 + Nai / Ni
+    else:
+        raise ValueError("No (inputSNR and outputSNR) or (Nai and Ni) given")
+    if NoiseFigure:
+        returnValue = db_power(1, returnValue)
 
     return returnValue
 def NF_cascade(gain: list or tuple, NF: list or tuple,
