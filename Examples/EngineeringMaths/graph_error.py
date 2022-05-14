@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 from Maths import myStats
-from InfoandSystem import plot_error_bar
+from graphing import plot_error_bar
 
 # Arguments
 def parse_arguments():
