@@ -632,6 +632,10 @@ def NF_cascade(gain: list or tuple, NF: list or tuple,
         gain[i] = abs(gain[i])
         NF[i] = abs(NF[i])
 
+    # Sorting values
+    gain.sort()
+    NF.sort()
+
     # Calculating NF
     totalNF = NF[0]
     for i in range(len(NF) - 1):
