@@ -422,6 +422,24 @@ def FM_PM_power_transmitted(R: float, Vcrms: float = 0,
         raise ValueError("No Vcrms or J given")
     return Pt
 
+# PM Pulse Modulation
+def mu_law(mu: int, Vin: float, Vmax: float) -> float:
+    """
+    Compands the signal using μ-law (American)
+    """
+    Vout = Vmax * log1p(1 + mu * Vin / Vmax) / log1p(1 + mu)
+    return Vout
+def shanon_hartleys_formula(BW: float, M: int) -> float:
+    """
+    Calculates the maximum data that can be sent in a given bandwidth
+    """
+    return 2 * BW * log2(M)
+def shanon_limit(BW: float, SNR: float) -> float:
+    """
+    Calculates the maximum data that can be sent in a given bandwidth
+    """
+    return BW * log2(1 + SNR)
+
 # Digital Filter
 def convolution(x: list, h: list) -> list:
     """
