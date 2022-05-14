@@ -6,7 +6,6 @@ from Maths import db_power, db_volts, db_power_reverse
 from Maths import product, log1p, log2
 from Maths import exp, factorial
 import csv
-import numpy as np
 
 # Diodes
 def bolzmann_diode_equation(IS: float, VD: float, VT: float = VT) -> float:
@@ -424,7 +423,49 @@ def FM_PM_power_transmitted(R: float, Vcrms: float = 0,
     return Pt
 
 # Digital Filter
-convolution = np.convolve
+def convolution(x: list, h: list) -> list:
+    """
+    Find the convolution of data stream x given impulse response h
+    Parameters
+    ----------
+    x
+        A list containing all the data of the data stream
+    h
+        A list containing all the impulse response
+    Returns
+    -------
+    list
+        The convoluted result
+    """
+    # Can be achieved via numpy.convolve(x, h)
+    result = []
+    row = []
+    xSize = len(x)
+    hSize = len(h)
+
+    # Finding y per sample
+    for rows in range(xSize):
+        # Appending leading 0
+        column = [0 for i in range(rows)]
+        # Finding output of x[n]
+        for i in h:
+            column.append(i * x[rows])
+        # Appending trailing 0
+        while len(column) < xSize + hSize - 1:
+            column.append(0)
+        # Appending row to column
+        row.append(column)
+
+    # Summing y per sample
+    for columns in range(xSize + hSize - 1):
+        # Summing the columns
+        total = 0
+        for rows in range(xSize):
+            total += row[rows][columns]
+        # Appending to rsult
+        result.append(total)
+    # Returning result
+    return result
 
 def filter(b: list, a: list, x: list) -> list:
     """
