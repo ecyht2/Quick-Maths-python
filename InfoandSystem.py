@@ -661,7 +661,7 @@ def effective_noise_temperature_NF(T: float, NF: float,
         NF = db_power_reverse(NF, 1)
 
     return T * (NF - 1)
-def effective_noise_temperature_gain(T: float, gain: float,
+def effective_noise_temperature_gain(T: list or tuple, gain: list or tuple,
                                      kelvin: bool = True) -> float:
     if not kelvin:
         for i in range(len(T)):
