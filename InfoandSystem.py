@@ -467,6 +467,29 @@ def dft_min_frequency(T: float) -> float:
     """
     return 1 / T
 
+# Analogue Filter
+def low_pass_filter_voltage_gain(Af: float, f: float, fc: float) -> float:
+    """
+    Calculates the voltage gain of a low pass filter
+    """
+    Av = Af / (1 + (f / fc)**2)**0.5
+    return Av
+def low_pass_filter_cutoff_frequency(R: float, C: float) -> float:
+    """
+    Calculates the cut-off frequency of a low pass filter
+    """
+    return 1 / (2 * pi * R * C)
+def low_pass_filter_capacitor(R: float, fc: float) -> float:
+    """
+    Calculates the capacitor needed of a low pass filter
+    """
+    return 1 / (2 * pi * R * fc)
+def second_order_low_pass_filter_cutoff_frequency(R: list[float], C: list[float]) -> float:
+    """
+    Calculates the cut-off frequency of a second order low pass filter
+    """
+    return 1 / (2 * pi * (product(R) * product(C))**0.5)
+
 # Digital Filter
 def convolution(x: list, h: list) -> list:
     """
