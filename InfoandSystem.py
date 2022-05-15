@@ -340,12 +340,17 @@ def FM_PM_deviation_sensitivity(delta: float, em: float) -> float:
     """
     Calculates the deviation sensitivity of the modulator of a FM or PM signal (kf/kp)
     """
-    return delta / em
-def FM_PM_modulating_index(delta: float, n: float) -> float:
+    return deviation / em
+def FM_modulating_index(delta: float, fm: float) -> float:
     """
-    Calculates the modulating index of a FM or PM signal
+    Calculates the modulating index of a FM signal
     """
-    return delta / n
+    return delta / fm
+def PM_modulating_index(kp: float, em: float) -> float:
+    """
+    Calculates the modulating index of a PM signal
+    """
+    return kp * em
 def bessel_function(x: float, v: int) -> float:
     """
     Calculates the J value of a given order v with the β value x
