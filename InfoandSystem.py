@@ -336,7 +336,7 @@ def AM_modulating_index_sum_voltage(Vc: float, Vm: list or tuple, *argc: tuple[f
     return mt**0.5/Vc
 
 # Angle Modulation
-def FM_PM_deviation_sensitivity(delta: float, em: float) -> float:
+def FM_PM_deviation_sensitivity(deviation: float, em: float) -> float:
     """
     Calculates the deviation sensitivity of the modulator of a FM or PM signal (kf/kp)
     """
