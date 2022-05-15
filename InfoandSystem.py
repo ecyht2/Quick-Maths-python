@@ -42,6 +42,17 @@ def transimpedence_op_amp(Iin: float, Rf: float) -> float:
     Calculates the output voltage of a transimpedence Op-Amp given an input current
     """
     return Iin * Rf
+def summing_op_amp(Rf: float, V: list or tuple, R: list or tuple) -> float:
+    """
+    Calculates the output voltage of a summing Op-Amp
+    """
+    if not len(V) == len(R):
+        raise ValueError("Size of V and R must be equal")
+    Vlist = list()
+    for v, r in zip(V, R):
+        Vlist.append(Rf * v / r)
+    Vo = - sum(Vlist)
+    return Vo
 
 # Transistor
 def transistor_beta(IC: float, IB: float) -> float:
