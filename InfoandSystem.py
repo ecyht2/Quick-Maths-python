@@ -178,6 +178,24 @@ def gray_to_binary(number: str) -> str:
         binaryNumber += str(int(bool(binary) ^ bool(binaryPrev)))
     return binaryNumber
 # Signed Number
+def invert_binary(number: str) -> str:
+    """
+    Inverts all the binary number
+    """
+    tmpBinary = str()
+    for i in number:
+        tmpBinary += str(int(not int(i)))
+    number = tmpBinary
+    return number
+def add_signed_binary(number: int, binary: str) -> str:
+    """
+    Adds a 1 to the beginning of binary if number is >= 0 adds a 0 other wise
+    """
+    if number >= 0:
+        binary = "0" + binary
+    else:
+        binary = "1" + binary
+    return binary
 # Signed magnitude system
 def decimal_to_singed_binary(number: int, bits: int = 0) -> str:
     """
@@ -197,10 +215,7 @@ def decimal_to_singed_binary(number: int, bits: int = 0) -> str:
             while len(binary) + 1 < bits:
                 binary = "0" + binary
     # Adding the signed binary
-    if number >= 0:
-        binary = "0" + binary
-    else:
-        binary = "1" + binary
+    binary = add_signed_binary(number, binary)
     # Returning number
     return binary
 def singed_binary_to_decimal(number: str) -> int:
