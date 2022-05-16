@@ -177,6 +177,43 @@ def gray_to_binary(number: str) -> str:
         binaryPrev = int(binaryNumber[i])
         binaryNumber += str(int(bool(binary) ^ bool(binaryPrev)))
     return binaryNumber
+# Signed Number
+# Signed magnitude system
+def decimal_to_singed_binary(number: int, bits = 0) -> str:
+    """
+    Converts a decimal number using the sign magnitude system
+    """
+    binary = ""
+    # Converting it to binary
+    if number >= 0:
+        binary = bin(number).replace("0b", "")
+    else:
+        binary = bin(number).replace("-0b", "")
+    # Added 0 so the number will be in the correct number of bits
+    if bits > 0:
+        if len(binary) + 1 > bits:
+            raise ValueError(f"{number} cannot be represent by a {bits}-bit signed binary number")
+        else:
+            while len(binary) + 1 < bits:
+                binary = "0" + binary
+    # Adding the signed binary
+    if number >= 0:
+        binary = "0" + binary
+    else:
+        binary = "1" + binary
+    # Returning number
+    return binary
+def singed_binary_to_decimal(number: str) -> int:
+    """
+    Converts a signed binary number to a decimal number
+    """
+    # Converting back to integer
+    integer = int(number[1:], 2)
+    # Adding sign
+    if number[0] == "1":
+        integer = -integer
+    # Returning number
+    return integer
 
 # Combinational Logic Circuit
 def kMap(size, equation):
