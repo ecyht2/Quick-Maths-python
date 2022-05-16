@@ -177,6 +177,113 @@ def gray_to_binary(number: str) -> str:
         binaryPrev = int(binaryNumber[i])
         binaryNumber += str(int(bool(binary) ^ bool(binaryPrev)))
     return binaryNumber
+# Signed Number
+def invert_binary(number: str) -> str:
+    """
+    Inverts all the binary number
+    """
+    tmpBinary = str()
+    for i in number:
+        tmpBinary += str(int(not int(i)))
+    number = tmpBinary
+    return number
+def add_signed_binary(number: int, binary: str) -> str:
+    """
+    Adds a 1 to the beginning of binary if number is >= 0 adds a 0 other wise
+    """
+    if number >= 0:
+        binary = "0" + binary
+    else:
+        binary = "1" + binary
+    return binary
+# Signed magnitude system
+def decimal_to_singed_binary(number: int, bits: int = 0) -> str:
+    """
+    Converts a decimal number using the sign magnitude system
+    """
+    binary = ""
+    # Converting it to binary
+    if number >= 0:
+        binary = bin(number).replace("0b", "")
+    else:
+        binary = bin(number).replace("-0b", "")
+    # Added 0 so the number will be in the correct number of bits
+    if bits > 0:
+        if len(binary) + 1 > bits:
+            raise ValueError(f"{number} cannot be represent by a {bits}-bit signed binary number")
+        else:
+            while len(binary) + 1 < bits:
+                binary = "0" + binary
+    # Adding the signed binary
+    binary = add_signed_binary(number, binary)
+    # Returning number
+    return binary
+def singed_binary_to_decimal(number: str) -> int:
+    """
+    Converts a signed binary number to a decimal number
+    """
+    # Converting back to integer
+    integer = int(number[1:], 2)
+    # Adding sign
+    if number[0] == "1":
+        integer = -integer
+    # Returning number
+    return integer
+def decimal_to_1s_complement(number: int, bits: int = 0) -> str:
+    """
+    Converts a decimal number using the 1's compliment system
+    """
+    # Converting to binary
+    binary = bin(number).replace("0b", "")
+    # Inverting bits if negative
+    if number < 0:
+        binary = invert_binary(binary[1:])
+    # Added 0 so the number will be in the correct number of bits
+    if bits > 0:
+        if len(binary) + 1 > bits:
+            raise ValueError(f"{number} cannot be represent by a {bits}-bit signed binary number")
+        else:
+            while len(binary) + 1 < bits:
+                binary = add_signed_binary(number, binary)
+    # Adding the signed binary
+    binary = add_signed_binary(number, binary)
+    # Returning number
+    return binary
+def ones_complement_to_decimal(number: str) -> int:
+    """
+    Converts a 1's compliment number to a decimal number
+    """
+    # Converting back to decimal
+    integer = 0
+    if number[0] == "0":
+        integer = int(number, 2)
+    else:
+        # Inverting bits if negative
+        # number = number[0] + invert_binary(number[1:])
+        # integer = - int(number[1:], 2)
+        integer = -2**(len(number) - 1) + int(number[1:], 2) + 1
+    return integer
+def decimal_to_2s_complement(number: int, bits: int = 0) -> str:
+    """
+    Converts a decimal number using the 2's compliment system
+    """
+    # Getting 1's complement
+    binary = decimal_to_1s_complement(number, bits)
+    # Adding one to binary
+    if number < 0:
+        binary = str(bin(int(binary, 2) + 1)).replace("0b", "")
+    # Returning binary
+    return binary
+def twos_complement_to_decimal(number: str) -> int:
+    """
+    Converts a 2's compliment number to a decimal number
+    """
+    # Getting number if 1's complement
+    integer = ones_complement_to_decimal(number)
+    # Subtracting one if negative
+    if number[0] == "1":
+        integer -= 1
+    return integer
 
 # Combinational Logic Circuit
 def kMap(size, equation):
