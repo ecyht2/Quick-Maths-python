@@ -248,6 +248,27 @@ def ones_complement_to_decimal(number: str) -> int:
         # integer = - int(number[1:], 2)
         integer = -2**(len(number) - 1) + int(number[1:], 2) + 1
     return integer
+def decimal_to_2s_complement(number: int, bits: int = 0) -> str:
+    """
+    Converts a decimal number using the 2's compliment system
+    """
+    # Getting 1's complement
+    binary = decimal_to_1s_complement(number, bits)
+    # Adding one to binary
+    if number < 0:
+        binary = str(bin(int(binary, 2) + 1)).replace("0b", "")
+    # Returning binary
+    return binary
+def twos_complement_to_decimal(number: str) -> int:
+    """
+    Converts a 2's compliment number to a decimal number
+    """
+    # Getting number if 1's complement
+    integer = ones_complement_to_decimal(number)
+    # Subtracting one if negative
+    if number[0] == "1":
+        integer -= 1
+    return integer
 
 # Combinational Logic Circuit
 def kMap(size, equation):
