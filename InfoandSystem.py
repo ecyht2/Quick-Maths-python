@@ -101,18 +101,18 @@ def BJT_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN") -> st
         raise ValueError("Invalid BJT type")
     return modes[mode]
 # MOSFET
-def MOSFET_mode_NMOS(VGS: float, VTH: float, VDS: float) -> str:
+def MOSFET_mode_NMOS(VGS: float, VTN: float, VDS: float) -> str:
     """
-    Determines the mode the NMOS MOSFET transistor is operating in given VGS, VTH and VDS
+    Determines the mode the NMOS MOSFET transistor is operating in given VGS, VTN and VDS
     """
     # Defining Modes
     modes = ["Cutoff", "Saturation", "Non-Saturation"]
 
     # Logic
-    if VGS <= VTH:
+    if VGS <= VTN:
         mode = 0
     else:
-        if VDS > VGS - VTH:
+        if VDS > VGS - VTN:
             mode = 1
         else:
             mode = 2
@@ -133,17 +133,27 @@ def MOSFET_mode_PMOS(VSG: float, VTP: float, VSD: float) -> str:
         else:
             mode = 2
     return modes[mode]
-def drain_current_mosfet(K: float, VGS: float, VThresh: float, mosfetType: str) -> float:
+def drain_current_NMOS(Kn: float, VGS: float, VTN: float, VDS: float, mode: str = "Saturation") -> float:
     """
-    Calculates the drain current (ID) of a mosfet
+    Calculates the drain current (ID) of an NMOS MOSFET
     """
-    ID = 0
-    if mosfetType.upper() == "NMOS":
-        ID = K * (VGS - VThresh)**2
-    elif mosfetType.upper() == "PMOS":
-        ID = K * (VGS + VThresh)
-    else:
-        raise ValueError("Invalid MOSFET type")
+    if mode == "Cutoff":
+        ID = 0
+    elif mode == "Saturation":
+        ID = Kn * (VGS - VTN)**2
+    elif mode == "Non-Saturation":
+        ID = Kn * (2 * (VGS - VTN) * VDS - VDS**2)
+    return ID
+def drain_current_PMOS(Kp: float, VSG: float, VTP: float, VSD: float, mode: str = "Saturation") -> float:
+    """
+    Calculates the drain current (ID) of an PMOS MOSFET
+    """
+    if mode == "Cutoff":
+        ID = 0
+    elif mode == "Saturation":
+        ID = Kp * (VSG + VTP)**2
+    elif mode == "Non-Saturation":
+        ID = Kp * (2 * (VSG + VTP) * VSD - VSD**2)
     return ID
 
 # Number System
