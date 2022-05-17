@@ -784,7 +784,7 @@ def NF(inputSNR: float = 0, outputSNR: float = 0,
         returnValue = 1 + Nai / Ni
     else:
         raise ValueError("No (inputSNR and outputSNR) or (Nai and Ni) given")
-    if NoiseFigure:
+    if NoiseFigure and (Nai <= 0 and Ni <= 0):
         returnValue = db_power(1, returnValue)
 
     return returnValue
