@@ -54,30 +54,31 @@ def summing_op_amp(Rf: float, V: list or tuple, R: list or tuple) -> float:
     return Vo
 
 # Transistor
-def transistor_beta(IC: float, IB: float) -> float:
+# BJT
+def BJT_beta(IC: float, IB: float) -> float:
     """
     Calculates the β (common-emitter current gain) of a transistor
     Should be between 50 and 200
     """
     beta = IC/IB
     return beta
-def transistor_alpha(beta: float) -> float:
+def BJT_alpha(beta: float) -> float:
     """
     Calculates the α common-base current gain
     Should be slightly less than 1
     """
     alpha = beta / (1 + beta)
     return alpha
-def transistor_alpha_IE(IC: float, IE: float) -> float:
+def BJT_alpha_IE(IC: float, IE: float) -> float:
     """
     Calculates the α common-base current gain using IC and IE
     Should be slightly less than 1
     """
     alpha = IC/IE
     return alpha
-def transistor_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN") -> str:
+def BJT_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN") -> str:
     """
-    Determines the mode the transistor is operating in given VE, VB and VC
+    Determines the mode the BJT transistor is operating in given VE, VB and VC
     """
     # Defining Modes
     modes = ["Active", "Saturation", "Cutoff", "Reverse"]
@@ -99,17 +100,60 @@ def transistor_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN"
     else:
         raise ValueError("Invalid BJT type")
     return modes[mode]
-def drain_current_mosfet(K: float, VGS: float, VThresh: float, mosfetType: str) -> float:
+# MOSFET
+def MOSFET_mode_NMOS(VGS: float, VTN: float, VDS: float) -> str:
     """
-    Calculates the drain current (ID) of a mosfet
+    Determines the mode the NMOS MOSFET transistor is operating in given VGS, VTN and VDS
     """
-    ID = 0
-    if mosfetType.upper() == "NMOS":
-        ID = K * (VGS - VThresh)**2
-    elif mosfetType.upper() == "PMOS":
-        ID = K * (VGS + VThresh)
+    # Defining Modes
+    modes = ["Cutoff", "Saturation", "Non-Saturation"]
+
+    # Logic
+    if VGS <= VTN:
+        mode = 0
     else:
-        raise ValueError("Invalid MOSFET type")
+        if VDS > VGS - VTN:
+            mode = 1
+        else:
+            mode = 2
+    return modes[mode]
+def MOSFET_mode_PMOS(VSG: float, VTP: float, VSD: float) -> str:
+    """
+    Determines the mode the PMOS MOSFET transistor is operating in given VSG, VTP and VSD
+    """
+    # Defining Modes
+    modes = ["Cutoff", "Saturation", "Non-Saturation"]
+
+    # Logic
+    if VSG <= abs(VTP):
+        mode = 0
+    else:
+        if VSD > VSG + VTP:
+            mode = 1
+        else:
+            mode = 2
+    return modes[mode]
+def drain_current_NMOS(Kn: float, VGS: float, VTN: float, VDS: float, mode: str = "Saturation") -> float:
+    """
+    Calculates the drain current (ID) of an NMOS MOSFET
+    """
+    if mode == "Cutoff":
+        ID = 0
+    elif mode == "Saturation":
+        ID = Kn * (VGS - VTN)**2
+    elif mode == "Non-Saturation":
+        ID = Kn * (2 * (VGS - VTN) * VDS - VDS**2)
+    return ID
+def drain_current_PMOS(Kp: float, VSG: float, VTP: float, VSD: float, mode: str = "Saturation") -> float:
+    """
+    Calculates the drain current (ID) of an PMOS MOSFET
+    """
+    if mode == "Cutoff":
+        ID = 0
+    elif mode == "Saturation":
+        ID = Kp * (VSG + VTP)**2
+    elif mode == "Non-Saturation":
+        ID = Kp * (2 * (VSG + VTP) * VSD - VSD**2)
     return ID
 
 # Number System
