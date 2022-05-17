@@ -78,7 +78,7 @@ def BJT_alpha_IE(IC: float, IE: float) -> float:
     return alpha
 def BJT_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN") -> str:
     """
-    Determines the mode the transistor is operating in given VE, VB and VC
+    Determines the mode the BJT transistor is operating in given VE, VB and VC
     """
     # Defining Modes
     modes = ["Active", "Saturation", "Cutoff", "Reverse"]
@@ -99,6 +99,39 @@ def BJT_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN") -> st
         mode = mode
     else:
         raise ValueError("Invalid BJT type")
+    return modes[mode]
+# MOSFET
+def MOSFET_mode_NMOS(VGS: float, VTH: float, VDS: float) -> str:
+    """
+    Determines the mode the NMOS MOSFET transistor is operating in given VGS, VTH and VDS
+    """
+    # Defining Modes
+    modes = ["Cutoff", "Saturation", "Non-Saturation"]
+
+    # Logic
+    if VGS <= VTH:
+        mode = 0
+    else:
+        if VDS > VGS - VTH:
+            mode = 1
+        else:
+            mode = 2
+    return modes[mode]
+def MOSFET_mode_PMOS(VSG: float, VTP: float, VSD: float) -> str:
+    """
+    Determines the mode the PMOS MOSFET transistor is operating in given VSG, VTP and VSD
+    """
+    # Defining Modes
+    modes = ["Cutoff", "Saturation", "Non-Saturation"]
+
+    # Logic
+    if VSG <= abs(VTP):
+        mode = 0
+    else:
+        if VSD > VSG + VTP:
+            mode = 1
+        else:
+            mode = 2
     return modes[mode]
 def drain_current_mosfet(K: float, VGS: float, VThresh: float, mosfetType: str) -> float:
     """
