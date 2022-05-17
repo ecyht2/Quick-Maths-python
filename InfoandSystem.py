@@ -54,28 +54,29 @@ def summing_op_amp(Rf: float, V: list or tuple, R: list or tuple) -> float:
     return Vo
 
 # Transistor
-def transistor_beta(IC: float, IB: float) -> float:
+# BJT
+def BJT_beta(IC: float, IB: float) -> float:
     """
     Calculates the β (common-emitter current gain) of a transistor
     Should be between 50 and 200
     """
     beta = IC/IB
     return beta
-def transistor_alpha(beta: float) -> float:
+def BJT_alpha(beta: float) -> float:
     """
     Calculates the α common-base current gain
     Should be slightly less than 1
     """
     alpha = beta / (1 + beta)
     return alpha
-def transistor_alpha_IE(IC: float, IE: float) -> float:
+def BJT_alpha_IE(IC: float, IE: float) -> float:
     """
     Calculates the α common-base current gain using IC and IE
     Should be slightly less than 1
     """
     alpha = IC/IE
     return alpha
-def transistor_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN") -> str:
+def BJT_mode(VE: float, VB: float, VC: float, transistorType: str = "NPN") -> str:
     """
     Determines the mode the transistor is operating in given VE, VB and VC
     """
