@@ -3,6 +3,35 @@ from Constants import *
 from Maths import product
 
 # Circuit Analysis
+def current(Q: float, t: float) -> float:
+    """
+    Calculates the current from charge over time
+    """
+    return Q / t
+def voltage(W: float, Q: float) -> float:
+    """
+    Calculates the voltage with energy (W) and charge (Q)
+    """
+    return W / Q
+def electrical_power(V: float = 0, I: float = 0, R: float = 0) -> float:
+    """
+    Calculates the of an electrical component
+    """
+    P = 0
+    if abs(V) == 0 and abs(I) > 0 and abs(R) > 0:
+        P = I**2 / R
+    elif abs(I) == 0 and abs(V) > 0 and abs(R) > 0:
+        P = V**2 / R
+    elif abs(R) == 0 and abs(V) > 0 and abs(I) > 0:
+        P = V * I
+    else:
+        raise ValueError("At least 2 of the parameters must be provided")
+    return P
+def resistance(rho: float, l: float, A: float) -> float:
+    """
+    Calculates the resistance of a given material
+    """
+
 def par_res(resistors, *res):
     if type(resistors) == list:
         flipped = []
