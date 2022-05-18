@@ -19,7 +19,7 @@ def electrical_power(V: float = 0, I: float = 0, R: float = 0) -> float:
     """
     P = 0
     if abs(V) == 0 and abs(I) > 0 and abs(R) > 0:
-        P = I**2 / R
+        P = I**2 * R
     elif abs(I) == 0 and abs(V) > 0 and abs(R) > 0:
         P = V**2 / R
     elif abs(R) == 0 and abs(V) > 0 and abs(I) > 0:
@@ -31,7 +31,7 @@ def resistance(rho: float, l: float, A: float) -> float:
     """
     Calculates the resistance of a given material
     """
-
+    return rho * l / A
 def par_res(resistors, *res):
     if type(resistors) == list:
         flipped = []
