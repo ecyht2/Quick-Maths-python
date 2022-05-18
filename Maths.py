@@ -253,10 +253,10 @@ class Vector(list):
         A list or tuple with the values of (x, y, z), 0 will be added for the z value if only x and y are given
     """
     mag = 0
-    def __init__(self, vector):
+    def __init__(self, vector: list or tuple):
         # Checking if parameter is valid
         # Type
-        if not (type(vector) == list or type(vector) == tuple or type(vector) == type(self)):
+        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
             raise TypeError("A vector must be an array_like (list, tuple, Vector) object")
         # Size
         if len(vector) > 3:
@@ -289,7 +289,7 @@ class Vector(list):
             The cross product
         """
         # Checking vector type
-        if not type(vector) == type(self):
+        if not issubclass(type(vector), Vector):
             raise TypeError("Only a type Vector can be crossed with a Vector")
 
         # a x b = absin(thetha)c
@@ -314,7 +314,7 @@ class Vector(list):
             The dot product
         """
         # Checking vector type
-        if not type(vector) == type(self):
+        if not issubclass(type(vector), Vector):
             raise TypeError("Only a type Vector can be dot with a Vector")
 
         # a.b = |a||b|cos(thetha)
@@ -326,7 +326,7 @@ class Vector(list):
         Returns self + vector
         """
         # Checking vector type
-        if not type(vector) == type(self):
+        if not issubclass(type(vector), Vector):
             raise TypeError("Only a type Vector can be added with a Vector")
 
         vector = Vector(vector)
@@ -341,7 +341,7 @@ class Vector(list):
         Returns self - vector
         """
         # Checking vector type
-        if not type(vector) == type(self):
+        if not issubclass(type(vector), Vector):
             raise TypeError("Only a type Vector can be subtracted with a Vector")
 
         vector = Vector(vector)
@@ -351,7 +351,7 @@ class Vector(list):
 
         return Vector(return_vector)
 
-    def __mul__(self, scalar):
+    def __mul__(self, scalar: float):
         """
         Returns self * scalar
         """
@@ -365,7 +365,7 @@ class Vector(list):
 
         return Vector(return_vector)
 
-    def __truediv__(self, scalar):
+    def __truediv__(self, scalar: float):
         """
         Returns self / scalar
         """
@@ -415,11 +415,11 @@ class Charge(Vector):
         The vector location of the charge
     """
     q = 0
-    def __init__(self, q, vector):
+    def __init__(self, q: float, vector: list or tuple):
         self.q = q
         # Checking if parameter is valid
         # Type
-        if not (type(vector) == list or type(vector) == tuple or type(vector) == type(self)):
+        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
             raise TypeError("A vector must be an array_like (list, tuple, Vector) object")
         # Size
         if len(vector) > 3:
@@ -437,7 +437,7 @@ class Charge(Vector):
             self.append(vector[i])
         self.mag = mag(vector=vector)
 
-    def E_Field(self, location: Vector):
+    def E_Field(self, location: Vector) -> Vector:
         """
         Calculates the Electric Field produced by the charge at a point
 
@@ -466,7 +466,7 @@ class Charge(Vector):
         # Returning result
         return E_field(self.q, r = r, vector=diff)
 
-    def Electric_Force(self, charge):
+    def Electric_Force(self, charge: float) -> Vector:
         """
         Calculates the Electric Force Caused by this charge to another
 
@@ -494,7 +494,32 @@ class Charge(Vector):
         return coulomb_law(self.q, charge.q, r=r, vector=diff)
 
 # Electric Field
-def coulomb_law(q1, q2, r, vector = None, k = kCoulomb):
+def coulomb_law(q1: float, q2: float, r: float,
+                vector: Vector = None, k: float = kCoulomb) -> float or Vector:
+    """
+    Calculates the magnitude force induced on a charge
+    If a vector is given, the vector of the force is returned instead
+
+    Parameters
+    ----------
+    q1
+        The charge of on of the charge
+    q2
+        The charge of on of the charge
+    r
+        The distance between the charges
+    vector (optional)
+        The vector of the charge in which the force is acted on
+    k (optional)
+        Coulomb's Constant
+
+    Returns
+    -------
+    float if no vector is given
+        The magnitude of the force
+    Vector
+        The force on the charge
+    """
     magnitude = (k * abs(q1) * abs(q2))/(r**2)
     if not vector == None:
         vector = Vector(vector)
@@ -503,10 +528,52 @@ def coulomb_law(q1, q2, r, vector = None, k = kCoulomb):
     else:
         return magnitude
 def electric_force(q: float, E: float) -> float:
+    """
+    Calculates the electric force caused by an electric field on a charge
+
+    Parameters
+    ----------
+    q
+        The charge in which the force is acted on
+    E
+        The electric field
+
+    Returns
+    -------
+    float
+        The electric force
+    """
     F = 0
     F = abs(q)*abs(E)
     return F
-def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = kCoulomb, vector = None):
+def E_field(q: float = 0, r: float = 0,
+            sigma: float = 0, epsilon0: float = epsilon0,
+            k: float = kCoulomb, vector: float = None) -> float or Vector:
+    """
+    Calculates the electric field of a charge
+
+    Parameters
+    ----------
+    q (Not needed if sigma and epsilon0 is provided)
+        The charge
+    r (Not needed if sigma and epsilon0 is provided)
+        The distance from the charge
+    sigma (Not needed if q and r is provided)
+        The sigma value
+    epsilon0 (Not needed if q and r is provided)
+        The epsilon0 value
+    k (optional)
+        Coulomb's constant
+    vector (optional)
+        The vector of the charge
+
+    Returns
+    -------
+    float (if no vector is given)
+        The magnitude of the electric field
+    Vector
+        The Electric Field of the charge
+    """
     eField = 0
     if sigma == 0:
         eField = (k * abs(q))/(r**2)
@@ -525,6 +592,24 @@ def E_field(q = 0, r = 0, sigma = 0, epsilon0 = epsilon0, k = kCoulomb, vector =
 def B_field(H: float = 0, I: float = 0, r: float = 0, mu0: float = mu0, mur: float = 1) -> float:
     """
     Calculates the magnetic field
+
+    Parameters
+    ----------
+    H (Not needed if I and r is given)
+        Magnetic field intensity
+    I (Not needed if H is given)
+        The current of the wire
+    r (Not needed if H is given)
+        The distance from the wire
+    mu0
+        Vacuum permeability
+    mur
+        Relative permeability of the material
+
+    Returns
+    -------
+    float
+        The magnetic field
     """
     B = 0
     if I == 0 and H == 0:
@@ -538,23 +623,86 @@ def B_field(H: float = 0, I: float = 0, r: float = 0, mu0: float = mu0, mur: flo
 def B_field_H(H: float, mu0: float = mu0, mur: float = 1) -> float:
     """
     Calculates the magnetic field given H
+
+    Parameters
+    ----------
+    H (Not needed if I and r is given)
+        Magnetic field intensity
+    mu0
+        Vacuum permeability
+    mur
+        Relative permeability of the material
+
+    Returns
+    -------
+    float
+        The magnetic field
     """
     B = mu0*mur*H
     return B
 def B_field_I(r: float, I: float, mu0: float = mu0, mur: float = 1) -> float:
     """
     Calculates the magnetic field given the current
+
+    Parameters
+    ----------
+    r
+        The distance from the wire
+    I
+        The current of the wire
+    mu0
+        Vacuum permeability
+    mur
+        Relative permeability of the material
+
+    Returns
+    -------
+    float
+        The magnetic field
     """
     H = I/(2*pi*r)
     B = mu0*mur*H
     return B
-def magnetic_force(q, v, B):
+def magnetic_force(q: float, v: float, B: float) -> float:
     """
     Calculate the magnetic force on charge q caused by B
+
+    Parameters
+    ----------
+    q
+        The charge
+    v
+        The speed the charge is moving at
+    B
+        The magnetic field the the charge is moving in
+
+    Returns
+    -------
+    float
+        The magnetic force
     """
     F = abs(q)*v*abs(B)
     return F
-def EMF(v = 0, B = 0, L = 0, E = 0):
+def EMF(v: float = 0, B: float = 0, L: float = 0, E: float = 0) -> float:
+    """
+    Calculates the EMF induced by a moving rod in a magnetic field
+
+    Parameters
+    ----------
+    v
+        The speed the rod is moving at
+    B
+        The magnetic field
+    L
+        The length of the rod
+    E
+        The electric field
+
+    Returns
+    -------
+    float
+        The EMF induced
+    """
     if E == 0:
         return v*B*L
     else:
@@ -564,20 +712,64 @@ def EMF(v = 0, B = 0, L = 0, E = 0):
 def energy_density_E(E: float, epsilon0: float = epsilon0) -> float:
     """
     Calculate the energy density for the electric field of the EM wave
+
+    Parameters
+    ----------
+    E
+        The electric field
+    epsilon0
+        Free space permittivity
+
+    Returns
+    -------
+    float
+        The energy density
     """
     uE = 0.5 * epsilon0*E**2
     return uE
 def energy_density_B(B: float, mu0: float = mu0) -> float:
     """
     Calculate the energy density for the magnetic field of the EM wave
+
+    Parameters
+    ----------
+    B
+        The magnetic field
+    mu0
+        Free space permeability
+
+    Returns
+    -------
+    float
+        The energy density
     """
     uB = 0.5 * B**2/mu0
     return uB
 def energy_density(B: float = 0, E: float = 0,
-                   mu0: float = mu0, epsilon0: float = epsilon0,
-                   uE: float = 0, uB: float = 0) -> float:
+                   uE: float = 0, uB: float = 0,
+                   mu0: float = mu0, epsilon0: float = epsilon0) -> float:
     """
     Calculate the energy density of the EM wave
+
+    Parameters
+    ----------
+    B (Not needed if uE or uB or E is given)
+        The magnetic field
+    E (Not needed if uE or uB or B is given)
+        The electric field
+    uE (Not needed if B or E or uB is given)
+        Electric field energy density
+    uB (Not needed if B or E or uE is given)
+        Magnetic field energy density
+    mu0 (optional)
+        Free space permeability
+    epsilon0 (optional)
+        Free space permittivity
+
+    Returns
+    -------
+    float
+        The energy density
     """
     u = 0
 
@@ -599,6 +791,18 @@ def energy_density(B: float = 0, E: float = 0,
 def EM_E_field(B: float, c: float = c) -> float:
     """
     Calculates the Electric Field of an EM wave
+
+    Parameters
+    ----------
+    B
+        Magnetic field of the EM wave
+    c (optional)
+        Speed of light
+
+    Returns
+    -------
+    float
+        The electric field
     """
     E = c*B
     return E
@@ -606,6 +810,22 @@ def EM_B_field(E: float, c: float = c,
                epsilon0: float = epsilon0, mu0: float = mu0) -> float:
     """
     Calculates the Magnetic Field of an EM wave
+
+    Parameters
+    ----------
+    E
+        Electric field of the EM wave
+    c (optional)
+        Speed of light
+    epsilon0 (optional)
+        Free space permittivity
+    mu0 (optional)
+        Free space permeability
+
+    Returns
+    -------
+    float
+        The magnetic field
     """
     B = epsilon0 * mu0 * c * E
     # B = sqrt(mu0*epsilon0) * E
@@ -613,12 +833,26 @@ def EM_B_field(E: float, c: float = c,
 def poynting_vector(E: Vector, B: Vector, mu0: float = mu0) -> float:
     """
     Calculates the poynting vector of and EM wave
+
+    Parameters
+    ----------
+    E
+        Electric field of the EM wave
+    B
+        Magnetic field of the EM wave
+    mu0 (optional)
+        Free space permeability
+
+    Returns
+    -------
+    float
+        The poynting vector of the EM wave
     """
     S = 1/mu0 * E.cross(B)
     return S
 
 # Vector Maths
-def mag(a = 0, b = 0, c = 0, vector = None) -> float:
+def mag(a: float = 0, b: float = 0, c: float = 0, vector: Vector = None) -> float:
     """
     Finds the magnitude of any vector of (a, b, c) or vector
 
@@ -630,7 +864,7 @@ def mag(a = 0, b = 0, c = 0, vector = None) -> float:
         ŷ value of the vector
     c
         ẑ value of the vector
-    vector
+    vector (Not needed if a, b and c is given)
         A vector of type tuple, list or Vector
 
     Returns
@@ -639,7 +873,7 @@ def mag(a = 0, b = 0, c = 0, vector = None) -> float:
         The magnitude of the Vector
     """
     if not vector == None:
-        if not (type(vector) == list or type(vector) == tuple or type(vector) == Vector):
+        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
             raise TypeError("Invalid vector passed in. It must be an array_like (list, tuple, Vector) object")
         if len(vector) > 3:
             raise ValueError("Invalid vector, a vector must include at most 3 values")
