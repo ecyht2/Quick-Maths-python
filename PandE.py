@@ -91,6 +91,31 @@ def current_divider_r_split(I_total, R_out, R_rest, *res):
 
     return I_out
 
+# Capacitor and Inductor
+def capacitance(Q: float, V: float) -> float:
+    """
+    Calculate a capacitance of a capacitor
+    """
+    return Q / V
+def capacitor_current(C: float, dv: float) -> float:
+    """
+    Calculates the current flow of a capacitor
+    """
+    return C * dv
+def capacitor_power(C: float, V: float) -> float:
+    """
+    Calculates the energy supplied for a given capacitor
+    """
+    return 0.5 * C * V**2
+def capacitor_charge(C: float, V: float) -> float:
+    """
+    Calculates the charge stored in a capacitor
+    """
+    return C * V
+capacitance_series = par_res
+capacitance_parallel = series_res
+capacitor_voltage_distribution = voltage_divider
+
 # Impedence
 def imp_cap(capacitor, freq):
     return 1/(2*pi*freq*capacitor*1j)
