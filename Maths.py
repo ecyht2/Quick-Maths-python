@@ -532,7 +532,7 @@ def B_field(H: float = 0, I: float = 0, r: float = 0, mu0: float = mu0, mur: flo
     elif H == 0:
         B = B_field_I(r, I, mu0, mur)
     elif I == 0:
-        B = B_field_H(r, H, mu0, mur)
+        B = B_field_H(H, mu0, mur)
 
     return B
 def B_field_H(H: float, mu0: float = mu0, mur: float = 1) -> float:
