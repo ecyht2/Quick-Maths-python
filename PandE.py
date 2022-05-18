@@ -92,21 +92,36 @@ def current_divider_r_split(I_total, R_out, R_rest, *res):
     return I_out
 
 # Capacitor and Inductor
+# Capacitor
 def capacitance(Q: float, V: float) -> float:
     """
     Calculate a capacitance of a capacitor
     """
     return Q / V
-def capacitor_current(C: float, dv: float) -> float:
+def capacitor_current(C: float = 0, dv: float = 0, dQ: float = 0) -> float:
     """
     Calculates the current flow of a capacitor
     """
-    return C * dv
-def capacitor_power(C: float, V: float) -> float:
+    I = 0
+    if C > 0 and dv > 0:
+        I = C * dv
+    elif dQ > 0:
+        I = dQ
+    else:
+        raise ValueError("No (C and dv) or dQ given")
+    return I
+def capacitor_power(V: float, C: float = 0, Q: float = 0) -> float:
     """
     Calculates the energy supplied for a given capacitor
     """
-    return 0.5 * C * V**2
+    P = 0
+    if C > 0:
+        P = 0.5 * C * V**2
+    elif Q > 0:
+        P = 0.5 * Q * V
+    else:
+        raise ValueError("No C or Q given")
+    return P
 def capacitor_charge(C: float, V: float) -> float:
     """
     Calculates the charge stored in a capacitor
