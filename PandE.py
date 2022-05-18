@@ -130,6 +130,19 @@ def capacitor_charge(C: float, V: float) -> float:
 capacitance_series = par_res
 capacitance_parallel = series_res
 capacitor_voltage_distribution = voltage_divider
+# Inductor
+def inductor_voltage(L: float, di: float) -> float:
+    """
+    Calculates the emf induced by and inductor
+    """
+    return L * di
+def inductor_power(L: float, I: float) -> float:
+    """
+    Calculates the energy supplied for a given capacitor
+    """
+    return 0.5 * L * I**2
+inductance_series = series_res
+inductance_parallel = par_res
 
 # Impedence
 def imp_cap(capacitor, freq):
