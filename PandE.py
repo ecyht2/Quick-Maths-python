@@ -130,6 +130,11 @@ def capacitor_charge(C: float, V: float) -> float:
 capacitance_series = par_res
 capacitance_parallel = series_res
 capacitor_voltage_distribution = voltage_divider
+def RC_time_constant(R: float, C: float):
+    """
+    Calculates the time constant (τ) of an RC circuit
+    """
+    return R * C
 # Inductor
 def inductor_voltage(L: float, di: float) -> float:
     """
@@ -143,6 +148,11 @@ def inductor_power(L: float, I: float) -> float:
     return 0.5 * L * I**2
 inductance_series = series_res
 inductance_parallel = par_res
+def RL_time_constant(R: float, L: float):
+    """
+    Calculates the time constant (τ) of an RC circuit
+    """
+    return L / R
 
 # Impedence
 def imp_cap(capacitor, freq):
