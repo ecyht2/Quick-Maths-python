@@ -46,11 +46,11 @@ def par_res(resistors, *res):
     return total
 
 # Ohm's Law
-def ohms_V(I, R):
+def ohms_V(I: float, R: float) -> float:
     return I*R
-def ohms_I(V, R):
+def ohms_I(V: float, R: float) -> float:
     return V/R
-def ohms_R(V, I):
+def ohms_R(V: float, I: float) -> float:
     return V/I
 
 # Divider Rules
