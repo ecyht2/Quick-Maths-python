@@ -32,6 +32,12 @@ def resistance(rho: float, l: float, A: float) -> float:
     Calculates the resistance of a given material
     """
     return rho * l / A
+def series_res(resistors: list or tuple, *res):
+    if type(resistors) == list or type(resistors) == tuple:
+        R = sum(resistors)
+    else:
+        R = resistors + sum(res)
+    return R
 def par_res(resistors, *res):
     if type(resistors) == list:
         flipped = []
@@ -79,15 +85,13 @@ def current_divider_r_split(I_total, R_out, R_rest, *res):
 
     return I_out
 
+# Impedence
 def imp_cap(capacitor, freq):
     return 1/(2*pi*freq*capacitor*1j)
-
 def imp_ind(ind, freq):
     return 2*pi*freq*ind*1j
-
 def imp_cap_rev(imp, freq):
     return 1/(2*pi*freq*capacitor*1j)
-
 def imp_ind(ind, freq):
     return 2*pi*freq*ind*1j
 
