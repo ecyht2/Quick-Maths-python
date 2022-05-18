@@ -32,13 +32,19 @@ def resistance(rho: float, l: float, A: float) -> float:
     Calculates the resistance of a given material
     """
     return rho * l / A
-def series_res(resistors: list or tuple, *res):
+def series_res(resistors: list or tuple, *res) -> float:
+    """
+    Calculates the resistance in series
+    """
     if type(resistors) == list or type(resistors) == tuple:
         R = sum(resistors)
     else:
         R = resistors + sum(res)
     return R
-def par_res(resistors, *res):
+def par_res(resistors: list or tuple, *res) -> float:
+    """
+    Calculates the resistance in parallel
+    """
     if type(resistors) == list:
         flipped = []
         for i in resistors:
