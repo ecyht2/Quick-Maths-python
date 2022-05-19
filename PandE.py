@@ -154,6 +154,30 @@ def RL_time_constant(R: float, L: float):
     """
     return L / R
 
+# Network Theorem
+# Source Transformation
+def source_transform_V_to_I(Vs: float, Rs: float) -> float:
+    """
+    Converts a voltage source in series into current source in parallel
+    """
+    return ohms_I(Vs, Rs)
+def source_transform_I_to_V(Is: float, Rs: float) -> float:
+    """
+    Converts a current source in parallel into voltage source in series
+    """
+    return ohms_V(Is, Rs)
+# Delta-Star Transformation
+def delta_to_star(Rside1: float, Rside2: float, Ropposite: float) -> float:
+    """
+    Converts a resistor in delta into star equivalent resistance
+    """
+    return Rside1 * Rside2 / (Rside1 + Rside2 + Ropposite)
+def star_to_delta(Rnode1: float, Rnode2: float, Ropposite: float) -> float:
+    """
+    Converts a resistor in star into delta  equivalent resistance
+    """
+    return Rnode1 + Rnode2 + (Rnode1 * Rnode2) / Ropposite
+
 # Impedence
 def imp_cap(capacitor, freq):
     return 1/(2*pi*freq*capacitor*1j)
