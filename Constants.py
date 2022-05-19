@@ -13,5 +13,6 @@ VT = 26e-3              # Thermal Voltage when T = 300 K (room temperature)
 kBolzman = 1.38e-23
 
 # Power and Energy
+e = -1.6e-19            # The charge of an electron
 rowAir = 1.2            # Air density at sea level
 Cpmax = 16/27           # Maximum power coefficient
