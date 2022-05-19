@@ -1,41 +1,5 @@
-from math import exp, factorial
-from math import log10, log1p, log2
-from statistics import mean,median,mode
-from statistics import quantiles, variance, stdev
-from math import sqrt, atan, sin, cos, exp
+from helper import *
 from Constants import *
-
-# Helper
-def product(iterable, start = 0):
-    """
-
-    """
-    result = 1
-    for i in range(len(iterable) + start):
-        result *= iterable[i]
-
-    return result
-
-# db Functions
-# Power
-def db_power(input, output):
-    return 10*log10(output/input)
-def db_power_reverse(db, initial):
-    db = db / 10
-    return 10**db * initial
-def db_power_find_initial(db, output):
-    db = db / 10
-    return output / 10**db
-
-# Volts/Current
-def db_volts(input, output):
-    return 20*log10(output/input)
-def db_volts_reverse(db, initial):
-    db = db / 20
-    return 10**db * initial
-def db_volts_find_initial(db, output):
-    db = db / 20
-    return output / 10**db
 
 # Data Presentation
 class myStats:
