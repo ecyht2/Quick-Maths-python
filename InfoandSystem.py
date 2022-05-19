@@ -2,9 +2,7 @@
 from string import ascii_uppercase
 from string import digits
 from Constants import *
-from Maths import db_power, db_volts, db_power_reverse
-from Maths import product, log1p, log2
-from Maths import exp, factorial
+from helper import *
 import csv
 
 # Diodes
