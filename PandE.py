@@ -167,7 +167,7 @@ def source_transform_I_to_V(Is: float, Rs: float) -> float:
     """
     return ohms_V(Is, Rs)
 # Delta-Star Transformation
-def delta_to_star(Rside1: float, Rside2: float, Ropposite: float) -> float:
+def delta_to_star(Rbranch1: float, Rbranch2: float, Ropposite: float) -> float:
     """
     Converts a resistor in delta into star equivalent resistance
     """
