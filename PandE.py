@@ -178,6 +178,18 @@ def star_to_delta(Rnode1: float, Rnode2: float, Ropposite: float) -> float:
     """
     return Rnode1 + Rnode2 + (Rnode1 * Rnode2) / Ropposite
 
+# RMS
+def RMS_sinusoidal(value: float) -> float:
+    """
+    Converts a sinusoidal sigal peak value into RMS
+    """
+    return value / 2**0.5
+def RMS_sinusoidal_reverse(value: float) -> float:
+    """
+    Converts an RMS value into sinusoidal sigal peak value
+    """
+    return value * 2**0.5
+
 # Impedence
 def imp_cap(capacitor, freq):
     return 1/(2*pi*freq*capacitor*1j)
