@@ -755,11 +755,6 @@ def moving_average_filter(x: list, n: int) -> list:
 def thermal_noise(T: float, B: float, k: float = kBolzman) -> float:
     return k*T*B
 
-def C_to_kelvin(T: float) -> float:
-    return T + 273
-def kelvin_to_C(T: float) -> float:
-    return T - 273
-
 # SNR
 def SNR(S: float, N: float, dB: bool = True, power: bool = True) -> float:
     returnValue = 0
