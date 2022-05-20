@@ -234,7 +234,7 @@ def rct_ind_rev(X: float, f: float = 0, omega: float = 0, T: float = 0):
 def imp_cap(C: float, f: float = 0, omega: float = 0, T: float = 0) -> complex:
     Z = rct_cap(C, f, omega, T) / 1j
     return Z
-def imp_ind(L: float, omega: float = 0, f: float = 0, T: float = 0) -> complex:
+def imp_ind(L: float, f: float = 0, omega: float = 0, T: float = 0) -> complex:
     Z = rct_ind(L, f, omega, T) * 1j
     return Z
 def imp_cap_rev(Z: complex, f: float = 0, omega: float = 0, T: float = 0) -> float:
