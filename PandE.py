@@ -179,11 +179,67 @@ def star_to_delta(Rnode1: float, Rnode2: float, Ropposite: float) -> float:
     return Rnode1 + Rnode2 + (Rnode1 * Rnode2) / Ropposite
 
 # Impedence
-def imp_cap(capacitance: float, freq: float) -> complex:
-    return 1 / (2 * pi * freq * capacitor * 1j)
-def imp_ind(inductance: float, freq: float) -> complex:
-    return 2 * pi * freq * inductance * 1j
-def imp_cap_reverse(impedence: complex, freq: float) -> float:
-    return 1 / (2 * pi * freq * impedence * 1j)
-def imp_ind_reverse(impedence: complex, freq: float) -> float:
-    return impedence / (2 * pi * freq * 1j)
+def rct_cap(C: float, f: float = 0, omega: float = 0, T: float = 0):
+    """
+    Calculates the reactance of a capacitor
+    """
+    X = 1 / C
+    if omega > 0:
+        X *= 1 / omega
+    elif f > 0:
+        X *= 1 / (2 * pi * f)
+    elif T > 0:
+        X *= T / (2 * pi)
+    else:
+        raise ValueError("No omega or f or T given")
+    return X
+def rct_cap_rev(X: float, f: float = 0, omega: float = 0, T: float = 0):
+    """
+    Calculates the capacitance of a capacitor from the reactance
+    """
+    C = 1 / X
+    if f > 0:
+        C *= 1 / (2 * pi * f)
+    elif omega > 0:
+        C *= 1 / (omega)
+    elif T > 0:
+        C *= T / (2 * pi)
+    return C
+def rct_ind(L: float, f: float = 0, omega: float = 0, T: float = 0):
+    """
+    Calculates the reactance of an inductor
+    """
+    X = L
+    if omega > 0:
+        X *= omega
+    elif f > 0:
+        X *= 2 * pi * f
+    elif T > 0:
+        X *= 2 * pi / T
+    else:
+        raise ValueError("No omega or f or T given")
+    return X
+def rct_ind_rev(X: float, f: float = 0, omega: float = 0, T: float = 0):
+    """
+    Calculates the inductance of an inductor from the reactance
+    """
+    L = X
+    if f > 0:
+        L /= 2 * pi * f
+    elif omega > 0:
+        L /= omega
+    elif T > 0:
+        L /= 2 * pi / T
+    return L
+def imp_cap(C: float, f: float = 0, omega: float = 0, T: float = 0) -> complex:
+    Z = rct_cap(C, f, omega, T) / 1j
+    return Z
+def imp_ind(L: float, omega: float = 0, f: float = 0, T: float = 0) -> complex:
+    Z = rct_ind(L, f, omega, T) * 1j
+    return Z
+def imp_cap_rev(Z: complex, f: float = 0, omega: float = 0, T: float = 0) -> float:
+    X = Z * 1j
+    return rct_cap_rev(X.real, f, omega, T)
+def imp_ind_rev(Z: complex, f: float = 0, omega: float = 0, T: float = 0) -> float:
+    X = Z / 1j
+    return rct_ind_rev(X.real, f, omega, T)
