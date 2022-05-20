@@ -179,11 +179,11 @@ def star_to_delta(Rnode1: float, Rnode2: float, Ropposite: float) -> float:
     return Rnode1 + Rnode2 + (Rnode1 * Rnode2) / Ropposite
 
 # Impedence
-def imp_cap(capacitor, freq):
-    return 1/(2*pi*freq*capacitor*1j)
-def imp_ind(ind, freq):
-    return 2*pi*freq*ind*1j
-def imp_cap_rev(imp, freq):
-    return 1/(2*pi*freq*capacitor*1j)
-def imp_ind(ind, freq):
-    return 2*pi*freq*ind*1j
+def imp_cap(capacitance: float, freq: float) -> complex:
+    return 1 / (2 * pi * freq * capacitor * 1j)
+def imp_ind(inductance: float, freq: float) -> complex:
+    return 2 * pi * freq * inductance * 1j
+def imp_cap_reverse(impedence: complex, freq: float) -> float:
+    return 1 / (2 * pi * freq * impedence * 1j)
+def imp_ind_reverse(impedence: complex, freq: float) -> float:
+    return impedence / (2 * pi * freq * 1j)
