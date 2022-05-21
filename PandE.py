@@ -326,6 +326,23 @@ def complex_power(phi: float,
         phi = radians(phi)
     Sstar *= cos(phi) + sin(phi) * 1j
     return Sstar
+def power_factor_correction(P: float, thetaNew: float, thetaOld: float, Vrms: float,
+                            f: float = 0, omega: float = 0, T: float = 0) -> float:
+    """
+    Calculates the capacitance needed to increase the power factor of a circuit
+    without altering the voltage or current to the original load
+    """
+    if omega > 0:
+        omega = omega
+    elif f > 0:
+        omega = 2 * pi * f
+    elif T > 0:
+        omega = 2 * pi / T
+    else:
+        raise ValueError("No f or omega or T given")
+    Qc = P * (tan(thetaNew) - tan(thetaOld))
+    C = Qc / (omega * Vrms**2)
+    return C
 
 # Transient Analysis
 def general_approach(final: float, initial: float, tau: float) -> str:
