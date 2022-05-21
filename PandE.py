@@ -312,3 +312,14 @@ def complex_power(phi: float,
         phi = radians(phi)
     Sstar *= cos(phi) + sin(phi) * 1j
     return Sstar
+
+# Transient Analysis
+def general_approach(final: float, initial: float, tau: float) -> str:
+    """
+    The transient state of and RC or RL circuit using general approach
+    """
+    if final == 0:
+        eq = f"{initial - final}e^(-{1/tau}t)"
+    else:
+        eq = f"{final} + {initial - final}e^(-{1/tau}t)"
+    return eq
