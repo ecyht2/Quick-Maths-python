@@ -6,6 +6,7 @@ from statistics import quantiles, variance, stdev
 from math import acos, atan, asin
 from math import tan, sin, cos
 from math import radians, degrees
+import cmath
 
 # Helper
 def product(iterable, start = 0):

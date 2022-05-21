@@ -356,3 +356,85 @@ def general_approach(final: float, initial: float, tau: float) -> str:
     else:
         eq = f"{final} + {initial - final}e^(-{1/tau}t)"
     return eq
+
+# Three phase system
+def line_voltage_star_polar(Vp: float, phase: float = None, radian: bool = True) -> float:
+    """
+    Calculates the line voltage of a three phase system in star configuration
+    """
+    VL = sqrt(3) * Vp
+    if not phase == None:
+        if radian:
+            phaseL = phase + pi / 6
+        else:
+            phaseL = phase + 30
+        ret = (VL, phaseL)
+    else:
+        ret = VL
+    return ret
+def line_voltage_star_polar_rev(VL: float, phase: float = None, radian: bool = True) -> float:
+    """
+    Calculates the line voltage of a three phase system in star configuration
+    """
+    Vp = VL / sqrt(3)
+    if not phase == None:
+        if radian:
+            phaseP = phase - pi / 6
+        else:
+            phaseP = phase - 30
+        ret = (Vp, phaseP)
+    else:
+        ret = Vp
+    return ret
+def line_current_delta_polar(Ip: float, phase: float = None, radian: bool = True) -> float:
+    """
+    Calculates the line voltage of a three phase system in star configuration
+    """
+    IL = sqrt(3) * Ip
+    if not phase == None:
+        if radian:
+            phaseL = phase - pi / 6
+        else:
+            phaseL = phase - 30
+        ret = (IL, phaseL)
+    else:
+        ret = IL
+    return ret
+def line_current_delta_polar_rev(IL: float, phase: float = None, radian: bool = True) -> float:
+    """
+    Calculates the line voltage of a three phase system in star configuration
+    """
+    Ip = IL / sqrt(3)
+    if not phase == None:
+        if radian:
+            phaseP = phase + pi / 6
+        else:
+            phaseP = phase + 30
+        ret = (Ip, phaseP)
+    else:
+        ret = Ip
+    return ret
+def line_voltage_star(Vp: complex) -> complex:
+    """
+    Calculates the line voltage of a three phase system in star configuration
+    """
+    VL = cmath.rect(sqrt(3), pi / 6) * Vp
+    return VL
+def line_voltage_star_rev(VL: complex) -> complex:
+    """
+    Calculates the line voltage of a three phase system in star configuration
+    """
+    Vp = VL / cmath.rect(sqrt(3), pi / 6)
+    return Vp
+def line_current_delta(Ip: complex) -> complex:
+    """
+    Calculates the line voltage of a three phase system in star configuration
+    """
+    IL = cmath.rect(sqrt(3), - pi / 6) * Ip
+    return IL
+def line_current_delta_rev(IL: complex) -> complex:
+    """
+    Calculates the line voltage of a three phase system in star configuration
+    """
+    Ip = IL / cmath.rect(sqrt(3), - pi / 6)
+    return Ip
