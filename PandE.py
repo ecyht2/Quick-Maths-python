@@ -268,16 +268,30 @@ def active_power(Vrms: float = 0, Irms: float = 0, S: float = 0,
     else:
         raise ValueError("No phi or PF given")
     return P
-def apparent_power(Vrms: float, Irms: float) -> float:
+def apparent_power(Vrms: float = 0, Irms: float = 0,
+                   P: float = 0, Q: float = 0) -> float:
     """
     Calculates the apparent power of an AC circuit
     """
-    return Vrms * Irms
-def power_factor(P: float, S: float) -> float:
+    S = 0
+    if Vrms > 0 and Irms > 0:
+        S = Vrms * Irms
+    elif P > 0 and Q > 0:
+        S = sqrt(P**2 + Q**2)
+    else:
+        raise ValueError("No (Vrms and Irms) or (P and Q) given")
+    return S
+def power_factor(P: float = 0, S: float = 0,
+                 theta: float = 0) -> float:
     """
     Calculates the power factor of an AC circuit
     """
-    return P / S
+    PF = 0
+    if P > 0 and S > 0:
+        PF = P / S
+    elif not theta == 0:
+        PF = cos(theta)
+    return PF
 def reactive_power(phi: float,
                    Vrms: float = 0, Irms: float = 0, S: float = 0,
                    radian: bool = True) -> float:
