@@ -340,7 +340,7 @@ def power_factor_correction(P: float, thetaNew: float, thetaOld: float, Vrms: fl
         omega = 2 * pi / T
     else:
         raise ValueError("No f or omega or T given")
-    Qc = P * (tan(thetaNew) - tan(thetaOld))
+    Qc = P * (tan(thetaOld) - tan(thetaNew))
     C = Qc / (omega * Vrms**2)
     return C
 
