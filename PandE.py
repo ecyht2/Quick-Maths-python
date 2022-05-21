@@ -1,6 +1,6 @@
 import math
 from Constants import *
-from Maths import product
+from Maths import Vector
 from helper import *
 
 # Circuit Analysis
@@ -466,3 +466,109 @@ def balanced_three_phase_total_apparent_power(Vph: float = 0, Iph: float = 0,
     else:
         raise ValueError("No (Vph and Iph) or (VL and IL) given")
     return S
+
+# Magnetic Fields and Electrical coils
+def H_field(I: float, r: float) -> float:
+    """
+    Calculates the H field of a straight wire
+    """
+    return I / (2 * pi * r)
+def H_field_coil(N: int, i: float, l: float) -> float:
+    """
+    Calculates the H field of a coil
+    """
+    return N * i / l
+def B_field_coil(N: int = 0, i: float = None, l: float = 0,
+                 H: float = 0,
+                 mu0: float = mu0, mur = 1) -> float:
+    """
+    Calculates the B field of a coil
+    """
+    if N > 0 and not i == None and l > 0:
+        B = B_field_coil_I(N, I, l, mu0, mur)
+    elif H > 0:
+        B = B_field_coil_H(H, mu0, mur)
+    else:
+        raise ValueError("No H or (N and i and l) given")
+    return B
+def B_field_coil_I(N: int, i: float, l: float,
+                   mu0: float = mu0, mur = 1) -> float:
+    """
+    Calculates the B field of a coil given the current and length of coil
+    """
+    return mu0 * mur * N * i / l
+def B_field_coil_H(H: float, mu0: float = mu0, mur = 1) -> float:
+    """
+    Calculates the B field of a coil given the H field
+    """
+    return mu0 * mur * H
+def magnetic_force_wire(i: float, B: float, l: float) -> float:
+    """
+    Calculates the magnetic force on a current carrying wire of length l
+    """
+    return abs(i * B * l)
+def flux(B: float, A: float) -> float:
+    """
+    Calculates the flux (φ) in a single coil
+    """
+    return B * A
+def flux_linkage(N: int, phi: float) -> float:
+    """
+    Calculates the flux linkage (λ) of a coil
+    """
+    return N * phi
+def inductance(i: float, linkage: float = 0,
+               N: int = 0, phi: float = 0) -> float:
+    """
+    Calculate the inductance of a coil
+    """
+    if linkage > 0:
+        L = linkage / i
+    elif N > 0 and phi > 0:
+        L = N * phi / i
+    return L
+def flux_linkage_two_coil(L: float, i1: float,
+                          i2: float, M: float, strengthen: bool = True) -> float:
+    """
+    Calculates the flux linkage of a two coil system
+    """
+    if strengthen:
+        linkage = L * i1 + M * i2
+    else:
+        linkage = L * i1 - M * i2
+    return linkage
+def voltage_two_coil(R: float, i1: float,
+                     L: float, di1: float,
+                     di2: float, M: float, strengthen: bool = True) -> float:
+    """
+    Calculates the flux linkage of a two coil system
+    """
+    V = R * i1
+    if strengthen:
+        V += L * di1 + M * i2
+    else:
+        V += L * i1 - M * i2
+    return V
+def voltage_two_coil_phasor(R: float, L: float, i1: float,
+                            di2: float, M: float,
+                            omega: float, f: float, T: float,
+                            strengthen: bool = True) -> float:
+    """
+    Calculates the flux linkage of a two coil system
+    """
+    if omega > 0:
+        omega = omega
+    elif f > 0:
+        omega = 2 * pi * f
+    elif T > 0:
+        omega = 2 * pi / T
+    else:
+        raise ValueError("No omega or f or T given")
+
+    Z = R + imp_ind(L, omega = omega)
+    V = i1 * Z
+    if strengthen:
+        V += M * 1j * omega * i2
+    else:
+        V -= M * 1j * omega * i2
+    return V
