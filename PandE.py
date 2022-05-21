@@ -1,6 +1,7 @@
 import math
 from Constants import *
 from Maths import product
+from helper import *
 
 # Circuit Analysis
 def current(Q: float, t: float) -> float:
@@ -243,3 +244,71 @@ def imp_cap_rev(Z: complex, f: float = 0, omega: float = 0, T: float = 0) -> flo
 def imp_ind_rev(Z: complex, f: float = 0, omega: float = 0, T: float = 0) -> float:
     X = Z / 1j
     return rct_ind_rev(X.real, f, omega, T)
+
+# AC Power
+def active_power(Vrms: float = 0, Irms: float = 0, S: float = 0,
+                 phi: float = 0, PF: float = 0,
+                 radian: bool = True) -> float:
+    """
+    Calculates the active power of an AC circuit
+    """
+    if S > 0:
+        S = S
+    elif Irms > 0 and Vrms > 0:
+        S = Irms * Vrms
+    else:
+        raise ValueError("No (Vrms and Irms) or S given")
+    P = S
+    if abs(phi) > 0:
+        if not radian:
+            phi = radians(phi)
+        P *= cos(phi)
+    elif PF > 0:
+        P *= PF
+    else:
+        raise ValueError("No phi or PF given")
+    return P
+def apparent_power(Vrms: float, Irms: float) -> float:
+    """
+    Calculates the apparent power of an AC circuit
+    """
+    return Vrms * Irms
+def power_factor(P: float, S: float) -> float:
+    """
+    Calculates the power factor of an AC circuit
+    """
+    return P / S
+def reactive_power(phi: float,
+                   Vrms: float = 0, Irms: float = 0, S: float = 0,
+                   radian: bool = True) -> float:
+    """
+    Calculates the reactive power of an AC circuit
+    """
+    if S > 0:
+        S = S
+    elif Irms > 0 and Vrms > 0:
+        S = Irms * Vrms
+    else:
+        raise ValueError("No (Vrms and Irms) or S given")
+    Q = S
+    if not radian:
+        phi = radians(phi)
+    Q *= sin(phi)
+    return Q
+def complex_power(phi: float,
+                  Vrms: float = 0, Irms: float = 0, S: float = 0,
+                  radian: bool = True) -> complex:
+    """
+    Calculates the total complex power of an AC circuit
+    """
+    if S > 0:
+        S = S
+    elif Irms > 0 and Vrms > 0:
+        S = Irms * Vrms
+    else:
+        raise ValueError("No (Vrms and Irms) or S given")
+    Sstar = S
+    if not radian:
+        phi = radians(phi)
+    Sstar *= cos(phi) + sin(phi) * 1j
+    return Sstar
