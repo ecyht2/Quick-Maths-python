@@ -441,3 +441,28 @@ def line_current_delta_rev(IL: complex) -> complex:
     Ip = IL / cmath.rect(sqrt(3), - pi / 6)
     return Ip
 # Power
+def balanced_three_phase_total_power(phi: float,
+                                     Vph: float = 0, Iph: float = 0,
+                                     VL: float = 0, IL: float = 0) -> float:
+    """
+    Calculates the total power of a balanced three phase system
+    """
+    if Vph > 0 and Iph > 0:
+        P = 3 * Vph * Iph * cos(phi)
+    elif VL > 0 and IL > 0:
+        P = sqrt(3) * Vph * Iph * cos(phi)
+    else:
+        raise ValueError("No (Vph and Iph) or (VL and IL) given")
+    return P
+def balanced_three_phase_total_apparent_power(Vph: float = 0, Iph: float = 0,
+                                              VL: float = 0, IL: float = 0) -> float:
+    """
+    Calculates the total apparent power of a balanced three phase system
+    """
+    if Vph > 0 and Iph > 0:
+        S = 3 * Vph * Iph
+    elif VL > 0 and IL > 0:
+        S = sqrt(3) * Vph * Iph
+    else:
+        raise ValueError("No (Vph and Iph) or (VL and IL) given")
+    return S
