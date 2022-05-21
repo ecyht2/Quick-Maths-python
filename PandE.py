@@ -282,10 +282,12 @@ def apparent_power(Vrms: float = 0, Irms: float = 0,
         raise ValueError("No (Vrms and Irms) or (P and Q) given")
     return S
 def power_factor(P: float = 0, S: float = 0,
-                 theta: float = 0) -> float:
+                 theta: float = 0, radian: bool = True) -> float:
     """
     Calculates the power factor of an AC circuit
     """
+    if not radian:
+        theta = radians(theta)
     PF = 0
     if P > 0 and S > 0:
         PF = P / S
