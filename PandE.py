@@ -659,3 +659,20 @@ def secondary_impedence(Z1: complex, N1: int = 0, N2: int = 0,
     """
     a = turns_ratio(N1, N2, K, a)
     return Z1 / a**2
+# Almost ideal
+def primary_current_almost_ideal(I2: float, Im: float = 0,
+                                 N1: int = 0, N2: int = 0,
+                                 a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the current induced on the primary coil of an almost ideal transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return Im + (I2 / a)
+def secondary_current_almost_ideal(I1: float, Im: float = 0,
+                                   N1: int = 0, N2: int = 0,
+                                   a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the current induced on the secondary coil of an almost ideal transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return (I1 - Im) * a
