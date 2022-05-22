@@ -2,6 +2,7 @@ import math
 from Constants import *
 from Maths import Vector
 from helper import *
+from unitConversion import *
 
 # Circuit Analysis
 def current(Q: float, t: float) -> float:
@@ -572,3 +573,236 @@ def voltage_two_coil_phasor(R: float, L: float, i1: float,
     else:
         V -= M * 1j * omega * i2
     return V
+
+# Transformers
+# Transformers parameters
+def turns_ratio(N1: int = 0, N2: int = 0,
+                K: float = 0, a: float = 0) -> float:
+    """
+    Calculates the turns ratio of a transformer
+    """
+    if N1 > 0 and N2 > 0:
+        a = N1 / N2
+    elif a > 0:
+        a = a
+    elif K > 0:
+        a = 1 / K
+    else:
+        raise ValueError("No (N1 and N2) or a or K given")
+    return a
+def voltage_transformation_ratio(N1: int = 0, N2: int = 0,
+                                 a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the voltage transformation ratio of a transformer
+    """
+    if N1 > 0 and N2 > 0:
+        K = N2 / N1
+    elif a > 0:
+        K = 1 / a
+    elif K > 0:
+        K = K
+    else:
+        raise ValueError("No (N1 and N2) or a or K given")
+    return K
+def transformer_type(N1: int = 0, N2: int = 0,
+                     a: float = 0, K: float = 0):
+    """
+    Determines the type of transformer a transformer is
+    """
+    K = voltage_transformation_ratio(N1, N2, a, K)
+    if K > 1:
+        tType = "Step-up Transformer"
+    elif K < 1:
+        tType = "Step-down Transformer"
+    else:
+        tType = "Isolation Transformer"
+    return tType
+# Ideal
+def primary_voltage(V2: float, N1: int = 0, N2: int = 0,
+                    a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the voltage induced on the primary coil of an ideal or almost ideal transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return V2 * a
+def primary_current_ideal(I2: float, N1: int = 0, N2: int = 0,
+                          a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the current induced on the primary coil of an ideal transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return I2 / a
+def primary_impedence(Z2: complex, N1: int = 0, N2: int = 0,
+                      a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the secondary impedence reflected on the primary
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return a**2 * Z2
+def secondary_voltage(V1: float, N1: int = 0, N2: int = 0,
+                      a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the voltage induced on the secondary coil of an ideal or almost ideal transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return V1 / a
+def secondary_current_ideal(I1: float, N1: int = 0, N2: int = 0,
+                            a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the current induced on the secondary coil of an ideal transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return I1 * a
+def secondary_impedence(Z1: complex, N1: int = 0, N2: int = 0,
+                        a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the primary impedence reflected on the secondary
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return Z1 / a**2
+# Almost ideal
+def primary_current_almost_ideal(I2: float, Im: float = 0,
+                                 N1: int = 0, N2: int = 0,
+                                 a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the current induced on the primary coil of an almost ideal transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return Im + (I2 / a)
+def secondary_current_almost_ideal(I1: float, Im: float = 0,
+                                   N1: int = 0, N2: int = 0,
+                                   a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the current induced on the secondary coil of an almost ideal transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return (I1 - Im) * a
+# Efficiency and voltage regulation
+def voltage_regulation(V2no: float, V2full: float) -> float:
+    """
+    Calculates the voltage regulation of a transformer
+    """
+    return (V2no - V2full) / V2full
+def transformer_efficiency_x_load(Pout: float, Pcore: float,
+                                  Pcopper: float, x: float = 1,
+                                  formatted: bool = False) -> float:
+    """
+    Calculates the effieciency of a transformer at x*100% load
+    """
+    if x > 1 or x < 0:
+        raise ValueError("x must be 0 <= x <= 1")
+    ret = (x * Pout) / (x * Pout + Pcore + x**2 * Pcopper)
+    if formatted:
+        ret = str(ret * 100) + "%"
+    return ret
+# SC and OC test
+def OC_test(P: float, I: float, V: float,
+            f: float = 0, omega: float = 0, T: float = 0,
+            reactance: bool = True) -> tuple[float, float]:
+    """
+    Calculates the Rc and (Xm or Lm) of a transformer
+
+    Parameters
+    ----------
+    P
+        Power of the transformer
+    I
+        Magnitude of current
+    V
+        Magnitude of voltage
+    f (Not needed if omega or T given)
+        Frequency of circuit
+    omega (Not needed if T or f given)
+        Angular Frequency of circuit
+    T (Not needed if omega or f given)
+        Period of circuit
+    reactance (True by default)
+        If set to True the reactance will be given otherwise the inductance will be given
+
+    Returns
+    -------
+    Tuple
+        (Rc, Xm) if reactance is True
+        (Rc, Lm) if reactance is False
+    """
+    if omega > 0:
+        omega = omega
+    elif f > 0 or T > 0:
+        omega = angular_frequency(f, T)
+    else:
+        raise ValueError("No f or omega or T given")
+    # Calculating PF and Θ
+    PF = power_factor(P, V * I)
+    theta = acos(PF)
+
+    # Calculating Losses
+    try:
+        Rc = V / (I * PF)
+    except ZeroDivisionError:
+        Rc = 0
+    try:
+        Lm = V / (omega * I * sin(theta))
+    except ZeroDivisionError:
+        Lm = 0
+
+    # Setting return
+    if reactance:
+        ret = (Rc, Lm * omega)
+    else:
+        ret = (Rc, Lm)
+    return ret
+def SC_test(P: float, I: float, V: float,
+            f: float = 0, omega: float = 0, T: float = 0,
+            reactance: bool = True) -> tuple[float, float]:
+    """
+    Calculates the R and (X or L) of a transformer
+
+    Parameters
+    ----------
+    P
+        Power of the transformer
+    I
+        Magnitude of current
+    V
+        Magnitude of voltage
+    f (Not needed if omega or T given)
+        Frequency of circuit
+    omega (Not needed if T or f given)
+        Angular Frequency of circuit
+    T (Not needed if omega or f given)
+        Period of circuit
+    reactance (True by default)
+        If set to True the reactance will be given otherwise the inductance will be given
+
+    Returns
+    -------
+    Tuple
+        (R, X) if reactance is True
+        (R, L) if reactance is False
+    """
+    if omega > 0:
+        omega = omega
+    elif f > 0 or T > 0:
+        omega = angular_frequency(f, T)
+    else:
+        raise ValueError("No f or omega or T given")
+    # Calculating PF and Θ
+    PF = power_factor(P, V * I)
+    theta = acos(PF)
+
+    # Calculating Losses
+    try:
+        R = V * PF / I
+    except ZeroDivisionError:
+        R = 0
+    try:
+        L = V * sin(theta) / (omega * I)
+    except ZeroDivisionError:
+        L = 0
+
+    # Setting return
+    if reactance:
+        ret = (R, L * omega)
+    else:
+        ret = (R, L)
+    return ret
