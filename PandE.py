@@ -2,6 +2,7 @@ import math
 from Constants import *
 from Maths import Vector
 from helper import *
+from unitConversion import *
 
 # Circuit Analysis
 def current(Q: float, t: float) -> float:
@@ -693,4 +694,115 @@ def transformer_efficiency_x_load(Pout: float, Pcore: float,
     ret = (x * Pout) / (x * Pout + Pcore + x**2 * Pcopper)
     if formatted:
         ret = str(ret * 100) + "%"
+    return ret
+# SC and OC test
+def OC_test(P: float, I: float, V: float,
+            f: float = 0, omega: float = 0, T: float = 0,
+            reactance: bool = True) -> tuple[float, float]:
+    """
+    Calculates the Rc and (Xm or Lm) of a transformer
+
+    Parameters
+    ----------
+    P
+        Power of the transformer
+    I
+        Magnitude of current
+    V
+        Magnitude of voltage
+    f (Not needed if omega or T given)
+        Frequency of circuit
+    omega (Not needed if T or f given)
+        Angular Frequency of circuit
+    T (Not needed if omega or f given)
+        Period of circuit
+    reactance (True by default)
+        If set to True the reactance will be given otherwise the inductance will be given
+
+    Returns
+    -------
+    Tuple
+        (Rc, Xm) if reactance is True
+        (Rc, Lm) if reactance is False
+    """
+    if omega > 0:
+        omega = omega
+    elif f > 0 or T > 0:
+        omega = angular_frequency(f, T)
+    else:
+        raise ValueError("No f or omega or T given")
+    # Calculating PF and Θ
+    PF = power_factor(P, V * I)
+    theta = acos(PF)
+
+    # Calculating Losses
+    try:
+        Rc = V / (I * PF)
+    except ZeroDivisionError:
+        Rc = 0
+    try:
+        Lm = V / (omega * I * sin(theta))
+    except ZeroDivisionError:
+        Lm = 0
+
+    # Setting return
+    if reactance:
+        ret = (Rc, Lm * omega)
+    else:
+        ret = (Rc, Lm)
+    return ret
+def SC_test(P: float, I: float, V: float,
+            f: float = 0, omega: float = 0, T: float = 0,
+            reactance: bool = True) -> tuple[float, float]:
+    """
+    Calculates the R and (X or L) of a transformer
+
+    Parameters
+    ----------
+    P
+        Power of the transformer
+    I
+        Magnitude of current
+    V
+        Magnitude of voltage
+    f (Not needed if omega or T given)
+        Frequency of circuit
+    omega (Not needed if T or f given)
+        Angular Frequency of circuit
+    T (Not needed if omega or f given)
+        Period of circuit
+    reactance (True by default)
+        If set to True the reactance will be given otherwise the inductance will be given
+
+    Returns
+    -------
+    Tuple
+        (R, X) if reactance is True
+        (R, L) if reactance is False
+    """
+    if omega > 0:
+        omega = omega
+    elif f > 0 or T > 0:
+        omega = angular_frequency(f, T)
+    else:
+        raise ValueError("No f or omega or T given")
+    # Calculating PF and Θ
+    PF = power_factor(P, V * I)
+    theta = acos(PF)
+
+    # Calculating Losses
+    try:
+        R = V * PF / I
+    except ZeroDivisionError:
+        R = 0
+    try:
+        L = V * sin(theta) / (omega * I)
+    except ZeroDivisionError:
+        L = 0
+
+    # Setting return
+    if reactance:
+        ret = (R, L * omega)
+    else:
+        ret = (R, L)
     return ret
