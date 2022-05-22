@@ -616,3 +616,46 @@ def transformer_type(N1: int = 0, N2: int = 0,
     else:
         tType = "Isolation Transformer"
     return tType
+# Ideal
+def primary_voltage(V2: float, N1: int = 0, N2: int = 0,
+                    a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the voltage induced on the primary coil of a transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return V2 * a
+def primary_current_ideal(I2: float, N1: int = 0, N2: int = 0,
+                          a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the current induced on the primary coil of an ideal transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return I2 / a
+def primary_impedence(Z2: complex, N1: int = 0, N2: int = 0,
+                      a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the secondary impedence reflected on the primary
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return a**2 * Z2
+def secondary_voltage(V1: float, N1: int = 0, N2: int = 0,
+                      a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the voltage induced on the secondary coil of a transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return V1 / a
+def secondary_current_ideal(I1: float, N1: int = 0, N2: int = 0,
+                            a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the current induced on the secondary coil of an ideal transformer
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return I1 * a
+def secondary_impedence(Z1: complex, N1: int = 0, N2: int = 0,
+                        a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the primary impedence reflected on the secondary
+    """
+    a = turns_ratio(N1, N2, K, a)
+    return Z1 / a**2
