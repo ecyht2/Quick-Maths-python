@@ -572,3 +572,47 @@ def voltage_two_coil_phasor(R: float, L: float, i1: float,
     else:
         V -= M * 1j * omega * i2
     return V
+
+# Transformers
+# Transformers parameters
+def turns_ratio(N1: int = 0, N2: int = 0,
+                K: float = 0, a: float = 0) -> float:
+    """
+    Calculates the turns ratio of a transformer
+    """
+    if N1 > 0 and N2 > 0:
+        a = N1 / N2
+    elif a > 0:
+        a = a
+    elif K > 0:
+        a = 1 / K
+    else:
+        raise ValueError("No (N1 and N2) or a or K given")
+    return a
+def voltage_transformation_ratio(N1: int = 0, N2: int = 0,
+                                 a: float = 0, K: float = 0) -> float:
+    """
+    Calculates the voltage transformation ratio of a transformer
+    """
+    if N1 > 0 and N2 > 0:
+        K = N2 / N1
+    elif a > 0:
+        K = 1 / a
+    elif K > 0:
+        K = K
+    else:
+        raise ValueError("No (N1 and N2) or a or K given")
+    return K
+def transformer_type(N1: int = 0, N2: int = 0,
+                     a: float = 0, K: float = 0):
+    """
+    Determines the type of transformer a transformer is
+    """
+    K = voltage_transformation_ratio(N1, N2, a, K)
+    if K > 1:
+        tType = "Step-up Transformer"
+    elif K < 1:
+        tType = "Step-down Transformer"
+    else:
+        tType = "Isolation Transformer"
+    return tType
