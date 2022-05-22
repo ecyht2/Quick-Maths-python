@@ -676,3 +676,21 @@ def secondary_current_almost_ideal(I1: float, Im: float = 0,
     """
     a = turns_ratio(N1, N2, K, a)
     return (I1 - Im) * a
+# Efficiency and voltage regulation
+def voltage_regulation(V2no: float, V2full: float) -> float:
+    """
+    Calculates the voltage regulation of a transformer
+    """
+    return (V2no - V2full) / V2full
+def transformer_efficiency_x_load(Pout: float, Pcore: float,
+                                  Pcopper: float, x: float = 1,
+                                  formatted: bool = False) -> float:
+    """
+    Calculates the effieciency of a transformer at x*100% load
+    """
+    if x > 1 or x < 0:
+        raise ValueError("x must be 0 <= x <= 1")
+    ret = (x * Pout) / (x * Pout + Pcore + x**2 * Pcopper)
+    if formatted:
+        ret = str(ret * 100) + "%"
+    return ret
