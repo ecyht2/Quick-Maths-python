@@ -290,8 +290,8 @@ def power_factor(P: float = 0, S: float = 0,
     if not radian:
         theta = radians(theta)
     PF = 0
-    if P > 0 and S > 0:
-        PF = P / S
+    if abs(P) > 0 and abs(S) > 0:
+        PF = abs(P) / abs(S)
     elif not theta == 0:
         PF = cos(theta)
     return PF
