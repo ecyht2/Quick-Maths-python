@@ -43,12 +43,22 @@ def W_to_hp(W):
     hp = W/746
     return hp
 #RPM
-def rpm_to_rad(rpm):
-    rad = rpm * 2*pi/60
-    return rad
-def rad_to_rpm(rad):
-    rpm = rad * 60/(2*pi)
+def rpm(omega: float = 0, rpm: float = 0) -> float:
+    if omega > 0:
+        rpm = omega * 60/(2*pi)
+    elif rpm > 0:
+        rpm = rpm
+    else:
+        raise ValueError("No omega or rpm given")
     return rpm
+def rad_per_sec(rpm: float = 0, omega: float = 0) -> float:
+    if omega > 0:
+        omega = omega
+    elif rpm > 0:
+        omega = rpm * 2*pi/60
+    else:
+        raise ValueError("No omega or rpm given")
+    return omega
 
 # Engineering Maths
 # db Functions
