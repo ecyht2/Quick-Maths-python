@@ -207,7 +207,7 @@ def IQR(data):
 
 # Vectors
 # Classes
-class Vector(list):
+class Vector():
     """
     Create a Vector
 
@@ -234,8 +234,7 @@ class Vector(list):
         vector = list(vector)
         while len(vector) != 3:
             vector.append(0)
-        for i in range(len(vector)):
-            self.append(vector[i])
+        self.data = vector
         self.mag = mag(vector=vector)
 
     def cross(self, vector):
@@ -253,8 +252,10 @@ class Vector(list):
             The cross product
         """
         # Checking vector type
-        if not issubclass(type(vector), Vector):
+        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
             raise TypeError("Only a type Vector can be crossed with a Vector")
+        if len(vector) > 3:
+            raise ValueError("Invalid vector")
 
         # a x b = absin(thetha)c
         x = self[1]*vector[2] - self[2]*vector[1]
@@ -278,20 +279,39 @@ class Vector(list):
             The dot product
         """
         # Checking vector type
-        if not issubclass(type(vector), Vector):
+        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
             raise TypeError("Only a type Vector can be dot with a Vector")
+        if len(vector) > 3:
+            raise ValueError("Invalid vector")
 
         # a.b = |a||b|cos(thetha)
         product = vector[0]*self[0] + vector[1]*self[1] + vector[2]*self[2]
         return product
+
+    def __getitem__(self, key: int) -> float:
+        """
+        x.__getitem__(y) <==> x[y]
+        """
+        return self.data[key]
+
+    def __repr__(self):
+       return str(self.data)
+
+    def __str__(self):
+       return str(self.data)
+
+    def __len__(self):
+       return len(self.data)
 
     def __add__(self, vector):
         """
         Returns self + vector
         """
         # Checking vector type
-        if not issubclass(type(vector), Vector):
-            raise TypeError("Only a type Vector can be added with a Vector")
+        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
+            return NotImplemented
+        if len(vector) > 3:
+            raise ValueError("Invalid vector")
 
         vector = Vector(vector)
         return_vector = []
@@ -300,13 +320,23 @@ class Vector(list):
 
         return Vector(return_vector)
 
+    def __radd__(self, vector):
+        """
+        Returns vector + self
+        """
+        return_vector = self + vector
+
+        return Vector(return_vector)
+
     def __sub__(self, vector):
         """
         Returns self - vector
         """
         # Checking vector type
-        if not issubclass(type(vector), Vector):
-            raise TypeError("Only a type Vector can be subtracted with a Vector")
+        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
+            return NotImplemented
+        if len(vector) > 3:
+            raise ValueError("Invalid vector")
 
         vector = Vector(vector)
         return_vector = []
@@ -315,13 +345,43 @@ class Vector(list):
 
         return Vector(return_vector)
 
+    def __rsub__(self, vector):
+        """
+        Returns vector - self
+        """
+        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
+            return NotImplemented
+        if len(vector) > 3:
+            raise ValueError("Invalid vector")
+
+        vector = Vector(vector)
+        return_vector = []
+        for i in range(3):
+            return_vector.append(vector[i] - self[i])
+
+        return Vector(return_vector)
+
     def __mul__(self, scalar: float):
         """
-        Returns self * scalar
+        Performs Scalar multiplication of Vector
         """
         # Checking vector type
         if not (type(scalar) == int or type(scalar) == float):
-            raise TypeError("Invalid scalar value for scalar multiplication")
+            return NotImplemented
+
+        return_vector = []
+        for i in range(3):
+            return_vector.append(self[i] * scalar)
+
+        return Vector(return_vector)
+
+    def __rmul__(self, scalar: float):
+        """
+        Performs Scalar multiplication of Vector
+        """
+        # Checking vector type
+        if not (type(scalar) == int or type(scalar) == float):
+            return NotImplemented
 
         return_vector = []
         for i in range(3):
@@ -331,11 +391,11 @@ class Vector(list):
 
     def __truediv__(self, scalar: float):
         """
-        Returns self / scalar
+        Performs Scalar division of Vector
         """
         # Checking vector type
         if not (type(scalar) == int or type(scalar) == float):
-            raise TypeError("Invalid scalar value for scalar multiplication")
+            return NotImplemented
 
         return_vector = []
         for i in range(3):
