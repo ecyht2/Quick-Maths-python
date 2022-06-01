@@ -9,12 +9,9 @@ from math import radians, degrees
 import cmath
 
 # Helper
-def product(iterable, start = 0):
-    """
-
-    """
+def product(iterable: list | tuple, start: int = 0) -> float:
+    """Returns the product of all the element of an iterable object."""
     result = 1
     for i in range(len(iterable) + start):
         result *= iterable[i]
-
     return result
