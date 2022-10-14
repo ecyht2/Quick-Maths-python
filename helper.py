@@ -1,12 +1,40 @@
 #!/usr/bin/env python3
 from math import exp, factorial, sqrt
 from math import log10, log1p, log2
-from statistics import mean,median,mode
+from statistics import mean, median, mode
 from statistics import quantiles, variance, stdev
 from math import acos, atan, asin
 from math import tan, sin, cos
 from math import radians, degrees
 import cmath
+
+# Imports
+# Math Functions
+exp = exp,
+factorial = factorial,
+sqrt = sqrt
+log10 = log10
+log1p = log1p
+log2 = log2
+# Stats Function
+# Distance
+mean = mean
+median = median
+mode = mode
+# Spread
+quantiles = quantiles
+variance = variance
+stdev = stdev
+# Trigonometric
+# Reverse Functions
+acos = acos
+atan = atan
+asin = asin
+# Normal Functions
+tan = tan
+sin = sin
+cos = cos
+
 
 class Complex():
     """Create a complex number from a real part and an imaginary part."""
@@ -16,6 +44,7 @@ class Complex():
     phi: float = 0
     cartesian: complex = 0 + 0j
     polar: tuple[float, float] = (0, 0)
+
     def __init__(self, Z: complex):
         # Settings
         if not hasattr(self, "isRadians"):
@@ -67,7 +96,8 @@ class Complex():
         return cls(Z)
 
     def __get_class(self, value, polar, radian):
-        """Returns a complex class of value with in the form specified by polar and radian."""
+        """Returns a complex class of value with in the
+        form specified by polar and radian."""
         # Cartesian
         if not polar:
             ret = Complex.from_cartesian(value, radian)
@@ -94,12 +124,12 @@ class Complex():
         -------
         """
         # Manual overide polar
-        if not polar == None:
+        if polar is not None:
             polar = polar
         else:
             polar = self.isPolar
         # Manual overide radians
-        if not radian == None:
+        if radian is not None:
             radian = radian
         else:
             radian = self.isRadians
@@ -112,7 +142,8 @@ class Complex():
     def __add__(self, value: complex):
         """Returns self + value."""
         # Chacking validity
-        if not hasattr(value, "imag") or not hasattr(value, "real") or not hasattr(value, "conjugate"):
+        if not hasattr(value, "imag") or not hasattr(value, "real")\
+                or not hasattr(value, "conjugate"):
             return NotImplemented
         sum = self.real + value.real + (self.imag + value.imag) * 1j
         # sum = self.cartesian + value
@@ -124,7 +155,8 @@ class Complex():
     def __radd__(self, value: complex):
         """Returns value + self."""
         # Chacking validity
-        if not hasattr(value, "imag") or not hasattr(value, "real") or not hasattr(value, "conjugate"):
+        if not hasattr(value, "imag") or not hasattr(value, "real")\
+                or not hasattr(value, "conjugate"):
             return NotImplemented
         sum = self.real + value.real + (self.imag + value.imag) * 1j
         # sum = value + self.cartesian
@@ -136,7 +168,8 @@ class Complex():
     def __sub__(self, value: complex):
         """Returns self - value."""
         # Chacking validity
-        if not hasattr(value, "imag") or not hasattr(value, "real") or not hasattr(value, "conjugate"):
+        if not hasattr(value, "imag") or not hasattr(value, "real")\
+                or not hasattr(value, "conjugate"):
             return NotImplemented
         diff = self.real - value.real + (self.imag - value.imag) * 1j
         # diff = self.cartesian - value
@@ -148,7 +181,8 @@ class Complex():
     def __rsub__(self, value: complex):
         """Returns value - self."""
         # Chacking validity
-        if not hasattr(value, "imag") or not hasattr(value, "real") or not hasattr(value, "conjugate"):
+        if not hasattr(value, "imag") or not hasattr(value, "real")\
+                or not hasattr(value, "conjugate"):
             return NotImplemented
         diff = value.real - self.real + (value.imag - self.imag) * 1j
         # diff = value - self.cartesian
@@ -160,7 +194,8 @@ class Complex():
     def __mul__(self, value: complex):
         """Returns self * value."""
         # Chacking validity
-        if not hasattr(value, "imag") or not hasattr(value, "real") or not hasattr(value, "conjugate"):
+        if not hasattr(value, "imag") or not hasattr(value, "real")\
+                or not hasattr(value, "conjugate"):
             return NotImplemented
         prod = self.real * value.real + self.imag * 1j * value.real + \
             self.real * value.imag * 1j + self.imag * 1j * value.imag * 1j
@@ -173,7 +208,8 @@ class Complex():
     def __rmul__(self, value: complex):
         """Returns value * self."""
         # Chacking validity
-        if not hasattr(value, "imag") or not hasattr(value, "real") or not hasattr(value, "conjugate"):
+        if not hasattr(value, "imag") or not hasattr(value, "real")\
+                or not hasattr(value, "conjugate"):
             return NotImplemented
         prod = self.real * value.real + self.imag * 1j * value.real + \
             self.real * value.imag * 1j + self.imag * 1j * value.imag * 1j
@@ -186,7 +222,8 @@ class Complex():
     def __truediv__(self, value: complex):
         """Returns self / value"."""
         # Chacking validity
-        if not hasattr(value, "imag") or not hasattr(value, "real") or not hasattr(value, "conjugate"):
+        if not hasattr(value, "imag") or not hasattr(value, "real")\
+                or not hasattr(value, "conjugate"):
             return NotImplemented
         conjugate = value.conjugate()
         denominator = (value * conjugate).real
@@ -201,7 +238,8 @@ class Complex():
     def __rtruediv__(self, value: complex):
         """Returns value / self."""
         # Chacking validity
-        if not hasattr(value, "imag") or not hasattr(value, "real") or not hasattr(value, "conjugate"):
+        if not hasattr(value, "imag") or not hasattr(value, "real")\
+                or not hasattr(value, "conjugate"):
             return NotImplemented
         conjugate = self.conjugate(False, True)
         denominator = (self * conjugate).real
@@ -233,6 +271,7 @@ class Complex():
         else:
             string = self.cartesian
         return str(string)
+
 
 # Helper
 def product(iterable: list | tuple, start: int = 0) -> float:
