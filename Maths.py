@@ -1,5 +1,8 @@
-from helper import *
-from Constants import *
+from helper import mean, mode, median, quantiles, variance, stdev
+from helper import sqrt
+from Constants import kCoulomb, epsilon0, mu0, c
+from Constants import pi
+
 
 # Data Presentation
 class myStats:
@@ -18,6 +21,7 @@ class myStats:
     max = 0
     min = 0
     data = []
+
     def __init__(self, data):
         self.data = data
 
@@ -66,8 +70,10 @@ class myStats:
         }
         return str(info)
 
+
 class myStatsGrouped(myStats):
     freqData = {}
+
     def __init__(self, data: dict):
         self.freqData = data
         self.data = []
@@ -92,6 +98,7 @@ class myStatsGrouped(myStats):
         self.max = max(data)
         self.min = min(data)
 
+
 class myStatsGroupedRange():
     freqData = {}
     # Measure of Location
@@ -102,6 +109,7 @@ class myStatsGroupedRange():
     # Measure of Spread
     variance = 0
     std = 0
+
     def __init__(self, data: dict):
         self.freqData = data
 
@@ -155,7 +163,8 @@ class myStatsGroupedRange():
         boundary = self.boundaries[self.medianClass]
         medianClass = self.freqData[self.medianClass]
         freqPrevious = self.freqData[previousClass]
-        median = boundary[0] + (self.observations/2 - freqPrevious)*(boundary[1] - boundary[0])/medianClass
+        median = boundary[0] + (self.observations/2 - freqPrevious)\
+            * (boundary[1] - boundary[0])/medianClass
         return median
 
     def __find_variance(self) -> float:
@@ -197,13 +206,17 @@ class myStatsGroupedRange():
         }
         return str(info)
 
+
 def stat_range(data):
     minimum = min(data)
     maximum = max(data)
     return maximum - minimum
+
+
 def IQR(data):
-        quartiles = quantiles(data)
-        return quartiles[2] - quartiles[0]
+    quartiles = quantiles(data)
+    return quartiles[2] - quartiles[0]
+
 
 # Vectors
 # Classes
@@ -214,21 +227,24 @@ class Vector():
     Parameters
     ----------
     vector
-        A list or tuple with the values of (x, y, z), 0 will be added for the z value if only x and y are given
+        A list or tuple with the values of (x, y, z),
+        0 will be added for the z value if only x and y are given
     """
     mag = 0
-    def __init__(self, vector: list or tuple):
+
+    def __init__(self, vector: list[int | float] | tuple[int | float]):
         # Checking if parameter is valid
         # Type
-        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
-            raise TypeError("A vector must be an array_like (list, tuple, Vector) object")
+        if not issubclass(type(vector), list | tuple | Vector):
+            raise TypeError("A vector must be an array_like"
+                            "(list, tuple, Vector) object")
         # Size
         if len(vector) > 3:
             raise ValueError("Invalid vector to be converted")
         # Indexes
         else:
             for i in vector:
-                if not (type(i) == int or type(i) == float):
+                if not issubclass(type(i), float | int):
                     raise ValueError("Invalid vector to be converted")
 
         vector = list(vector)
@@ -252,7 +268,7 @@ class Vector():
             The cross product
         """
         # Checking vector type
-        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
+        if not issubclass(type(vector), list | tuple | Vector):
             raise TypeError("Only a type Vector can be crossed with a Vector")
         if len(vector) > 3:
             raise ValueError("Invalid vector")
@@ -279,7 +295,7 @@ class Vector():
             The dot product
         """
         # Checking vector type
-        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
+        if not issubclass(type(vector), list | tuple | Vector):
             raise TypeError("Only a type Vector can be dot with a Vector")
         if len(vector) > 3:
             raise ValueError("Invalid vector")
@@ -295,20 +311,20 @@ class Vector():
         return self.data[key]
 
     def __repr__(self):
-       return str(self.data)
+        return str(self.data)
 
     def __str__(self):
-       return str(self.data)
+        return str(self.data)
 
     def __len__(self):
-       return len(self.data)
+        return len(self.data)
 
     def __add__(self, vector):
         """
         Returns self + vector
         """
         # Checking vector type
-        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
+        if not issubclass(type(vector), list | tuple | Vector):
             return NotImplemented
         if len(vector) > 3:
             raise ValueError("Invalid vector")
@@ -333,7 +349,7 @@ class Vector():
         Returns self - vector
         """
         # Checking vector type
-        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
+        if not issubclass(type(vector), list | tuple | Vector):
             return NotImplemented
         if len(vector) > 3:
             raise ValueError("Invalid vector")
@@ -349,7 +365,7 @@ class Vector():
         """
         Returns vector - self
         """
-        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
+        if not issubclass(type(vector), list | tuple | Vector):
             return NotImplemented
         if len(vector) > 3:
             raise ValueError("Invalid vector")
@@ -427,6 +443,7 @@ class Vector():
 
         return Vector(unit_vector)
 
+
 class Charge(Vector):
     """
     Create a charge object
@@ -439,12 +456,14 @@ class Charge(Vector):
         The vector location of the charge
     """
     q = 0
-    def __init__(self, q: float, vector: list or tuple):
+
+    def __init__(self, q: float, vector: list | tuple):
         self.q = q
         # Checking if parameter is valid
         # Type
-        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
-            raise TypeError("A vector must be an array_like (list, tuple, Vector) object")
+        if not issubclass(type(vector), list | tuple | Vector | Charge):
+            raise TypeError("A vector must be an array_like "
+                            "(list, tuple, Vector, Charge) object")
         # Size
         if len(vector) > 3:
             raise ValueError("Invalid vector to be converted")
@@ -457,8 +476,7 @@ class Charge(Vector):
         vector = list(vector)
         while len(vector) != 3:
             vector.append(0)
-        for i in range(len(vector)):
-            self.append(vector[i])
+        self.data = vector
         self.mag = mag(vector=vector)
 
     def E_Field(self, location: Vector) -> Vector:
@@ -488,7 +506,7 @@ class Charge(Vector):
         r = diff.mag
 
         # Returning result
-        return E_field(self.q, r = r, vector=diff)
+        return E_field(self.q, r=r, vector=diff)
 
     def Electric_Force(self, charge: float) -> Vector:
         """
@@ -516,6 +534,7 @@ class Charge(Vector):
 
         # Returning result
         return coulomb_law(self.q, charge.q, r=r, vector=diff)
+
 
 # Electric Field
 def coulomb_law(q1: float, q2: float, r: float,
@@ -545,12 +564,14 @@ def coulomb_law(q1: float, q2: float, r: float,
         The force on the charge
     """
     magnitude = (k * abs(q1) * abs(q2))/(r**2)
-    if not vector == None:
+    if vector is not None:
         vector = Vector(vector)
         force = vector.unit_vector() * magnitude
         return force
     else:
         return magnitude
+
+
 def electric_force(q: float, E: float) -> float:
     """
     Calculates the electric force caused by an electric field on a charge
@@ -570,6 +591,8 @@ def electric_force(q: float, E: float) -> float:
     F = 0
     F = abs(q)*abs(E)
     return F
+
+
 def E_field(q: float = 0, r: float = 0,
             sigma: float = 0, epsilon0: float = epsilon0,
             k: float = kCoulomb, vector: float = None) -> float or Vector:
@@ -604,7 +627,7 @@ def E_field(q: float = 0, r: float = 0,
     else:
         eField = sigma / (2*epsilon0)
 
-    if not vector == None:
+    if vector is not None:
         vector = Vector(vector)
         return_value = vector.unit_vector() * eField
     else:
@@ -612,8 +635,10 @@ def E_field(q: float = 0, r: float = 0,
 
     return return_value
 
+
 # Magnetic Field
-def B_field(H: float = 0, I: float = 0, r: float = 0, mu0: float = mu0, mur: float = 1) -> float:
+def B_field(H: float = 0, current: float = 0, r: float = 0,
+            mu0: float = mu0, mur: float = 1) -> float:
     """
     Calculates the magnetic field
 
@@ -621,7 +646,7 @@ def B_field(H: float = 0, I: float = 0, r: float = 0, mu0: float = mu0, mur: flo
     ----------
     H (Not needed if I and r is given)
         Magnetic field intensity
-    I (Not needed if H is given)
+    current (Not needed if H is given)
         The current of the wire
     r (Not needed if H is given)
         The distance from the wire
@@ -636,14 +661,16 @@ def B_field(H: float = 0, I: float = 0, r: float = 0, mu0: float = mu0, mur: flo
         The magnetic field
     """
     B = 0
-    if I == 0 and H == 0:
+    if current == 0 and H == 0:
         raise ValueError("No I or H was given")
     elif H == 0:
-        B = B_field_I(r, I, mu0, mur)
-    elif I == 0:
+        B = B_field_I(r, current, mu0, mur)
+    elif current == 0:
         B = B_field_H(H, mu0, mur)
 
     return B
+
+
 def B_field_H(H: float, mu0: float = mu0, mur: float = 1) -> float:
     """
     Calculates the magnetic field given H
@@ -664,7 +691,10 @@ def B_field_H(H: float, mu0: float = mu0, mur: float = 1) -> float:
     """
     B = mu0*mur*H
     return B
-def B_field_I(r: float, I: float, mu0: float = mu0, mur: float = 1) -> float:
+
+
+def B_field_I(r: float, current: float,
+              mu0: float = mu0, mur: float = 1) -> float:
     """
     Calculates the magnetic field given the current
 
@@ -672,7 +702,7 @@ def B_field_I(r: float, I: float, mu0: float = mu0, mur: float = 1) -> float:
     ----------
     r
         The distance from the wire
-    I
+    current
         The current of the wire
     mu0
         Vacuum permeability
@@ -684,9 +714,11 @@ def B_field_I(r: float, I: float, mu0: float = mu0, mur: float = 1) -> float:
     float
         The magnetic field
     """
-    H = I/(2*pi*r)
+    H = current / (2*pi*r)
     B = mu0*mur*H
     return B
+
+
 def magnetic_force(q: float, v: float, B: float) -> float:
     """
     Calculate the magnetic force on charge q caused by B
@@ -707,6 +739,8 @@ def magnetic_force(q: float, v: float, B: float) -> float:
     """
     F = abs(q)*v*abs(B)
     return F
+
+
 def EMF(v: float = 0, B: float = 0, L: float = 0, E: float = 0) -> float:
     """
     Calculates the EMF induced by a moving rod in a magnetic field
@@ -732,6 +766,7 @@ def EMF(v: float = 0, B: float = 0, L: float = 0, E: float = 0) -> float:
     else:
         return E*L
 
+
 # Electromagnetic Waves
 def energy_density_E(E: float, epsilon0: float = epsilon0) -> float:
     """
@@ -751,6 +786,8 @@ def energy_density_E(E: float, epsilon0: float = epsilon0) -> float:
     """
     uE = 0.5 * epsilon0*E**2
     return uE
+
+
 def energy_density_B(B: float, mu0: float = mu0) -> float:
     """
     Calculate the energy density for the magnetic field of the EM wave
@@ -769,6 +806,8 @@ def energy_density_B(B: float, mu0: float = mu0) -> float:
     """
     uB = 0.5 * B**2/mu0
     return uB
+
+
 def energy_density(B: float = 0, E: float = 0,
                    uE: float = 0, uB: float = 0,
                    mu0: float = mu0, epsilon0: float = epsilon0) -> float:
@@ -809,9 +848,12 @@ def energy_density(B: float = 0, E: float = 0,
     elif uB > 0 and uE > 0:
         u = uB + uE
     else:
-        raise ValueError("Atleast one of these: B, E, uE or uB must be passed in")
+        raise ValueError("Atleast one of these: B, E, uE or uB"
+                         "must be passed in")
 
     return u
+
+
 def EM_E_field(B: float, c: float = c) -> float:
     """
     Calculates the Electric Field of an EM wave
@@ -830,6 +872,8 @@ def EM_E_field(B: float, c: float = c) -> float:
     """
     E = c*B
     return E
+
+
 def EM_B_field(E: float, c: float = c,
                epsilon0: float = epsilon0, mu0: float = mu0) -> float:
     """
@@ -854,6 +898,8 @@ def EM_B_field(E: float, c: float = c,
     B = epsilon0 * mu0 * c * E
     # B = sqrt(mu0*epsilon0) * E
     return B
+
+
 def poynting_vector(E: Vector, B: Vector, mu0: float = mu0) -> float:
     """
     Calculates the poynting vector of and EM wave
@@ -875,8 +921,10 @@ def poynting_vector(E: Vector, B: Vector, mu0: float = mu0) -> float:
     S = 1/mu0 * E.cross(B)
     return S
 
+
 # Vector Maths
-def mag(a: float = 0, b: float = 0, c: float = 0, vector: Vector = None) -> float:
+def mag(a: float = 0, b: float = 0, c: float = 0,
+        vector: Vector = None) -> float:
     """
     Finds the magnitude of any vector of (a, b, c) or vector
 
@@ -896,11 +944,13 @@ def mag(a: float = 0, b: float = 0, c: float = 0, vector: Vector = None) -> floa
     float
         The magnitude of the Vector
     """
-    if not vector == None:
-        if not (type(vector) == list or type(vector) == tuple or issubclass(type(vector), Vector)):
-            raise TypeError("Invalid vector passed in. It must be an array_like (list, tuple, Vector) object")
+    if vector is not None:
+        if not issubclass(type(vector), list | tuple | Vector):
+            raise TypeError("Invalid vector passed in. It must be an"
+                            "array_like (list, tuple, Vector) object")
         if len(vector) > 3:
-            raise ValueError("Invalid vector, a vector must include at most 3 values")
+            raise ValueError("Invalid vector, a vector must"
+                             " include at most 3 values")
         distance = sqrt(sum(i**2 for i in vector))
     else:
         distance = sqrt(a**2 + b**2 + c**2)
