@@ -301,7 +301,9 @@ class Vector():
             raise ValueError("Invalid vector")
 
         # a.b = |a||b|cos(thetha)
-        product = vector[0]*self[0] + vector[1]*self[1] + vector[2]*self[2]
+        product = vector[0] * self[0]\
+            + vector[1] * self[1]\
+            + vector[2] * self[2]
         return product
 
     def __getitem__(self, key: int) -> float:
