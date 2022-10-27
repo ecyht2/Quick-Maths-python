@@ -142,8 +142,8 @@ class myStatsGroupedRange():
         """
         products = []
         for f, m in zip(self.midpoints.values(), self.freqData.values()):
-            products.append(f*m)
-        mean = sum(products)/self.observations
+            products.append(f * m)
+        mean = sum(products) / self.observations
         return mean
 
     def __find_median(self) -> float:
@@ -154,7 +154,7 @@ class myStatsGroupedRange():
         sumFreq = 0
         for freqClass, freq in self.freqData.items():
             sumFreq += freq
-            if sumFreq >= self.observations/2:
+            if sumFreq >= self.observations / 2:
                 self.medianClass = freqClass
                 break
             previousClass = freqClass
@@ -163,22 +163,22 @@ class myStatsGroupedRange():
         boundary = self.boundaries[self.medianClass]
         medianClass = self.freqData[self.medianClass]
         freqPrevious = self.freqData[previousClass]
-        median = boundary[0] + (self.observations/2 - freqPrevious)\
-            * (boundary[1] - boundary[0])/medianClass
+        median = boundary[0] + (self.observations / 2 - freqPrevious)\
+            * (boundary[1] - boundary[0]) / medianClass
         return median
 
     def __find_variance(self) -> float:
         """
         Finds the variance for the data of grouped data with ranges
         """
-        variance = 1/(self.observations - 1)
+        variance = 1 / (self.observations - 1)
         # Mean Square
-        meansquare = (self.mean*self.observations)**2 / self.observations
+        meansquare = (self.mean * self.observations)**2 / self.observations
 
         # Mean of x square
         products = []
         for m, f in zip(self.midpoints.values(), self.freqData.values()):
-            products.append(f*(m**2))
+            products.append(f * (m**2))
         meanxsquare = sum(products)
 
         variance *= (meanxsquare - meansquare)
@@ -274,9 +274,9 @@ class Vector():
             raise ValueError("Invalid vector")
 
         # a x b = absin(thetha)c
-        x = self[1]*vector[2] - self[2]*vector[1]
-        y = -(self[0]*vector[2] - self[2]*vector[0])
-        z = self[0]*vector[1] - self[1]*vector[0]
+        x = self[1] * vector[2] - self[2] * vector[1]
+        y = -(self[0] * vector[2] - self[2] * vector[0])
+        z = self[0] * vector[1] - self[1] * vector[0]
         return_vector = [x, y, z]
         return Vector(return_vector)
 
@@ -565,7 +565,7 @@ def coulomb_law(q1: float, q2: float, r: float,
     Vector
         The force on the charge
     """
-    magnitude = (k * abs(q1) * abs(q2))/(r**2)
+    magnitude = (k * abs(q1) * abs(q2)) / (r**2)
     if vector is not None:
         vector = Vector(vector)
         force = vector.unit_vector() * magnitude
@@ -591,7 +591,7 @@ def electric_force(q: float, E: float) -> float:
         The electric force
     """
     F = 0
-    F = abs(q)*abs(E)
+    F = abs(q) * abs(E)
     return F
 
 
@@ -625,9 +625,9 @@ def E_field(q: float = 0, r: float = 0,
     """
     eField = 0
     if sigma == 0:
-        eField = (k * abs(q))/(r**2)
+        eField = (k * abs(q)) / (r**2)
     else:
-        eField = sigma / (2*epsilon0)
+        eField = sigma / (2 * epsilon0)
 
     if vector is not None:
         vector = Vector(vector)
@@ -691,7 +691,7 @@ def B_field_H(H: float, mu0: float = mu0, mur: float = 1) -> float:
     float
         The magnetic field
     """
-    B = mu0*mur*H
+    B = mu0 * mur * H
     return B
 
 
@@ -716,8 +716,8 @@ def B_field_I(r: float, current: float,
     float
         The magnetic field
     """
-    H = current / (2*pi*r)
-    B = mu0*mur*H
+    H = current / (2 * pi * r)
+    B = mu0 * mur * H
     return B
 
 
@@ -739,7 +739,7 @@ def magnetic_force(q: float, v: float, B: float) -> float:
     float
         The magnetic force
     """
-    F = abs(q)*v*abs(B)
+    F = abs(q) * v * abs(B)
     return F
 
 
@@ -764,9 +764,9 @@ def EMF(v: float = 0, B: float = 0, L: float = 0, E: float = 0) -> float:
         The EMF induced
     """
     if E == 0:
-        return v*B*L
+        return v * B * L
     else:
-        return E*L
+        return E * L
 
 
 # Electromagnetic Waves
@@ -786,7 +786,7 @@ def energy_density_E(E: float, epsilon0: float = epsilon0) -> float:
     float
         The energy density
     """
-    uE = 0.5 * epsilon0*E**2
+    uE = 0.5 * epsilon0 * E**2
     return uE
 
 
@@ -806,7 +806,7 @@ def energy_density_B(B: float, mu0: float = mu0) -> float:
     float
         The energy density
     """
-    uB = 0.5 * B**2/mu0
+    uB = 0.5 * B**2 / mu0
     return uB
 
 
@@ -844,9 +844,9 @@ def energy_density(B: float = 0, E: float = 0,
         uB = energy_density_B(B, mu0)
 
     if uE == 0 and uB > 0:
-        u = 2*uB
+        u = 2 * uB
     elif uB == 0 and uE > 0:
-        u = 2*uE
+        u = 2 * uE
     elif uB > 0 and uE > 0:
         u = uB + uE
     else:
@@ -872,7 +872,7 @@ def EM_E_field(B: float, c: float = c) -> float:
     float
         The electric field
     """
-    E = c*B
+    E = c * B
     return E
 
 
@@ -920,7 +920,7 @@ def poynting_vector(E: Vector, B: Vector, mu0: float = mu0) -> float:
     float
         The poynting vector of the EM wave
     """
-    S = 1/mu0 * E.cross(B)
+    S = 1 / mu0 * E.cross(B)
     return S
 
 
