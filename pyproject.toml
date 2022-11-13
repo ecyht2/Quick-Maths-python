@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eeepy"
+description = "A module that provides functions and classes to calculate Electrical and
+Electronic circuits and values."
+readme = "README.md"
+license = { text = "MIT LICENSE" }
+requires-python = ">=3.10"
+dependencies = []
+dynamic = ["version"]
+authors = [
+    { name = "ecyht2", email = "ecyht2@nottingham.edu.my" }
+]
+
+[project.urls]
+"Homepage" = "https://github.com/ecyht2/quick-maths"
+
+[tool.setuptools.dynamic]
+version = { attr = "eeepy.__version__" }
