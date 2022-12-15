@@ -792,9 +792,6 @@ def second_order_low_pass_filter_cutoff_frequency(R: list[float],
 
 
 # Digital Filter
-convolution = np.convolve
-
-
 def filter(b: list, a: list, x: list) -> list:
     """
     Filters the input data x using "FIR or IIR"
@@ -838,7 +835,7 @@ def moving_average_filter(x: list, n: int) -> list:
         h.append(1 / n)
 
     # Getting the moving average result array
-    result = convolution(x, h)
+    result = np.convolve(x, h)
     while len(result) > len(x):
         result.pop()
 
