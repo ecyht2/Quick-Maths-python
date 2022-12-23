@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 import matplotlib.pyplot as plt
+import numpy as np
+
 
 # Signal Plotting
-def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None:
-    """
-    Plot a digital signal that is transmitted is as a digital signal
+def plot_digital_as_digital(signal, modulation: str,
+                            vMode: bool = True) -> None:
+    """Plot a digital signal that is transmitted is as a digital signal.
 
     Parameters
     ----------
@@ -69,7 +71,7 @@ def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None
             if i == 0:
                 append_no = [0, 0]
             else:
-                if state == True:
+                if state:
                     append_no = [1, 0]
                 else:
                     append_no = [-1, 0]
@@ -96,11 +98,12 @@ def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None
 
     # Setting up axis
     # plt.axis([0, 9, -1.1, 1.1])
-    ax.axis([0, len(xs)/2 - 1, min(ys) - 0.1, max(ys) + 0.1])
+    ax.axis([0, len(xs) / 2 - 1, min(ys) - 0.1, max(ys) + 0.1])
     # Setting up axis ticks
     # plt.yticks([1, 0, -1])
     ax.yaxis.set_ticks([max(ys), 0, min(ys)])
-    ax.xaxis.set_ticks(np.arange(0, len(xs)/2, 1), ["" for i in range(int(len(xs)/2))])
+    ax.xaxis.set_ticks(np.arange(0, len(xs) / 2, 1), [
+        "" for i in range(int(len(xs) / 2))])
     # Setting up grid
     # plt.grid(axis='x', color='b', linestyle='--')
     ax.grid(axis='x', color='b', linestyle='--', linewidth=1)
@@ -112,12 +115,12 @@ def plot_digital_as_digital(signal, modulation: str, vMode: bool = True) -> None
     ax.step(xs, ys)
     plt.show()
 
+
 def plot_error_bar(x: iter, y: iter,
                    xerr: iter, yerr: iter,
                    xLabel: str = "x", yLabel: str = "y",
                    showGraph: bool = True) -> None:
-    """
-    Plot a graph with an errorbar
+    """Plot a graph with an errorbar
     Parameters
     ----------
     x
@@ -138,7 +141,6 @@ def plot_error_bar(x: iter, y: iter,
     -------
     None
     """
-    fig = plt.figure()
     plt.xlabel(xLabel)
     plt.ylabel(yLabel)
 

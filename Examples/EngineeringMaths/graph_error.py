@@ -1,26 +1,34 @@
 #!/usr/bin/env python3
 import numpy as np
-import matplotlib.pyplot as plt
 import argparse
 from Maths import myStats
 from graphing import plot_error_bar
 
+
 # Arguments
 def parse_arguments():
     # Intializing parser
-    parser = argparse.ArgumentParser(description='Plots data located in a csv file with an option for error bar')
+    parser = argparse.ArgumentParser(description='Plots data located in a csv'
+                                     'file with an option for error bar')
 
     # Adding Positional Arguments
-    parser.add_argument('x_data', help="The csv file containing the x data", type=str)
-    parser.add_argument('y_data', help="The csv file containing the y data", type=str)
-    parser.add_argument('mode', help="How the data is being ploted", type=str, choices=["STD", "Range", "Max-Min", "None"], default="STD")
-    parser.add_argument('x_label', help="The csv file containing the x data", type=str)
-    parser.add_argument('y_label', help="The csv file containing the y data", type=str)
+    parser.add_argument('x_data', help="The csv file containing the x data",
+                        type=str)
+    parser.add_argument('y_data', help="The csv file containing the y data",
+                        type=str)
+    parser.add_argument('mode', help="How the data is being ploted", type=str,
+                        choices=["STD", "Range", "Max-Min", "None"],
+                        default="STD")
+    parser.add_argument('x_label', help="The csv file containing the x data",
+                        type=str)
+    parser.add_argument('y_label', help="The csv file containing the y data",
+                        type=str)
 
     # Adding Optional Arguments
 
     # Returning Parsed Arguments
     return parser.parse_args()
+
 
 # Retriving values from parsed args
 args = parse_arguments()
