@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
+"""This script splots data with error bars."""
 import numpy as np
 import argparse
-from Maths import myStats
+from eeepy.year_1.EngineeringMaths import myStats
 from graphing import plot_error_bar
 
 

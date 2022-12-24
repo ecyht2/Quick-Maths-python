@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""This modules provides functions to plot signals."""
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -111,7 +112,7 @@ def plot_digital_as_digital(signal, modulation: str,
     # A FuncFormatter is created automatically.
     if vMode:
         ax.yaxis.set_major_formatter(format_fn)
-        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+        ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
     ax.step(xs, ys)
     plt.show()
 
@@ -120,7 +121,7 @@ def plot_error_bar(x: iter, y: iter,
                    xerr: iter, yerr: iter,
                    xLabel: str = "x", yLabel: str = "y",
                    showGraph: bool = True) -> None:
-    """Plot a graph with an errorbar
+    """Plot a graph with an errorbar.
     Parameters
     ----------
     x
