@@ -33,6 +33,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
+if __name__ == '__main__':
 # Retriving values from parsed args
 args = parse_arguments()
 x_data = args.x_data
@@ -71,10 +72,10 @@ with open(y_data, "r", encoding="utf-8") as f:
         line = f.readline()
 
 # Getting Statistics of Raw Data
-for key, _ in xData.items():
-    xData[key]["Stats"] = myStats(xData[key]["Raw Data"])
-for key, value in yData.items():
-    yData[key]["Stats"] = myStats(yData[key]["Raw Data"])
+for key in xData:
+    key["Stats"] = myStats(key.get("Raw Data"))
+for key in yData:
+    key["Stats"] = myStats(key["Raw Data"])
 
 # Getting x, xerr, y and yerr values according to mode
 x = []
