@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """This script splots data with error bars."""
-import numpy as np
 import argparse
+
+import numpy as np
 from eeepy.year_1.EngineeringMaths import myStats
 from graphing import plot_error_bar
 
 
 # Arguments
 def parse_arguments():
+    """Funtions that parses command line arguments."""
     # Intializing parser
     parser = argparse.ArgumentParser(description='Plots data located in a csv'
                                      'file with an option for error bar')
@@ -40,8 +42,8 @@ xLabel = args.x_label
 yLabel = args.y_label
 
 # Reading x values
-xData = dict()
-with open(x_data, "r") as f:
+xData = {}
+with open(x_data, "r", encoding="utf-8") as f:
     line = f.readline()
     while not line == '':
         values = line.split(",")
@@ -54,8 +56,8 @@ with open(x_data, "r") as f:
                 pass
         line = f.readline()
 # Reading y values
-yData = dict()
-with open(y_data, "r") as f:
+yData = {}
+with open(y_data, "r", encoding="utf-8") as f:
     line = f.readline()
     while not line == '':
         values = line.split(",")
@@ -69,16 +71,16 @@ with open(y_data, "r") as f:
         line = f.readline()
 
 # Getting Statistics of Raw Data
-for key in xData:
+for key in xData.keys():
     xData[key]["Stats"] = myStats(xData[key]["Raw Data"])
-for key in yData:
+for key in yData.keys():
     yData[key]["Stats"] = myStats(yData[key]["Raw Data"])
 
 # Getting x, xerr, y and yerr values according to mode
-x = list()
-xerr = list()
-y = list()
-yerr = list()
+x = []
+xerr = []
+y = []
+yerr = []
 if mode == "STD":
     # Looping over xData
     for data in xData.values():
