@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 """This modules provides functions to plot signals."""
+from typing import Iterable
+
 import matplotlib.pyplot as plt
 import numpy as np
 
 
 # Signal Plotting
 def plot_digital_as_digital(signal, modulation: str,
-                            vMode: bool = True) -> None:
+                            v_mode: bool = True) -> None:
     """Plot a digital signal that is transmitted is as a digital signal.
 
     Parameters
@@ -23,7 +25,7 @@ def plot_digital_as_digital(signal, modulation: str,
     None
     """
     # Setting up ID for each type of modulation
-    modulationKey = {
+    modulation_key = {
         "nrz unipolar": 0,
         "nrz bipolar": 1,
         "rz unipolar": 2,
@@ -31,13 +33,13 @@ def plot_digital_as_digital(signal, modulation: str,
         "manchester": 4,
     }
     # Checking if the modulation given is valid or not
-    if modulation.lower() not in modulationKey:
+    if modulation.lower() not in modulation_key:
         raise ValueError("Invalid Modulation Type")
 
     # Saving modulation ID
-    modulationType = modulationKey[modulation.lower()]
+    modulation_type = modulation_key[modulation.lower()]
     # Creating subplots
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
 
     # Finding the axis values
     # Only extracting 0 and 1 (IDK if I should raise and error or not)
@@ -48,27 +50,57 @@ def plot_digital_as_digital(signal, modulation: str,
     # x values
     xs = np.arange(0, len(signal_array) + 1, 0.5)
     # Required for RZ bipolar
+    ys = plot_ys(modulation_type)
+
+    # Formatting function
+    def format_fn(tick_val, tick_pos):
+        # pylint: disable = unused-arguments
+        if int(tick_val) == 1:
+            return "V+"
+        if int(tick_val) == -1:
+            return "V-"
+        else:
+            return '0'
+
+    # Setting up axis
+    ax.axis([0, len(xs) / 2 - 1, min(ys) - 0.1, max(ys) + 0.1])
+    # Setting up axis ticks
+    ax.yaxis.set_ticks([max(ys), 0, min(ys)])
+    ax.xaxis.set_ticks(np.arange(0, len(xs) / 2, 1), [
+        "" for i in range(int(len(xs) / 2))])
+    # Setting up grid
+    ax.grid(axis='x', color='b', linestyle='--', linewidth=1)
+
+    # A FuncFormatter is created automatically.
+    if v_mode:
+        ax.yaxis.set_major_formatter(format_fn)
+        ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
+    ax.step(xs, ys)
+    plt.show()
+
+
+def plot_ys(modulation_type: int, signal_array: list[int]):
     state = True
     # y values
     ys = [0]
     for i in signal_array:
         # Decides what to append
-        if modulationType == 0:
+        if modulation_type == 0:
             if i == 0:
                 append_no = [0, 0]
             else:
                 append_no = [1, 1]
-        elif modulationType == 1:
+        elif modulation_type == 1:
             if i == 0:
                 append_no = [-1, -1]
             else:
                 append_no = [1, 1]
-        elif modulationType == 2:
+        elif modulation_type == 2:
             if i == 0:
                 append_no = [0, 0]
             else:
                 append_no = [1, 0]
-        elif modulationType == 3:
+        elif modulation_type == 3:
             if i == 0:
                 append_no = [0, 0]
             else:
@@ -77,7 +109,7 @@ def plot_digital_as_digital(signal, modulation: str,
                 else:
                     append_no = [-1, 0]
                 state = not state
-        elif modulationType == 4:
+        elif modulation_type == 4:
             if i == 0:
                 append_no = [0, 1]
             else:
@@ -87,65 +119,52 @@ def plot_digital_as_digital(signal, modulation: str,
         for j in append_no:
             ys.append(j)
     ys.append(0)
-
-    # Formatting function
-    def format_fn(tick_val, tick_pos):
-        if int(tick_val) == 1:
-            return "V+"
-        elif int(tick_val) == -1:
-            return "V-"
-        else:
-            return '0'
-
-    # Setting up axis
-    # plt.axis([0, 9, -1.1, 1.1])
-    ax.axis([0, len(xs) / 2 - 1, min(ys) - 0.1, max(ys) + 0.1])
-    # Setting up axis ticks
-    # plt.yticks([1, 0, -1])
-    ax.yaxis.set_ticks([max(ys), 0, min(ys)])
-    ax.xaxis.set_ticks(np.arange(0, len(xs) / 2, 1), [
-        "" for i in range(int(len(xs) / 2))])
-    # Setting up grid
-    # plt.grid(axis='x', color='b', linestyle='--')
-    ax.grid(axis='x', color='b', linestyle='--', linewidth=1)
-
-    # A FuncFormatter is created automatically.
-    if vMode:
-        ax.yaxis.set_major_formatter(format_fn)
-        ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
-    ax.step(xs, ys)
-    plt.show()
+    return ys
 
 
-def plot_error_bar(x: iter, y: iter,
-                   xerr: iter, yerr: iter,
-                   xLabel: str = "x", yLabel: str = "y",
-                   showGraph: bool = True) -> None:
+def plot_error_bar(axis: dict[str, Iterable],
+                   error: dict[str, Iterable],
+                   labels: dict[str, str] = None,
+                   show_graph: bool = True) -> None:
     """Plot a graph with an errorbar.
     Parameters
     ----------
-    x
-        An array_like containing all the x values
-    y
-        An array_like containing all the y values
-    xerr
-        An array_like containing all error of the x values
-    yerr
-        An array_like containing all error of the y values
-    xLabel
-        The label for x-axis
-    yLabel
-        The label for y-axis
+    axis: dict[str, Iterable]
+        A dictionary of the x and y values
+        {
+        "x": [1, 2, 3],
+        "y": [1, 2, 3]
+        }
+    error: dict[str, Iterable]
+        A dictionary of the x and y error values
+        {
+        "xerr": [1, 2, 3],
+        "yerr": [1, 2, 3]
+        }
+    labels: dict[str, str]
+        A dictionary of the labels of the graph
+        Defaults to if None is given:
+        {
+        "xlabel": "x",
+        "ylabel": "y"
+        }
     showGraph
         To show the graph or not
     Returns
     -------
     None
     """
-    plt.xlabel(xLabel)
-    plt.ylabel(yLabel)
+    if labels is None:
+        labels = {
+            "xlabel": "x",
+            "ylabel": "y"
+        }
 
-    plt.errorbar(x, y, xerr=xerr, yerr=yerr, capsize=2)
+    plt.xlabel(labels.get("xlabel"))
+    plt.ylabel(labels.get("ylabel"))
 
-    if showGraph:
+    plt.errorbar(axis.get("x"), axis.get("y"), xerr=error.get("xerr"),
+                 yerr=error.get("yerr"), capsize=2)
+
+    if show_graph:
         plt.show()
