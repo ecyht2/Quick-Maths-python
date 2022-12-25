@@ -6,6 +6,7 @@ from helper import product
 from unitConversion import db_power, db_power_reverse, db_volts
 from unitConversion import C_to_kelvin
 import csv
+import numpy as np
 
 
 # Diodes
@@ -791,51 +792,6 @@ def second_order_low_pass_filter_cutoff_frequency(R: list[float],
 
 
 # Digital Filter
-def convolution(x: list, h: list) -> list:
-    """
-    Find the convolution of data stream x given impulse response h
-    Parameters
-    ----------
-    x
-        A list containing all the data of the data stream
-    h
-        A list containing all the impulse response
-    Returns
-    -------
-    list
-        The convoluted result
-    """
-    # Can be achieved via numpy.convolve(x, h)
-    result = []
-    row = []
-    xSize = len(x)
-    hSize = len(h)
-
-    # Finding y per sample
-    for rows in range(xSize):
-        # Appending leading 0
-        column = [0 for i in range(rows)]
-        # Finding output of x[n]
-        for i in h:
-            column.append(i * x[rows])
-        # Appending trailing 0
-        while len(column) < xSize + hSize - 1:
-            column.append(0)
-        # Appending row to column
-        row.append(column)
-
-    # Summing y per sample
-    for columns in range(xSize + hSize - 1):
-        # Summing the columns
-        total = 0
-        for rows in range(xSize):
-            total += row[rows][columns]
-        # Appending to rsult
-        result.append(total)
-    # Returning result
-    return result
-
-
 def filter(b: list, a: list, x: list) -> list:
     """
     Filters the input data x using "FIR or IIR"
@@ -879,7 +835,7 @@ def moving_average_filter(x: list, n: int) -> list:
         h.append(1 / n)
 
     # Getting the moving average result array
-    result = convolution(x, h)
+    result = np.convolve(x, h)
     while len(result) > len(x):
         result.pop()
 
