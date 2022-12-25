@@ -4,7 +4,7 @@ import argparse
 
 import numpy as np
 from eeepy.year_1.EngineeringMaths import myStats
-from graphing import plot_error_bar
+from eeepy.year_1.InfoandSystem.graphing import plot_error_bar
 
 
 # Arguments
@@ -71,9 +71,9 @@ with open(y_data, "r", encoding="utf-8") as f:
         line = f.readline()
 
 # Getting Statistics of Raw Data
-for key in xData.keys():
+for key, _ in xData.items():
     xData[key]["Stats"] = myStats(xData[key]["Raw Data"])
-for key in yData.keys():
+for key, value in yData.items():
     yData[key]["Stats"] = myStats(yData[key]["Raw Data"])
 
 # Getting x, xerr, y and yerr values according to mode
@@ -137,4 +137,5 @@ elif mode == "None":
 print(x)
 print(y)
 # Plotting data
-plot_error_bar(x, y, xerr, yerr, xLabel, yLabel)
+plot_error_bar({"x": x, "y": y}, {"yerr": yerr, "xerr": xerr},
+               {"xlabel": xLabel, "ylabel": yLabel})
