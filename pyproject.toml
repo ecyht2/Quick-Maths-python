@@ -21,5 +21,5 @@ authors = [
 [tool.setuptools.dynamic]
 version = { attr = "eeepy.__version__" }
 
-[tool.pylint]
-invalid-name = false
+[tool.pylint.'MESSAGE CONTROL']
+disable = "invalid-name"
