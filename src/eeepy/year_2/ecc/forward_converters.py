@@ -10,7 +10,8 @@ class DutyCycle(float):
 # Non-Isolated
 class DutyCyleNonIsolated(DutyCycle):
     """Duty cycle equation for a forward converter.
-    d = V_o / V_s
+
+    Formula: d = \frac {V_{o}}{V_{s}}
     """
     def __new__(cls, V_o: float, V_s: float):
         return super().__new__(cls, V_o / V_s)
