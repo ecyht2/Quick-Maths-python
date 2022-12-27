@@ -8,7 +8,7 @@ class DutyCycle(float):
 
 
 # Non-Isolated
-class DutyCycleNonIsoForConv(DutyCycle):
+class DutyCyleNonIsolated(DutyCycle):
     """Duty cycle equation for a forward converter.
     d = V_o / V_s
     """
