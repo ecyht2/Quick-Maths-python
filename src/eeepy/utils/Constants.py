@@ -3,6 +3,8 @@ from math import pi
 
 # Constants
 h = 6.63e-34            # Planck's Constant
+pi = pi                 # π
+
 # Engineering maths
 epsilon0 = 8.85e-12     # Free space permittivity
 mu0 = 1.26e-6           # Free space permeability 4*pi*10^-7
@@ -16,4 +18,4 @@ kBolzman = 1.38e-23
 # Power and Energy
 e = -1.6e-19            # The charge of an electron
 rowAir = 1.2            # Air density at sea level
-Cpmax = 16/27           # Maximum power coefficient
+Cpmax = 16 / 27         # Maximum power coefficient
