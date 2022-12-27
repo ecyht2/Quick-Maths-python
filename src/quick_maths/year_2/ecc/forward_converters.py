@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 """Functions used to calculate forward converter related values."""
+import math
+
+
+class DutyCycle(float):
+    ...
 
 
 # Non-Isolated
-class DutyCycle(float):
+class DutyCycleNonIsoForConv(DutyCycle):
     """Duty cycle equation for a forward converter.
     d = V_o / V_s
     """
@@ -111,6 +116,22 @@ class CurrentRipple(float):
         return L
 
 
+class ForwardConverter:
+    def __init__(self, Vs: float, Vo: float, f: float, d: DutyCycle,
+                 I_o_max: float, I_o_min: float):
+        self.Vs: float = Vs
+        self.Vo: float = Vo
+        self.f: float = f
+        self.d: DutyCycle = d
+        self.I_o_max: float = I_o_max
+        self.I_o_min: float = I_o_min
+
+    @property
+    def T(self):
+        """The period of the forward converter."""
+        self._T = 1 / self.f
+
+
 # Isolated
 def v_o_isolated(d: float, V_s: float, N2: float, N1: float):
     """Caclculates the average output voltage of an isolated forward converter.
@@ -124,3 +145,27 @@ class RMSCurrentInductor(float):
 
     def __init__(self, I_1, I_2, d):
         ...
+
+
+class IsolatedForwardConverter:
+    def __init__(self):
+        ...
+
+
+def i_RMS_Q(i1: float, i2: float, d: DutyCycle):
+    """Calculates the peak to peak RMS value of the transistor.
+
+    Formula: \\sqrt {\frac{i_{1}^{2} + i_{1} * i_{2} + i_{2}^{2}}{3}
+
+    Parameters
+    ----------
+    i1: float
+        The first current.
+    i2: float
+        The second current.
+    d: DutyCycle
+        The duty cycle.
+    """
+    ans = (i1**2 + i1 * i2 + i2**2) * d
+    ans /= 3
+    return math.sqrt(ans)
