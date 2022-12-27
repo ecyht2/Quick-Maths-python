@@ -134,18 +134,71 @@ class ForwardConverter:
 
 
 # Isolated
-def v_o_isolated(d: float, V_s: float, N2: float, N1: float):
-    """Caclculates the average output voltage of an isolated forward converter.
+class DutyCycleIsolated(DutyCycle):
+    """Duty cycle equation for an isolated forward converter.
+
+    Formula: d = \frac {V_o N_{1}}{N_{2} V_s}
     """
+    def __new__(cls, V_o: float, V_s: float,
+                N1: float, N2: float):
+        return super().__new__(cls, (V_o * N1) / (V_s * N2))
 
+    def __init__(self, V_o: float, V_s: float,
+                 N1: float, N2: float):
+        """Duty cycle equation for an isolated forward converter.
 
-class RMSCurrentInductor(float):
-    # sqrt((I_1**2 + I_1 * I_2 + I_2**2) * d / 3)
-    def __new__(cls, I_1, I_2, d):
-        ...
+        :param V_o: Average voltage output of the converter.
+        :param V_s: Supply voltage of the converter.
+        :param N1: The number of primary windings in the transformer.
+        :param N2: The number of secondary windings in the transformer.
+        """
+        super().__init__()
 
-    def __init__(self, I_1, I_2, d):
-        ...
+    @classmethod
+    def from_turns_ratio(cls, V_o: float, V_s: float,
+                         turns_ratio: float):
+        """Calculates the duty cycle using the turns ratio instead of number of
+        windings.
+
+        :param V_o: Average voltage output of the converter.
+        :param V_s: Supply voltage of the converter.
+        :param turns_ratio: The turns ratio of the transformer.
+        """
+        return cls(V_o, V_s, turns_ratio, 1)
+
+    @staticmethod
+    def V_o(d: DutyCycle, V_s: float, N1: float, N2: float) -> float:
+        """Calculates the V_o (average voltage) of the forward converter.
+
+        :param d: Duty Cycle of the forward converter.
+        :param V_s: Supply voltage of the forward converter.
+        :param N1: The number of primary windings in the transformer.
+        :param N2: The number of secondary windings in the transformer.
+        :return: Average voltage output of the converter.
+        """
+        return N2 / N1 * d * V_s
+
+    @staticmethod
+    def V_s(d: DutyCycle, V_o: float, N1: float, N2: float) -> float:
+        """Calculates the V_s (supply voltage) of the forward converter.
+
+        :param d: Duty Cycle of the forward converter.
+        :param V_o: Average voltage of the forward converter.
+        :param N1: The number of primary windings in the transformer.
+        :param N2: The number of secondary windings in the transformer.
+        :return: The supply voltage of the converter.
+        """
+        return N1 / N2 * V_o / d
+
+    @staticmethod
+    def turns_ratio(d: DutyCycle, V_o: float, V_s: float) -> float:
+        """Calculates the turns ratio of the forward converter.
+
+        :param d: Duty Cycle of the forward converter.
+        :param V_s: Supply voltage of the forward converter.
+        :param V_o: Average voltage output of the converter.
+        """
+        return d * V_s / V_o
 
 
 class IsolatedForwardConverter:
