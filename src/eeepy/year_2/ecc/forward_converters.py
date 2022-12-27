@@ -137,7 +137,7 @@ class ForwardConverter:
 class DutyCycleIsolated(DutyCycle):
     """Duty cycle equation for an isolated forward converter.
 
-    Formula: d = \frac {V_o N_{1}}{N_{2} V_s}
+    Formula: d = \frac {N_{1}}{N_{2}} \frac {V_{o}}{V_{s}}
     """
     def __new__(cls, V_o: float, V_s: float,
                 N1: float, N2: float):
