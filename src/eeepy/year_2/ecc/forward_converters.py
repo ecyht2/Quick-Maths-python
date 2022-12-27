@@ -19,28 +19,28 @@ class DutyCyleNonIsolated(DutyCycle):
     def __init__(self, V_o: float, V_s: float):
         """Duty cycle equation for a forward converter.
 
-        :param V_o: Average voltage output of the converter
-        :param V_s: Supply voltage of the converter
+        :param V_o: Average voltage output of the converter.
+        :param V_s: Supply voltage of the converter.
         """
         super().__init__()
 
     @staticmethod
-    def V_o(d: float, V_s: float) -> float:
+    def V_o(d: DutyCycle, V_s: float) -> float:
         """Calculates the V_o (average voltage) of a forward converter.
 
-        :param d: Duty Cycle of the forward converter
-        :param V_s: Supply voltage of the forward converter
-        :return:
+        :param d: Duty Cycle of the forward converter.
+        :param V_s: Supply voltage of the forward converter.
+        :return: The average voltage output of the converter.
         """
         return d * V_s
 
     @staticmethod
-    def V_s(d: float, V_o: float) -> float:
+    def V_s(d: DutyCycle, V_o: float) -> float:
         """Calculates the V_s (supply voltage) of a forward converter.
 
-        :param d: Duty Cycle of the forward converter
-        :param V_o: Average voltage of the forward converter
-        :return:
+        :param d: Duty Cycle of the forward converter.
+        :param V_o: Average voltage of the forward converter.
+        :return: The supply voltage of the converter.
         """
         return V_o / d
 
