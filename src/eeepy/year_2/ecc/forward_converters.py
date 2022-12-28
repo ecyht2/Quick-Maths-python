@@ -206,6 +206,16 @@ class IsolatedForwardConverter:
         ...
 
 
+def MOSFET_I(i2: float, transformer_ratio: float, i_MAG: float = 0) -> float:
+    """Calculates the current at the MOSFET (i_Q).
+
+    :param i2: The current at the inductor side.
+    :param transformer_ratio: The transformer ratio (N2 / N1).
+    :param i_MAG: The magnetizing current of the transformer.
+    """
+    return transformer_ratio * i2 + i_MAG
+
+
 def i_RMS_Q(i1: float, i2: float, d: DutyCycle):
     """Calculates the peak to peak RMS value of the transistor.
 
