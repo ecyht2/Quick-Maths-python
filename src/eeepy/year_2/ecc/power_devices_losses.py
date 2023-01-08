@@ -21,7 +21,7 @@ class ConductionLoss(float):
         return cls(V_FWD * I_D + R_s + I_D_RMS**2)
 
     @classmethod
-    def mostfet(cls, R_DS, I_Q):
+    def mosfet(cls, R_DS, I_Q):
         """Calculates the conduction loss of a power MOSFET.
 
         Formula: P_{loss} = R_{DS(ON)} + (I_{Q,RMS})^2
