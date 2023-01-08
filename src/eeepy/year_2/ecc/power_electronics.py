@@ -117,3 +117,15 @@ def average_current(duty_cycle: float, voltage: float,
                     resistance: float) -> float:
     """Finds the average current."""
     return duty_cycle * voltage / resistance
+
+
+def peak_and_min(value: float, change: float) -> (float, float):
+    """Calculates The peak and minimum value given the change and average.
+
+    :param value: The average value.
+    :param change: The total change. (difference between peak and min)
+    :return: A tuple of the minimum and peak value in the form (min, peak).
+    """
+    peak = value + change / 2
+    minimum = value - change / 2
+    return (minimum, peak)
