@@ -18,7 +18,7 @@ class ConductionLoss(float):
         :param R_s: The series resistance of the dided.
         :param I_D_RMS: The RMS current of the diode.
         """
-        return cls(V_FWD * I_D + R_s + I_D_RMS**2)
+        return cls(V_FWD * I_D + R_s * I_D_RMS**2)
 
     @classmethod
     def mosfet(cls, R_DS, I_Q):
