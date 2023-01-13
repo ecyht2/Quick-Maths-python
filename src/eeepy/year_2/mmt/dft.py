@@ -5,7 +5,7 @@ import math
 
 
 class SampleTime(float):
-    """The sample time needed parameter of a DFT.
+    """The time sampling interval (Δt) needed parameter of a DFT.
 
     :param f_max: The maximum frequency of the sampled signal.
     """
@@ -39,7 +39,7 @@ class SampleTime(float):
 
 
 class SampleNumber(float):
-    """The number of samples parameter of a DFT.
+    """The number of time samples (N) parameter of a DFT.
 
     :param sample_time: The sample time of the sampled signal.
     :param f_min: The minimum frequency of the sampled signal.
@@ -78,7 +78,7 @@ class SampleNumber(float):
 
 
 class FrequencySamplingInterval(float):
-    """The frequency sample interval needed parameter of a DFT.
+    """The frequency sample interval (Δɷ) needed parameter of a DFT.
 
     :param f_min: The minimum frequency of the sampled signal.
     """
