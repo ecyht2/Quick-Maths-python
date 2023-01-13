@@ -203,3 +203,13 @@ class DutyCycleIsolated(DutyCycle):
 class IsolatedForwardConverter:
     def __init__(self):
         ...
+
+
+def MOSFET_I(i2: float, transformer_ratio: float, i_MAG: float = 0) -> float:
+    """Calculates the current at the MOSFET (i_Q).
+
+    :param i2: The current at the inductor side.
+    :param transformer_ratio: The transformer ratio (N2 / N1).
+    :param i_MAG: The magnetizing current of the transformer.
+    """
+    return transformer_ratio * i2 + i_MAG
