@@ -44,7 +44,7 @@ class SwitchingLoss(float):
         :param V_s: The supply voltage.
         :param t_TR_ON: The turn on duration of the MOSFET.
         """
-        return 0.5 * I_t * V_s * t_TR_ON
+        return cls(0.5 * I_t * V_s * t_TR_ON)
 
     @classmethod
     def power_turn_on(cls, I_t: float, V_s: float, t_TR_ON: float,
@@ -59,7 +59,7 @@ class SwitchingLoss(float):
         :param t_TR_ON: The turn on duration of the MOSFET.
         :param f_sw: The frequency of the converter.
         """
-        return 0.5 * I_t * V_s * t_TR_ON * f_sw
+        return cls(0.5 * I_t * V_s * t_TR_ON * f_sw)
 
     @classmethod
     def power_turn_on_e(cls, E_ON: float, f_sw: float):
@@ -70,7 +70,7 @@ class SwitchingLoss(float):
         :param E_ON: The energy loss during the turning on of the MOSFET.
         :param f_sw: The frequency of the converter.
         """
-        return E_ON * f_sw
+        return cls(E_ON * f_sw)
 
     @classmethod
     def energy_turn_off(cls, I_p: float, V_s: float, t_TR_OFF: float):
@@ -82,7 +82,7 @@ class SwitchingLoss(float):
         :param V_s: The supply voltage.
         :param t_TR_OFF: The turn off duration of the MOSFET.
         """
-        return 0.5 * I_p * V_s * t_TR_OFF
+        return cls(0.5 * I_p * V_s * t_TR_OFF)
 
     @classmethod
     def power_turn_off(cls, I_p: float, V_s: float, t_TR_OFF: float,
@@ -97,7 +97,7 @@ class SwitchingLoss(float):
         :param t_TR_OFF: The turn off duration of the MOSFET.
         :param f_sw: The frequency of the converter.
         """
-        return 0.5 * I_p * V_s * t_TR_OFF * f_sw
+        return cls(0.5 * I_p * V_s * t_TR_OFF * f_sw)
 
     @classmethod
     def power_turn_off_e(cls, E_OFF: float, f_sw: float):
@@ -108,7 +108,7 @@ class SwitchingLoss(float):
         :param E_OFF: The energy loss during the turning off of the MOSFET.
         :param f_sw: The frequency of the converter.
         """
-        return E_OFF * f_sw
+        return cls(E_OFF * f_sw)
 
 
 def I_RMS(i1: float, i2: float, d: float):
