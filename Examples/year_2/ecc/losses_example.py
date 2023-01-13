@@ -7,7 +7,7 @@ import math
 from eeepy.year_2.ecc import power_devices_losses
 
 
-def run(*args, **kwargs):
+def run():
     """Function that does all the calculations."""
     d = 0.45
     i_p = 20
