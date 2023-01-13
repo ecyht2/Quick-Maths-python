@@ -83,6 +83,7 @@ class TestFrequencySamplingInterval:
 
 
 class TestFrequencySampleNumber:
+    """Tests for FrequencySampleNumber equation."""
     f_min = 10
     f_max = 10e3
 
