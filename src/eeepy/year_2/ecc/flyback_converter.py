@@ -19,6 +19,7 @@ class DutyCycleNonIsolated(DutyCycle):
         :param V_o: Average voltage output of the converter.
         :param V_s: Supply voltage of the converter.
         """
+        # pylint: disable=unused-argument
         super().__init__()
 
     @staticmethod
@@ -63,6 +64,7 @@ class DutyCycleIsolated(DutyCycle):
         :param N1: The number of primary windings in the transformer.
         :param N2: The number of secondary windings in the transformer.
         """
+        # pylint: disable=unused-argument
         super().__init__()
 
     @classmethod
