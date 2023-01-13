@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Functions and equations used to calculate flyback converter related values.
+"""
 from .forward_converters import DutyCycle
 
 
