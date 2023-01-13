@@ -9,6 +9,9 @@ class DutyCycleNonIsolated(DutyCycle):
     """Duty cycle equation for a non-isolated flyback converter.
 
     Formula: d = \frac {V_{o}}{V_{s} + V_{o}}
+
+    :param V_o: Average voltage output of the converter.
+    :param V_s: Supply voltage of the converter.
     """
     def __new__(cls, V_o: float, V_s: float):
         return super().__new__(cls, V_o / (V_s + V_o))
@@ -22,27 +25,23 @@ class DutyCycleNonIsolated(DutyCycle):
         # pylint: disable=unused-argument
         super().__init__()
 
-    @staticmethod
-    def V_o(d: DutyCycle, V_s: float) -> float:
+    def V_o(self: DutyCycle, V_s: float) -> float:
         """Calculates the V_o (average voltage) of a non-isolated flyback
         converter.
 
-        :param d: Duty Cycle of the converter.
         :param V_s: Supply voltage of the converter.
         :return: The average voltage output of the converter.
         """
-        return d * V_s / (1 - d)
+        return self * V_s / (1 - self)
 
-    @staticmethod
-    def V_s(d: DutyCycle, V_o: float) -> float:
+    def V_s(self: DutyCycle, V_o: float) -> float:
         """Calculates the V_s (supply voltage) of a non-isolated flyback
         converter.
 
-        :param d: Duty Cycle of the converter.
         :param V_o: Average voltage of the converter.
         :return: The supply voltage of the converter.
         """
-        return V_o * (1 - d) / d
+        return V_o * (1 - self) / self
 
 
 # Isolated
@@ -50,6 +49,11 @@ class DutyCycleIsolated(DutyCycle):
     """Duty cycle equation for an isolated flyback converter.
 
     Formula: d = \frac {N_{1}}{N_{2}} \frac {V_{o}}{V_{s} + V_{o}}
+
+    :param V_o: Average voltage output of the converter.
+    :param V_s: Supply voltage of the converter.
+    :param N1: The number of primary windings in the transformer.
+    :param N2: The number of secondary windings in the transformer.
     """
     def __new__(cls, V_o: float, V_s: float,
                 N1: float, N2: float):
@@ -79,36 +83,30 @@ class DutyCycleIsolated(DutyCycle):
         """
         return cls(V_o, V_s, turns_ratio, 1)
 
-    @staticmethod
-    def V_o(d: DutyCycle, V_s: float, N1: float, N2: float) -> float:
+    def V_o(self, V_s: float, N1: float, N2: float) -> float:
         """Calculates the V_o (average voltage) of the flyback converter.
 
-        :param d: Duty Cycle of the forward converter.
         :param V_s: Supply voltage of the forward converter.
         :param N1: The number of primary windings in the transformer.
         :param N2: The number of secondary windings in the transformer.
         :return: Average voltage output of the converter.
         """
-        return N2 / N1 * d * V_s / (1 - d)
+        return N2 / N1 * self * V_s / (1 - self)
 
-    @staticmethod
-    def V_s(d: DutyCycle, V_o: float, N1: float, N2: float) -> float:
+    def V_s(self, V_o: float, N1: float, N2: float) -> float:
         """Calculates the V_s (supply voltage) of the flyback converter.
 
-        :param d: Duty Cycle of the converter.
         :param V_o: Average voltage of the converter.
         :param N1: The number of primary windings in the transformer.
         :param N2: The number of secondary windings in the transformer.
         :return: The supply voltage of the converter.
         """
-        return N1 / N2 * V_o * (1 - d) / d
+        return N1 / N2 * V_o * (1 - self) / self
 
-    @staticmethod
-    def turns_ratio(d: DutyCycle, V_o: float, V_s: float) -> float:
+    def turns_ratio(self, V_o: float, V_s: float) -> float:
         """Calculates the turns ratio of the flyback converter.
 
-        :param d: Duty Cycle of the forward converter.
         :param V_s: Supply voltage of the forward converter.
         :param V_o: Average voltage output of the converter.
         """
-        return d * V_s / V_o / (1 - d)
+        return self * V_s / V_o / (1 - self)
