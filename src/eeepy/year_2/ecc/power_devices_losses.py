@@ -33,6 +33,7 @@ class ConductionLoss(float):
 
 
 class SwitchingLoss(float):
+    """Switching losses in forward, flyback and boos converters."""
     @classmethod
     def energy_turn_on(cls, I_t: float, V_s: float, t_TR_ON: float):
         """Calculates the energy loss during the turning on of the MOSFET.
