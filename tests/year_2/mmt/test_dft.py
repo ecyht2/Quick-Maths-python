@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """This file contains test for dft module of eeepy.year_2.mmt"""
-from eeepy.year_2.mmt.dft import (SampleTime, SampleNumber)
+from eeepy.year_2.mmt.dft import (SampleTime, SampleNumber,
+                                  FrequencySamplingInterval)
 
 
 class TestSampleTime:
@@ -55,3 +56,26 @@ class TestSampleNumber:
         N: SampleNumber = SampleNumber.from_f_max(self.f_min, self.f_max)
         dt: SampleTime = SampleTime(self.f_max)
         assert N.calculate_f_min(dt) == 10
+
+
+class TestFrequencySamplingInterval:
+    """Tests for FrequencySamplingInterval equation."""
+    f_min: float = 10
+
+    def test_sample_interval(self):
+        """Testing frequency sample interval Δɷ calculation."""
+        dt: FrequencySamplingInterval = FrequencySamplingInterval(self.f_min)
+        assert dt == 62.83185307179586
+
+    def test_from_t_max(self):
+        """Testing frequency sample interval calculation using t_max."""
+        t_max: float = self.f_min**-1
+        dt: FrequencySamplingInterval = FrequencySamplingInterval.from_t_max(
+            t_max
+        )
+        assert dt == 62.83185307179586
+
+    def test_f_min(self):
+        """Testing f_min calulation."""
+        dt: FrequencySamplingInterval = FrequencySamplingInterval(self.f_min)
+        assert dt.calculate_f_min() == 10
