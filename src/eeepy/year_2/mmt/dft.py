@@ -75,3 +75,34 @@ class SampleNumber(float):
         :return: The minimum frequency of the sampled signal.
         """
         return 1 / (self * dt)
+
+
+class FrequencySamplingInterval(float):
+    """The frequency sample interval needed parameter of a DFT.
+
+    :param f_min: The minimum frequency of the sampled signal.
+    """
+    def __new__(cls, f_min: float):
+        return super().__new__(cls, 2 * f_min * math.pi)
+
+    def __init__(self, f_min: float):
+        super().__init__()
+
+        self._f_sample: float = self**-1
+
+    @classmethod
+    def from_t_max(cls, t_max: float):
+        """Calculates the frequency sample interval using maximum period
+        instead.
+
+        :param t_max: Maximum period of the sampled signal.
+        """
+        f_min: float = t_max**-1
+        return cls(f_min)
+
+    def calculate_f_min(self):
+        """Calculates the f_min of a given frequency sample interval.
+
+        :return: The f_min.
+        """
+        return self / (2 * math.pi)
