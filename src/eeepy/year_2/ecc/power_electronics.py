@@ -26,6 +26,7 @@ class TimeAreaRuleL(float):
         L: float
             The inductance.
         """
+        # pylint: disable=unused-argument
         super().__init__()
 
     @staticmethod
@@ -79,6 +80,7 @@ class TimeAreaRuleC(float):
         C: float
             The capacitance.
         """
+        # pylint: disable=unused-argument
         super().__init__()
 
     @staticmethod
