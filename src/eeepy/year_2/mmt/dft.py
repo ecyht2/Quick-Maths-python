@@ -13,6 +13,7 @@ class SampleTime(float):
         return super().__new__(cls, 1 / (2 * f_max))
 
     def __init__(self, f_max: float):
+        # pylint: disable=unused-argument
         super().__init__()
 
         self._f_sample: float = self**-1
@@ -48,6 +49,7 @@ class SampleNumber(float):
         return super().__new__(cls, math.ceil(1 / (dt * f_min)))
 
     def __init__(self, dt: SampleTime, f_min: float):
+        # pylint: disable=unused-argument
         super().__init__()
 
     @classmethod
@@ -86,6 +88,7 @@ class FrequencySamplingInterval(float):
         return super().__new__(cls, 2 * f_min * math.pi)
 
     def __init__(self, f_min: float):
+        # pylint: disable=unused-argument
         super().__init__()
 
         self._f_sample: float = self**-1
@@ -118,6 +121,7 @@ class FrequencySampleNumber(float):
         return super().__new__(cls, math.ceil(2 * f_max / f_min))
 
     def __init__(self, f_max: float, f_min: float):
+        # pylint: disable=unused-argument
         super().__init__()
 
     @classmethod
