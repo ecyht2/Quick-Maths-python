@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Functions used to calculate forward converter related values."""
-import math
 
 
 class DutyCycle(float):
@@ -214,22 +213,3 @@ def MOSFET_I(i2: float, transformer_ratio: float, i_MAG: float = 0) -> float:
     :param i_MAG: The magnetizing current of the transformer.
     """
     return transformer_ratio * i2 + i_MAG
-
-
-def i_RMS_Q(i1: float, i2: float, d: DutyCycle):
-    """Calculates the peak to peak RMS value of the transistor.
-
-    Formula: \\sqrt {\frac{i_{1}^{2} + i_{1} * i_{2} + i_{2}^{2}}{3}
-
-    Parameters
-    ----------
-    i1: float
-        The first current.
-    i2: float
-        The second current.
-    d: DutyCycle
-        The duty cycle.
-    """
-    ans = (i1**2 + i1 * i2 + i2**2) * d
-    ans /= 3
-    return math.sqrt(ans)
