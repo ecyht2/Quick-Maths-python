@@ -19,19 +19,22 @@ class Point:
 
     @property
     def x(self) -> float:
-        """The x coordinate of the 2D point."""
+        """The x coordinate of the point."""
         return self._x
 
     @property
     def y(self) -> float:
+        """The y coordinate of the point."""
         return self._y
 
     @property
     def r(self) -> float:
+        """The distance from origin."""
         return self._r
 
     @property
     def phi(self) -> float:
+        """The azimuthal angle of the point."""
         return self._phi
 
     @classmethod
@@ -56,7 +59,7 @@ class Point:
     def polar(self) -> tuple[float, float]:
         """The Point in polar form.
 
-        :return: (r, phi)
+        :return: (r, ɸ)
         """
         return (self.r, self.phi)
 
