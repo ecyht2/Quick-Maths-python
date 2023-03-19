@@ -167,5 +167,4 @@ class Point3D:
         """
         x = r * math.cos(phi)
         y = r * math.sin(phi)
-        z = z
         return cls(x, y, z)

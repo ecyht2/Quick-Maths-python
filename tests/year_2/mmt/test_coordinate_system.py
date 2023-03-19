@@ -5,7 +5,9 @@ from eeepy.year_2.mmt.coordinate_system import Point, Point3D
 
 
 class TestPoint:
+    """Tests for Point class."""
     def test_constructor(self):
+        """Tests for Point class constructor."""
         point = Point(2, 2)
 
         # Cartesian Values
@@ -17,6 +19,7 @@ class TestPoint:
         assert point.phi == math.pi / 4
 
     def test_from_polar(self):
+        """Tests for Point class from_polar classmethod."""
         point = Point.from_polar(2, math.pi / 4)
 
         # Polar Values
@@ -28,6 +31,7 @@ class TestPoint:
         assert point.y == 1.414213562373095
 
     def test_methods(self):
+        """Tests for Point class methods."""
         point = Point(1, -math.sqrt(3))
 
         assert point.cartesian() == (1.0, -math.sqrt(3))
@@ -40,7 +44,9 @@ class TestPoint:
 
 
 class TestPoint3D:
+    """Tests for Point3D class."""
     def test_constructor(self):
+        """Tests for Point3D class constructor."""
         x = 69
         y = 420
         z = 69420
@@ -60,6 +66,7 @@ class TestPoint3D:
         assert point.theta == math.acos(z / point.r_spherical)
 
     def test_from_cylindrical(self):
+        """Tests for Point3D class from_cylindrical classmethod."""
         r = 69
         phi = math.pi / 3
         z = 420
@@ -82,6 +89,7 @@ class TestPoint3D:
         assert point.theta == math.acos(z / r)
 
     def test_from_spherical(self):
+        """Tests for Point3D class from_spherical classmethod."""
         r = 69
         phi = math.pi / 3
         theta = math.pi / 4
@@ -104,6 +112,7 @@ class TestPoint3D:
         assert point.r_cylindrical == math.sqrt(x**2 + y**2)
 
     def test_methods(self):
+        """Tests for Point3D class methods."""
         x = 69
         y = 420
         z = 69420
