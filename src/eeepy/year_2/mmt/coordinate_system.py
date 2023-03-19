@@ -15,7 +15,7 @@ class Point:
         self._x = float(x)
         self._y = float(y)
         self._r = (x**2 + y**2)**0.5
-        self._phi = math.atan2(y / x)
+        self._phi = math.atan2(y, x)
 
     @property
     def x(self) -> float:
