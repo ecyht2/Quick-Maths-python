@@ -31,7 +31,7 @@ class Complex():
 
     def polar(self) -> tuple[float, float]:
         """Returns the polar form of the Complex number."""
-        cmath.polar(self.cartesian)
+        return cmath.polar(self.cartesian)
 
     @classmethod
     def from_polar(cls, r: float, phi: float, radian: bool = True):
