@@ -18,7 +18,6 @@ class Complex():
             self.isPolar = self.isPolar
         # Forms
         self.cartesian = complex(Z)
-        self.polar = cmath.polar(Z)
         # Attributes
         # Cartesian Attributes
         self.real = Z.real
@@ -29,7 +28,10 @@ class Complex():
             self.phi = cmath.phase(Z)
         else:
             self.phi = degrees(cmath.phase(Z))
-            self.polar = (self.polar[0], self.polar[1])
+
+    def polar(self) -> tuple[float, float]:
+        """Returns the polar form of the Complex number."""
+        cmath.polar(self.cartesian)
 
     @classmethod
     def from_polar(cls, r: float, phi: float, radian: bool = True):
@@ -223,7 +225,7 @@ class Complex():
         """Returns str(self)."""
         # Deciding what to return
         if self.isPolar:
-            string = self.polar
+            string = self.polar()
         else:
             string = self.cartesian
         return str(string)
@@ -231,7 +233,7 @@ class Complex():
     def __repr__(self):
         """Returns repr(self)."""
         if self.isPolar:
-            string = self.polar
+            string = self.polar()
         else:
             string = self.cartesian
         return str(string)
