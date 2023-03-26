@@ -3,8 +3,8 @@
 import argparse
 
 import numpy as np
-from eeepy.year_1.EngineeringMaths import myStats
-from eeepy.year_1.InfoandSystem.graphing import plot_error_bar
+from eeepy.year_1.ena import myStats
+from eeepy.year_1.ins.graphing import plot_error_bar
 
 
 # Arguments
