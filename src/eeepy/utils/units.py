@@ -58,9 +58,9 @@ def rpm(omega: float = 0) -> float:
     return omega * 60 / (2 * pi)
 
 
-def rad_per_sec(rpm: float = 0) -> float:
+def rad_per_sec(rpm_val: float = 0) -> float:
     """Calculates the angular velocity in radians per second(ɷ) from rpm."""
-    return rpm * 2 * pi / 60
+    return rpm_val * 2 * pi / 60
 
 
 # Engineering Maths
