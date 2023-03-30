@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Useful classes and functions to perform basic tasks."""
-from math import radians, degrees
 import cmath
+from math import degrees, radians
+from typing import Union
 
 
 class Complex():
@@ -240,8 +241,9 @@ class Complex():
 
 
 # Helper
-def product(iterable: list | tuple, start: int = 0) -> float:
+def product(iterable: Union[list, tuple], start: int = 0) -> float:
     """Returns the product of all the element of an iterable object."""
+    # list | tuple
     result = 1
     for i in range(len(iterable) + start):
         result *= iterable[i]
