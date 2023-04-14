@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-from math import pi
+"""Useful Constants used in formulas."""
 
 # Constants
 h = 6.63e-34            # Planck's Constant
-pi = pi                 # π
 
 # Engineering maths
 epsilon0 = 8.85e-12     # Free space permittivity
