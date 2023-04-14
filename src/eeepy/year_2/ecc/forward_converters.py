@@ -3,7 +3,7 @@
 
 
 class DutyCycle(float):
-    ...
+    """A class describing duty cycle of the PWM."""
 
 
 # Non-Isolated
@@ -15,7 +15,7 @@ class DutyCyleNonIsolated(DutyCycle):
     def __new__(cls, V_o: float, V_s: float):
         return super().__new__(cls, V_o / V_s)
 
-    def __init__(self, V_o: float, V_s: float):
+    def __init__(self, _V_o: float, _V_s: float):
         """Duty cycle equation for a forward converter.
 
         :param V_o: Average voltage output of the converter.
@@ -45,10 +45,11 @@ class DutyCyleNonIsolated(DutyCycle):
 
 
 class VTAInductor(float):
+    """Voltage time aread of an inductor."""
     def __new__(cls, d: float, T: float, V_o):
         return super().__new__(cls, (1 - d) * T * V_o)
 
-    def __init__(cls, d: float, T: float, V_o):
+    def __init__(cls, _d: float, _T: float, _V_o):
         super().__init__()
 
 
@@ -59,7 +60,7 @@ class VoltageRipple(float):
     def __new__(cls, dV: float):
         return super().__new__(cls, dV)
 
-    def __init__(self, dV: float):
+    def __init__(self, _dV: float):
         """Duty cycle equation for a forward converter.
 
         :param V_o: Average voltage output of the converter
@@ -69,6 +70,7 @@ class VoltageRipple(float):
 
     @staticmethod
     def capacitance(dI: float, f: float, dV: float):
+        """Find the capacitance needed for the voltage ripple."""
         return dI / (8 * f * dV)
 
 
@@ -77,59 +79,69 @@ class LCRIT(float):
     def __new__(cls, L_crit: float):
         return super().__new__(cls, L_crit)
 
-    def __init__(self, L_crit: float):
+    def __init__(self, _L_crit: float):
         super().__init__()
 
     @classmethod
     def from_VTA(cls, VTA: float, dI: float):
-        """"""
+        """Find the critical inductance from voltage time area."""
         L_crit = VTA / dI
         return cls(L_crit)
 
     @classmethod
     def from_R(cls, d: float, R: float, f_sw: float):
-        """"""
+        """Calculates the critical inductance from R."""
         L_crit = (1 - d) * R / (2 * f_sw)
         return cls(L_crit)
 
     @classmethod
     def from_duty_cycle(cls, d: float, V_o: float, T: float, dI: float):
-        """"""
+        """Find the critical inductance from duty cycle."""
         VTA = VTAInductor(d, T, V_o)
         L_crit = VTA / dI
         return cls(L_crit)
 
 
 class CurrentRipple(float):
+    """The current ripple."""
     def __new__(cls, d: float, T: float, V_o: float, L: float):
         VTA = VTAInductor(d, T, V_o)
         dI = VTA / L
         super().__new__(cls, dI)
 
-    def __init__(self, d: float, V: float, T):
+    def __init__(self, _d: float, _V: float, _T):
         super().__init__()
 
     @staticmethod
     def inductance(dI: float, d: float, T: float, V_o: float):
+        """Calculates the inductance needed for a current ripple."""
         VTA = VTAInductor(d, T, V_o)
         L = VTA / dI
         return L
 
 
 class ForwardConverter:
+    """A forward converter class."""
     def __init__(self, Vs: float, Vo: float, f: float, d: DutyCycle,
                  I_o_max: float, I_o_min: float):
+        # pylint: disable = too-many-arguments
         self.Vs: float = Vs
         self.Vo: float = Vo
         self.f: float = f
         self.d: DutyCycle = d
         self.I_o_max: float = I_o_max
         self.I_o_min: float = I_o_min
+        self._T = 1 / self.f
 
     @property
     def T(self):
         """The period of the forward converter."""
-        self._T = 1 / self.f
+        return self._T
+
+    @property
+    def current_out(self) -> tuple:
+        """The minimum and maximum output current."""
+        return (self.I_o_min, self.I_o_max)
 
 
 # Isolated
@@ -142,8 +154,8 @@ class DutyCycleIsolated(DutyCycle):
                 N1: float, N2: float):
         return super().__new__(cls, (V_o * N1) / (V_s * N2))
 
-    def __init__(self, V_o: float, V_s: float,
-                 N1: float, N2: float):
+    def __init__(self, _V_o: float, _V_s: float,
+                 _N1: float, _N2: float):
         """Duty cycle equation for an isolated forward converter.
 
         :param V_o: Average voltage output of the converter.
@@ -198,11 +210,6 @@ class DutyCycleIsolated(DutyCycle):
         :param V_o: Average voltage output of the converter.
         """
         return d * V_s / V_o
-
-
-class IsolatedForwardConverter:
-    def __init__(self):
-        ...
 
 
 def MOSFET_I(i2: float, transformer_ratio: float, i_MAG: float = 0) -> float:
