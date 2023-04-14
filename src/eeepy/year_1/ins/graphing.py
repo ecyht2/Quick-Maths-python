@@ -160,9 +160,9 @@ def plot_ys(modulation_type: int, signal_array: list):
     return ys
 
 
-def plot_error_bar(axis: dict[str, Iterable],
-                   error: dict[str, Iterable],
-                   labels: dict[str, str] = None,
+def plot_error_bar(axis: dict,
+                   error: dict,
+                   labels: dict = None,
                    show_graph: bool = True) -> None:
     """Plot a graph with an errorbar.
     Parameters
