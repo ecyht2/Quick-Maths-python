@@ -1,8 +1,12 @@
 """Functions and Equations taught in EEEE1028 Power and Energy
 module."""
-from eeepy.utils.constants import mu0, pi
-from helper import acos, cmath, cos, product, radians, sin, sqrt, tan
-from unitConversion import angular_frequency, rad_per_sec
+import cmath
+from math import acos, cos, pi, radians, sin, sqrt, tan
+from typing import Union
+
+from eeepy.utils.constants import mu0
+from eeepy.utils.helper import product
+from eeepy.utils.units import angular_frequency
 
 
 # Circuit Analysis
@@ -47,7 +51,7 @@ def series_res(resistors: list or tuple, *res) -> float:
     """
     Calculates the resistance in series
     """
-    if type(resistors) == list or type(resistors) == tuple:
+    if isinstance(resistors, Union[list, tuple]):
         R = sum(resistors)
     else:
         R = resistors + sum(res)
@@ -55,10 +59,8 @@ def series_res(resistors: list or tuple, *res) -> float:
 
 
 def par_res(resistors: list or tuple, *res) -> float:
-    """
-    Calculates the resistance in parallel
-    """
-    if type(resistors) == list:
+    """Calculates the resistance in parallel."""
+    if isinstance(resistors, Union[list, tuple]):
         flipped = []
         for i in resistors:
             flipped.append(1 / i)
@@ -73,23 +75,28 @@ def par_res(resistors: list or tuple, *res) -> float:
 
 # Ohm's Law
 def ohms_V(I: float, R: float) -> float:
+    """Calculates the voltage using Ohms's Law."""
     return I * R
 
 
 def ohms_I(V: float, R: float) -> float:
+    """Calculates the current using Ohms's Law."""
     return V / R
 
 
 def ohms_R(V: float, I: float) -> float:
+    """Calculates the resistance using Ohms's Law."""
     return V / I
 
 
 # Divider Rules
-def voltage_divider(V_total, R_out, R_rest, *res):
+def voltage_divider(V_total: float, R_out: float, R_rest: float,
+                    *res) -> float:
+    """Calculates the voltage output using voltage divider rule."""
     v_out = 0
 
     v_out = V_total * R_out
-    if type(R_rest) == list:
+    if isinstance(R_rest, Union[list, tuple]):
         v_out = v_out / (R_out + sum(R_rest))
     else:
         v_out = v_out / (R_out + R_rest + sum(res))
@@ -97,17 +104,19 @@ def voltage_divider(V_total, R_out, R_rest, *res):
     return v_out
 
 
-def current_divider_rt(I_total, R_out, R_t):
+def current_divider_rt(I_total: float, R_out: float, R_t: float):
+    """Calculates the voltage output using voltage divider rule using Rt."""
     I_out = 0
 
     I_out = R_t * I_total / R_out
     return I_out
 
 
-def current_divider_r_split(I_total, R_out, R_rest, *res):
+def current_divider_r_split(I_total: float, R_out: float, R_rest: float, *res):
+    """Calculates the current output using current divider rule."""
     I_out = 0
 
-    if type(R_rest) == list:
+    if isinstance(R_rest, Union[list, tuple]):
         I_out = I_total * product(R_rest) / (R_out + sum(R_rest))
     else:
         I_out = I_total * R_rest * product(res) / (R_out + R_rest + sum(res))
@@ -230,7 +239,7 @@ def star_to_delta(Rnode1: float, Rnode2: float, Ropposite: float) -> float:
 
 
 # Impedence
-def rct_cap(C: float, f: float = 0, omega: float = 0, T: float = 0):
+def rct_cap(C: float, f: float = 0, omega: float = 0, T: float = 0) -> float:
     """
     Calculates the reactance of a capacitor
     """
@@ -246,7 +255,8 @@ def rct_cap(C: float, f: float = 0, omega: float = 0, T: float = 0):
     return X
 
 
-def rct_cap_rev(X: float, f: float = 0, omega: float = 0, T: float = 0):
+def rct_cap_rev(X: float, f: float = 0, omega: float = 0,
+                T: float = 0) -> float:
     """
     Calculates the capacitance of a capacitor from the reactance
     """
@@ -260,7 +270,7 @@ def rct_cap_rev(X: float, f: float = 0, omega: float = 0, T: float = 0):
     return C
 
 
-def rct_ind(L: float, f: float = 0, omega: float = 0, T: float = 0):
+def rct_ind(L: float, f: float = 0, omega: float = 0, T: float = 0) -> float:
     """
     Calculates the reactance of an inductor
     """
@@ -276,7 +286,8 @@ def rct_ind(L: float, f: float = 0, omega: float = 0, T: float = 0):
     return X
 
 
-def rct_ind_rev(X: float, f: float = 0, omega: float = 0, T: float = 0):
+def rct_ind_rev(X: float, f: float = 0, omega: float = 0,
+                T: float = 0) -> float:
     """
     Calculates the inductance of an inductor from the reactance
     """
@@ -291,36 +302,42 @@ def rct_ind_rev(X: float, f: float = 0, omega: float = 0, T: float = 0):
 
 
 def imp_cap(C: float, f: float = 0, omega: float = 0, T: float = 0) -> complex:
+    """Calculates the impedance of a capacitor."""
     Z = rct_cap(C, f, omega, T) / 1j
     return Z
 
 
 def imp_ind(L: float, f: float = 0, omega: float = 0, T: float = 0) -> complex:
+    """Calculates the impedance of an inductor."""
     Z = rct_ind(L, f, omega, T) * 1j
     return Z
 
 
 def imp_cap_rev(Z: complex, f: float = 0,
                 omega: float = 0, T: float = 0) -> float:
+    """Calculates the capacitance from a purely capacitive impedance."""
     X = Z * 1j
     return rct_cap_rev(X.real, f, omega, T)
 
 
 def imp_ind_rev(Z: complex, f: float = 0,
                 omega: float = 0, T: float = 0) -> float:
+    """Calculates the capacitance from a purely inductive impedance."""
     X = Z / 1j
     return rct_ind_rev(X.real, f, omega, T)
 
 
 # AC Power
-def active_power(Vrms: float = 0, Irms: float = 0, S: float = 0,
+def active_power(rms_val: tuple = (0, 0), S: float = 0,
                  phi: float = 0, PF: float = 0,
                  radian: bool = True) -> float:
     """
     Calculates the active power of an AC circuit
     """
+    Irms = rms_val[0]
+    Vrms = rms_val[1]
     if S > 0:
-        S = S
+        pass
     elif Irms > 0 and Vrms > 0:
         S = Irms * Vrms
     else:
@@ -362,7 +379,7 @@ def power_factor(P: float = 0, S: float = 0,
     PF = 0
     if abs(P) > 0 and abs(S) > 0:
         PF = abs(P) / abs(S)
-    elif not theta == 0:
+    elif theta != 0:
         PF = cos(theta)
     return PF
 
@@ -374,7 +391,7 @@ def reactive_power(phi: float,
     Calculates the reactive power of an AC circuit
     """
     if S > 0:
-        S = S
+        pass
     elif Irms > 0 and Vrms > 0:
         S = Irms * Vrms
     else:
@@ -393,7 +410,7 @@ def complex_power(phi: float,
     Calculates the total complex power of an AC circuit
     """
     if S > 0:
-        S = S
+        pass
     elif Irms > 0 and Vrms > 0:
         S = Irms * Vrms
     else:
@@ -405,22 +422,20 @@ def complex_power(phi: float,
     return Sstar
 
 
-def power_factor_correction(P: float, thetaNew: float, thetaOld: float,
-                            Vrms: float, f: float = 0, omega: float = 0,
-                            T: float = 0) -> float:
+def power_factor_correction(P: float, theta: tuple,
+                            Vrms: float, f: float = 0,
+                            omega: float = 0) -> float:
     """
     Calculates the capacitance needed to increase the power factor of a circuit
     without altering the voltage or current to the original load
     """
     if omega > 0:
-        omega = omega
+        pass
     elif f > 0:
         omega = 2 * pi * f
-    elif T > 0:
-        omega = 2 * pi / T
     else:
         raise ValueError("No f or omega or T given")
-    Qc = abs(P) * (tan(thetaOld) - tan(thetaNew))
+    Qc = abs(P) * (tan(theta[0]) - tan(theta[1]))
     C = Qc / (omega * abs(Vrms)**2)
     return C
 
@@ -587,29 +602,27 @@ def H_field_coil(N: int, i: float, l: float) -> float:
 
 
 def B_field_coil(N: int = 0, I: float = None, l: float = 0,
-                 H: float = 0,
-                 mu0: float = mu0, mur: float = 1) -> float:
+                 H: float = 0, mur: float = 1) -> float:
     """
     Calculates the B field of a coil
     """
     if N > 0 and I is not None and l > 0:
-        B = B_field_coil_I(N, I, l, mu0, mur)
+        B = B_field_coil_I(N, I, l, mur)
     elif H > 0:
-        B = B_field_coil_H(H, mu0, mur)
+        B = B_field_coil_H(H, mur)
     else:
         raise ValueError("No H or (N and i and l) given")
     return B
 
 
-def B_field_coil_I(N: int, i: float, l: float,
-                   mu0: float = mu0, mur: float = 1) -> float:
+def B_field_coil_I(N: int, i: float, l: float, mur: float = 1) -> float:
     """
     Calculates the B field of a coil given the current and length of coil
     """
     return mu0 * mur * N * i / l
 
 
-def B_field_coil_H(H: float, mu0: float = mu0, mur: float = 1) -> float:
+def B_field_coil_H(H: float, mur: float = 1) -> float:
     """
     Calculates the B field of a coil given the H field
     """
@@ -667,6 +680,7 @@ def voltage_two_coil(R: float, I1: float, L: float, dI1: float,
     """
     Calculates the flux linkage of a two coil system
     """
+    # pylint: disable = too-many-arguments
     V = R * I1
     if strengthen:
         V += L * dI1 + M * I2
@@ -675,28 +689,26 @@ def voltage_two_coil(R: float, I1: float, L: float, dI1: float,
     return V
 
 
-def voltage_two_coil_phasor(R: float, L: float, i1: float,
-                            I2: float, M: float,
-                            omega: float, f: float, T: float,
+def voltage_two_coil_phasor(R: float, L: float, I: tuple, M: float,
+                            omega: float, f: float,
                             strengthen: bool = True) -> float:
     """
     Calculates the flux linkage of a two coil system
     """
+    # pylint: disable = too-many-arguments
     if omega > 0:
-        omega = omega
+        pass
     elif f > 0:
         omega = 2 * pi * f
-    elif T > 0:
-        omega = 2 * pi / T
     else:
         raise ValueError("No omega or f or T given")
 
     Z = R + imp_ind(L, omega=omega)
-    V = i1 * Z
+    V = I[0] * Z
     if strengthen:
-        V += M * 1j * omega * I2
+        V += M * 1j * omega * I[1]
     else:
-        V -= M * 1j * omega * I2
+        V -= M * 1j * omega * I[1]
     return V
 
 
@@ -710,7 +722,7 @@ def turns_ratio(N1: int = 0, N2: int = 0,
     if N1 > 0 and N2 > 0:
         a = N1 / N2
     elif a > 0:
-        a = a
+        pass
     elif K > 0:
         a = 1 / K
     else:
@@ -728,7 +740,7 @@ def voltage_transformation_ratio(N1: int = 0, N2: int = 0,
     elif a > 0:
         K = 1 / a
     elif K > 0:
-        K = K
+        pass
     else:
         raise ValueError("No (N1 and N2) or a or K given")
     return K
@@ -811,6 +823,7 @@ def primary_current_almost_ideal(I2: float, Im: float = 0,
     """Calculates the current induced on the primary coil of an almost ideal\
 transformer.
     """
+    # pylint: disable = too-many-arguments
     a = turns_ratio(N1, N2, K, a)
     return Im + (I2 / a)
 
@@ -821,6 +834,7 @@ def secondary_current_almost_ideal(I1: float, Im: float = 0,
     """Calculates the current induced on the secondary coil of an almost ideal\
 transformer.
     """
+    # pylint: disable = too-many-arguments
     a = turns_ratio(N1, N2, K, a)
     return (I1 - Im) * a
 
@@ -850,7 +864,7 @@ def transformer_efficiency_x_load(Pout: float, Pcore: float,
 # SC and OC test
 def OC_test(P: float, I: float, V: float,
             f: float = 0, omega: float = 0, T: float = 0,
-            reactance: bool = True) -> tuple[float, float]:
+            reactance: bool = True) -> tuple:
     """
     Calculates the Rc and (Xm or Lm) of a transformer
 
@@ -878,8 +892,9 @@ will be given
         (Rc, Xm) if reactance is True
         (Rc, Lm) if reactance is False
     """
+    # pylint: disable = too-many-arguments
     if omega > 0:
-        omega = omega
+        pass
     elif f > 0 or T > 0:
         omega = angular_frequency(f, T)
     else:
@@ -908,7 +923,7 @@ will be given
 
 def SC_test(P: float, I: float, V: float,
             f: float = 0, omega: float = 0, T: float = 0,
-            reactance: bool = True) -> tuple[float, float]:
+            reactance: bool = True) -> tuple:
     """
     Calculates the R and (X or L) of a transformer
 
@@ -936,8 +951,9 @@ will be given
         (R, X) if reactance is True
         (R, L) if reactance is False
     """
+    # pylint: disable = too-many-arguments
     if omega > 0:
-        omega = omega
+        pass
     elif f > 0 or T > 0:
         omega = angular_frequency(f, T)
     else:

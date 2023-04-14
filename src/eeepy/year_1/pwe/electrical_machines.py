@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
+"""Module containing functions and equations relating to electrical
+ machines."""
+from math import pi
+
+from eeepy.utils.units import rad_per_sec
+
+
 # Electrical Machine
 def induced_EMF(P: float, phi: float, Z: float, a: float,
                 omega: float = 0, N: float = 0) -> float:
     """
     Calculate the induced EMF for a DC machine
     """
+    # pylint: disable = too-many-arguments
     if omega > 0:
         Ea = P * Z * phi * omega / (2 * pi * a)
     elif N > 0:
@@ -28,11 +36,11 @@ def induced_EMF_Km(Km: float, phi: float, omega: float) -> float:
     return Km * phi * omega
 
 
-def armature_power(Ta: float, omega: float = 0, rpm: float = 0) -> float:
+def armature_power(Ta: float, rpm: float = 0) -> float:
     """
     Calculates the mechanical power developed by a DC motor armature
     """
-    omega = rad_per_sec(rpm, omega)
+    omega = rad_per_sec(rpm)
     return Ta * omega
 
 
@@ -43,12 +51,12 @@ def dc_motor_dev_torque_Km(Km: float, Ia: float, phi: float) -> float:
     return Km * Ia * phi
 
 
-def dc_motor_dev_torque_pdev(Pdev: float, omega: float = 0,
+def dc_motor_dev_torque_pdev(Pdev: float,
                              rpm: float = 0) -> float:
     """
     calculates torque produce (developed) by a dc motor using machine constant
     """
-    omega = rad_per_sec(rpm, omega)
+    omega = rad_per_sec(rpm)
     return Pdev / omega
 
 
