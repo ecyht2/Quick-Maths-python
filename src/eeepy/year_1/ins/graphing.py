@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 """This modules provides functions to plot signals."""
-from typing import Iterable
-
 import matplotlib.pyplot as plt
 import numpy as np
 
