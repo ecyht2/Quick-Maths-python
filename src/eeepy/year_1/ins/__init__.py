@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""Functions and Equations taught in EEEE1029 Information and System
+module."""
 import csv
 from math import exp, factorial, log1p, log2, pi
 from string import ascii_uppercase
@@ -436,9 +438,12 @@ def information_content(N: int, b: int = 0, P: float = 0) -> float:
 
 # AM
 def AM_modulating_index(Vm: float = 0, Vc: float = 0,
-                        Vmax: float = 0, Vmin: float = 0,
+                        V_range: Union[list, tuple] = (0, 0),
                         Pt: float = 0, Pc: float = 0) -> float:
     """Calculates the modulating index of an AM signal."""
+    Vmin = V_range[0]
+    Vmax = V_range[1]
+
     m = 0
     if Vm > 0 and Vc > 0:
         m = Vm / Vc
@@ -483,16 +488,15 @@ def AM_power_carrier(Pt: float, m: float) -> float:
     return Pt / (1 + m**2 / 2)
 
 
-def AM_modulating_index_sum(m: list | tuple, *argc: tuple[float]) -> float:
+def AM_modulating_index_sum(m: Union[list, tuple], *argc) -> float:
     """Calculates the total modulating index of mutiple AM singal
     simultaneously.
     """
-    mType = type(m)
     mt: float = 0
     if isinstance(m, Union[list, tuple]):
         for i in m:
             mt += i**2
-    elif mType == int or mType == float:
+    elif isinstance(m, Union[int, float]):
         mt += m**2
         for i in argc:
             mt += i**2
@@ -500,7 +504,7 @@ def AM_modulating_index_sum(m: list | tuple, *argc: tuple[float]) -> float:
     return mt**0.5
 
 
-def AM_modulating_index_sum_voltage(Vc: float, Vm: list | tuple,
+def AM_modulating_index_sum_voltage(Vc: float, Vm: Union[list, tuple],
                                     *argc: tuple[float]) -> float:
     """Calculates the total modulating index of mutiple AM singal
     simultaneously given the voltages.
@@ -562,16 +566,16 @@ def bessel_function(x: float, v: int) -> float:
 
 def FM_PM_J_values(m: float, cached: bool = True) -> tuple[float]:
     """Find the J values of a given modulating index."""
-    J = list()
+    J = []
     # Getting items from cached
     if m <= 5 and cached:
         m = round(m, 1)
-        with open('bessel.csv', 'r') as csvfile:
+        with open('bessel.csv', 'r', encoding='utf-8') as csvfile:
             bessel = csv.reader(csvfile)
             for i in bessel:
-                for j in range(len(i)):
+                for index, value in enumerate(i):
                     try:
-                        i[j] = float(i[j])
+                        i[index] = float(value)
                     except ValueError:
                         pass
                 if i[0] == m:
@@ -594,15 +598,15 @@ def FM_PM_bandwidth_bessel(fm: float, n: float = 0, m: float = 0) -> float:
     Find the bandwith of a given FM or PM signal using
     Bessel's frequency spectrum
     """
-    bandwidth: float = 0
+    bw: float = 0
     if n > 0:
-        bandwidth = 2 * (n * fm)
+        bw = 2 * (n * fm)
     elif m > 0:
         n = len(FM_PM_J_values(m)) - 1
-        bandwidth = 2 * (n * fm)
+        bw = 2 * (n * fm)
     else:
         raise ValueError("No n or m given")
-    return bandwidth
+    return bw
 
 
 def FM_PM_bandwidth_carson(fm: float, delta: float) -> float:
@@ -613,7 +617,7 @@ def FM_PM_bandwidth_carson(fm: float, delta: float) -> float:
 
 
 def FM_PM_power_transmitted(R: float, Vcrms: float = 0,
-                            J: tuple[float] | list[float] = tuple()) -> float:
+                            J: Union[tuple, list] = tuple()) -> float:
     """
     Find the transmitted power of a FM or PM signal
     """
@@ -646,11 +650,9 @@ def shanon_hartleys_formula(BW: float, M: int) -> float:
     return 2 * BW * log2(M)
 
 
-def shanon_limit(BW: float, SNR: float) -> float:
-    """
-    Calculates the maximum data that can be sent in a given bandwidth
-    """
-    return BW * log2(1 + SNR)
+def shanon_limit(BW: float, signal_noise_ratio: float) -> float:
+    """Calculates the maximum data that can be sent in a given bandwidth."""
+    return BW * log2(1 + signal_noise_ratio)
 
 
 # Fourier Analysis
@@ -721,27 +723,6 @@ def second_order_low_pass_filter_cutoff_frequency(R: list[float],
 
 
 # Digital Filter
-def filter(b: list, a: list, x: list) -> list:
-    """
-    Filters the input data x using "FIR or IIR"
-
-    Parameters
-    ----------
-    b
-        Numerator coefficient
-    a
-        Denominator coefficient
-    x
-        An array that contains the intput data
-
-    Returns
-    -------
-    list
-        The output of the filter
-    """
-    pass
-
-
 def moving_average_filter(x: list, n: int) -> list:
     """
     Find the mean average filter for data x
@@ -760,7 +741,7 @@ def moving_average_filter(x: list, n: int) -> list:
     """
     # Getting the impulse response needed for convolution
     h = []
-    for i in range(n):
+    for _ in range(n):
         h.append(1 / n)
 
     # Getting the moving average result array
@@ -774,11 +755,13 @@ def moving_average_filter(x: list, n: int) -> list:
 
 # Noise
 def thermal_noise(T: float, B: float, k: float = kBolzman) -> float:
+    """Calculates the thermal noise."""
     return k * T * B
 
 
 # SNR
 def SNR(S: float, N: float, dB: bool = True, power: bool = True) -> float:
+    """Calculates the Signal-to-Noise Ratio (SNR)."""
     returnValue = 0
     if dB:
         if power:
@@ -795,6 +778,7 @@ def SNR(S: float, N: float, dB: bool = True, power: bool = True) -> float:
 def NF(inputSNR: float = 0, outputSNR: float = 0,
        Nai: float = 0, Ni: float = 0,
        NoiseFigure: bool = True) -> float:
+    """Noise Factor."""
     returnValue = 0
     if inputSNR > 0 and outputSNR > 0:
         returnValue = inputSNR / outputSNR
@@ -808,30 +792,31 @@ def NF(inputSNR: float = 0, outputSNR: float = 0,
     return returnValue
 
 
-def NF_cascade(gain: list | tuple, NF: list | tuple,
+def NF_cascade(gain: Union[list, tuple], noise_factor: Union[list, tuple],
                NoiseFigureIn: bool = True,
                NoiseFigureReturn: bool = True) -> float:
+    """Cascated Noise Factor."""
     # Checking for conditions
-    if not len(gain) == len(NF):
+    if not len(gain) == len(noise_factor):
         raise ValueError("Size of gain and NF aren't equal")
 
     # Changing to noise figure into noise factor
     if NoiseFigureIn:
-        for i in range(len(gain)):
-            gain[i] = db_power_reverse(gain[i], 1)
+        for i, val in enumerate(gain):
+            gain[i] = db_power_reverse(val, 1)
     # Using absolute values
-    for i in range(len(gain)):
-        gain[i] = abs(gain[i])
-        NF[i] = abs(NF[i])
+    for i, val in enumerate(gain):
+        gain[i] = abs(val)
+        noise_factor[i] = abs(noise_factor[i])
 
     # Sorting values
     gain.sort()
-    NF.sort()
+    noise_factor.sort()
 
     # Calculating NF
-    totalNF = NF[0]
+    totalNF = noise_factor[0]
     for i in range(len(NF) - 1):
-        totalNF += (NF[i + 1] - 1) / product(gain[:i + 1])
+        totalNF += (noise_factor[i + 1] - 1) / product(gain[:i + 1])
 
     returnNF = 0
     if NoiseFigureReturn:
@@ -842,22 +827,25 @@ def NF_cascade(gain: list | tuple, NF: list | tuple,
     return returnNF
 
 
-def effective_noise_temperature_NF(T: float, NF: float,
+def effective_noise_temperature_NF(T: float, noise_factor: float,
                                    kelvin: bool = True,
                                    NoiseFigure: bool = True) -> float:
+    """Effective Noise Temperature."""
     if not kelvin:
         T = C_to_kelvin(T)
     if NoiseFigure:
-        NF = db_power_reverse(NF, 1)
+        noise_factor = db_power_reverse(noise_factor, 1)
 
-    return T * (NF - 1)
+    return T * (noise_factor - 1)
 
 
-def effective_noise_temperature_gain(T: list | tuple, gain: list | tuple,
+def effective_noise_temperature_gain(T: Union[list, tuple],
+                                     gain: Union[list, tuple],
                                      kelvin: bool = True) -> float:
+    """Effective Noise Temperature Gain."""
     if not kelvin:
-        for i in range(len(T)):
-            T[i] = C_to_kelvin(T[i])
+        for i, val in enumerate(T):
+            T[i] = C_to_kelvin(val)
 
     totalT = T[0]
     for i in range(len(T) - 1):
