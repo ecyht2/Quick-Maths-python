@@ -3,7 +3,7 @@
 import argparse
 
 import numpy as np
-from eeepy.year_1.ena import myStats
+from eeepy.year_1.ena import MyStats
 from eeepy.year_1.ins.graphing import plot_error_bar
 
 
@@ -73,9 +73,9 @@ if __name__ == '__main__':
 
     # Getting Statistics of Raw Data
     for key in xData:
-        key["Stats"] = myStats(key.get("Raw Data"))
+        key["Stats"] = MyStats(key.get("Raw Data"))
     for key in yData:
-        key["Stats"] = myStats(key["Raw Data"])
+        key["Stats"] = MyStats(key["Raw Data"])
 
     # Getting x, xerr, y and yerr values according to mode
     x = []

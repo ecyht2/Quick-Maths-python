@@ -291,10 +291,11 @@ class Vector():
     """
     mag = 0
 
-    def __init__(self, vector: list[int | float] | tuple[int | float]):
+    def __init__(self, vector: Union[list[Union[int, float]],
+                                     tuple[Union[int, float]]]):
         # Checking if parameter is valid
         # Type
-        if not isinstance(type(vector), list | tuple | Vector):
+        if not isinstance(type(vector), Union[list, tuple, Vector]):
             raise TypeError("A vector must be an array_like"
                             "(list, tuple, Vector) object")
         # Size
@@ -302,7 +303,7 @@ class Vector():
             raise ValueError("Invalid vector to be converted")
         # Indexes
         for i in vector:
-            if not issubclass(type(i), float | int):
+            if not issubclass(type(i), Union[float, int]):
                 raise ValueError("Invalid vector to be converted")
 
         vector = list(vector)
@@ -325,7 +326,7 @@ class Vector():
             The cross product
         """
         # Checking vector type
-        if not issubclass(type(vector), list | tuple | Vector):
+        if not issubclass(type(vector), Union[list, tuple, Vector]):
             raise TypeError("Only a type Vector can be crossed with a Vector")
         if len(vector) > 3:
             raise ValueError("Invalid vector")
@@ -351,7 +352,7 @@ class Vector():
             The dot product
         """
         # Checking vector type
-        if not issubclass(type(vector), list | tuple | Vector):
+        if not issubclass(type(vector), Union[list, tuple, Vector]):
             raise TypeError("Only a type Vector can be dot with a Vector")
         if len(vector) > 3:
             raise ValueError("Invalid vector")
@@ -381,7 +382,7 @@ class Vector():
     def __add__(self, vector):
         """Returns self + vector."""
         # Checking vector type
-        if not issubclass(type(vector), list | tuple | Vector):
+        if not issubclass(type(vector), Union[list, tuple, Vector]):
             return NotImplemented
         if len(vector) > 3:
             raise ValueError("Invalid vector")
@@ -402,7 +403,7 @@ class Vector():
     def __sub__(self, vector):
         """Returns self - vector."""
         # Checking vector type
-        if not issubclass(type(vector), list | tuple | Vector):
+        if not issubclass(type(vector), Union[list, tuple, Vector]):
             return NotImplemented
         if len(vector) > 3:
             raise ValueError("Invalid vector")
@@ -416,7 +417,7 @@ class Vector():
 
     def __rsub__(self, vector):
         """Returns vector - self."""
-        if not issubclass(type(vector), list | tuple | Vector):
+        if not issubclass(type(vector), Union[list, tuple, Vector]):
             return NotImplemented
         if len(vector) > 3:
             raise ValueError("Invalid vector")
@@ -498,7 +499,7 @@ class Charge(Vector):
     """
     q = 0
 
-    def __init__(self, q: float, vector: list | tuple):
+    def __init__(self, q: float, vector: Union[list, tuple]):
         self.q = q
         super().__init__(vector)
 
@@ -921,7 +922,7 @@ def mag(a: float = 0, b: float = 0, c_vec: float = 0,
         The magnitude of the Vector
     """
     if vector is not None:
-        if not issubclass(type(vector), list | tuple | Vector):
+        if not issubclass(type(vector), Union[list, tuple, Vector]):
             raise TypeError("Invalid vector passed in. It must be an"
                             "array_like (list, tuple, Vector) object")
         if len(vector) > 3:
