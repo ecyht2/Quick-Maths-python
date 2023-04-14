@@ -1,50 +1,12 @@
 #!/usr/bin/env python3
-from math import exp, factorial, sqrt
-from math import log10, log1p, log2
-from statistics import mean, median, mode
-from statistics import quantiles, variance, stdev
-from math import acos, atan, asin
-from math import tan, sin, cos
-from math import radians, degrees
+"""Useful classes and functions to perform basic tasks."""
 import cmath
-
-# Imports
-# Math Functions
-exp = exp,
-factorial = factorial,
-sqrt = sqrt
-log10 = log10
-log1p = log1p
-log2 = log2
-# Stats Function
-# Distance
-mean = mean
-median = median
-mode = mode
-# Spread
-quantiles = quantiles
-variance = variance
-stdev = stdev
-# Trigonometric
-# Reverse Functions
-acos = acos
-atan = atan
-asin = asin
-# Normal Functions
-tan = tan
-sin = sin
-cos = cos
+from math import degrees, radians
+from typing import Union
 
 
 class Complex():
     """Create a complex number from a real part and an imaginary part."""
-    real: float = 0
-    imag: float = 0
-    r: float = 0
-    phi: float = 0
-    cartesian: complex = 0 + 0j
-    polar: tuple[float, float] = (0, 0)
-
     def __init__(self, Z: complex):
         # Settings
         if not hasattr(self, "isRadians"):
@@ -57,7 +19,6 @@ class Complex():
             self.isPolar = self.isPolar
         # Forms
         self.cartesian = complex(Z)
-        self.polar = cmath.polar(Z)
         # Attributes
         # Cartesian Attributes
         self.real = Z.real
@@ -68,10 +29,14 @@ class Complex():
             self.phi = cmath.phase(Z)
         else:
             self.phi = degrees(cmath.phase(Z))
-            self.polar = (self.polar[0], self.polar[1])
+
+    def polar(self) -> tuple:
+        """Returns the polar form of the Complex number."""
+        return cmath.polar(self.cartesian)
 
     @classmethod
     def from_polar(cls, r: float, phi: float, radian: bool = True):
+        """Creates a Complex class from polar form."""
         if not radians:
             phi = radians(phi)
         cls.isRadians = radian
@@ -80,7 +45,14 @@ class Complex():
         return cls(Z)
 
     @classmethod
-    def from_polar_tuple(cls, Z: tuple[float, float], radian: bool = True):
+    def from_polar_tuple(cls, Z: tuple, radian: bool = True):
+        """Creates a Complex class from polar form in a tuple.
+
+        This classmethod treats the first item in the tuple as the radius from
+        the origin and the second item as the angle from the x-axis. If the
+        parameter radian is True the angle is in radians, otherwise it is in
+        degrees.
+        """
         if not radians:
             Z = cmath.rect(Z[0], radians(Z[1]))
         else:
@@ -91,6 +63,7 @@ class Complex():
 
     @classmethod
     def from_cartesian(cls, Z: complex, radian: bool = True):
+        """Creates a Complex class from cartesian form."""
         cls.isRadians = radian
         cls.isPolar = False
         return cls(Z)
@@ -124,14 +97,10 @@ class Complex():
         -------
         """
         # Manual overide polar
-        if polar is not None:
-            polar = polar
-        else:
+        if polar is None:
             polar = self.isPolar
         # Manual overide radians
-        if radian is not None:
-            radian = radian
-        else:
+        if radian is None:
             radian = self.isRadians
 
         conjugate = self.cartesian.conjugate()
@@ -145,11 +114,10 @@ class Complex():
         if not hasattr(value, "imag") or not hasattr(value, "real")\
                 or not hasattr(value, "conjugate"):
             return NotImplemented
-        sum = self.real + value.real + (self.imag + value.imag) * 1j
-        # sum = self.cartesian + value
+        total = self.real + value.real + (self.imag + value.imag) * 1j
 
         # Getting return class
-        ret = self.__get_class(sum, self.isPolar, self.isRadians)
+        ret = self.__get_class(total, self.isPolar, self.isRadians)
         return ret
 
     def __radd__(self, value: complex):
@@ -158,11 +126,10 @@ class Complex():
         if not hasattr(value, "imag") or not hasattr(value, "real")\
                 or not hasattr(value, "conjugate"):
             return NotImplemented
-        sum = self.real + value.real + (self.imag + value.imag) * 1j
-        # sum = value + self.cartesian
+        total = self.real + value.real + (self.imag + value.imag) * 1j
 
         # Getting return class
-        ret = self.__get_class(sum, self.isPolar, self.isRadians)
+        ret = self.__get_class(total, self.isPolar, self.isRadians)
         return ret
 
     def __sub__(self, value: complex):
@@ -259,7 +226,7 @@ class Complex():
         """Returns str(self)."""
         # Deciding what to return
         if self.isPolar:
-            string = self.polar
+            string = self.polar()
         else:
             string = self.cartesian
         return str(string)
@@ -267,15 +234,16 @@ class Complex():
     def __repr__(self):
         """Returns repr(self)."""
         if self.isPolar:
-            string = self.polar
+            string = self.polar()
         else:
             string = self.cartesian
         return str(string)
 
 
 # Helper
-def product(iterable: list | tuple, start: int = 0) -> float:
+def product(iterable: Union[list, tuple], start: int = 0) -> float:
     """Returns the product of all the element of an iterable object."""
+    # list | tuple
     result = 1
     for i in range(len(iterable) + start):
         result *= iterable[i]
