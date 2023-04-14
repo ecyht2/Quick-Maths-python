@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Useful Constants used in formulas."""
+import math
 
 # Constants
 h = 6.63e-34            # Planck's Constant
 
 # Engineering maths
 epsilon0 = 8.85e-12     # Free space permittivity
-mu0 = 4 * pi * 10**-7   # Free space permeability 4*pi*10^-7
+mu0 = 4 * math.pi * 10**-7   # Free space permeability 4*pi*10^-7
 kCoulomb = 9e9          # Coulomb's Constant 1/(4*pi*epsilon0)
 c = 3e8                 # Speed of Light in air/vacuum 1/(mu0*epsilon0)^0.5
 
