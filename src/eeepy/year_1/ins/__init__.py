@@ -1,18 +1,20 @@
 #!/usr/bin/env python
-from string import ascii_uppercase
-from Constants import VT, kBolzman, pi
-from helper import exp, log1p, log2, factorial
-from helper import product
-from unitConversion import db_power, db_power_reverse, db_volts
-from unitConversion import C_to_kelvin
+"""Functions and Equations taught in EEEE1029 Information and System
+module."""
 import csv
+from math import exp, factorial, log1p, log2, pi
+from string import ascii_uppercase
+from typing import Union
+
 import numpy as np
+from eeepy.utils.constants import VT, kBolzman
+from eeepy.utils.helper import product
+from eeepy.utils.units import C_to_kelvin, db_power, db_power_reverse, db_volts
 
 
 # Diodes
-def bolzmann_diode_equation(IS: float, VD: float, VT: float = VT) -> float:
-    """
-    Calculates the current in a pn junction diode
+def bolzmann_diode_equation(IS: float, VD: float) -> float:
+    """Calculates the current in a pn junction diode.
 
     Parameters
     ----------
@@ -23,49 +25,39 @@ def bolzmann_diode_equation(IS: float, VD: float, VT: float = VT) -> float:
     return ID
 
 
-def bolzmann_diode_equation_reverse(ID: float, IS: float,
-                                    VT: float = VT) -> float:
-    """
-    Calculates the voltage in a pn junction diode
-    """
+def bolzmann_diode_equation_reverse(ID: float, IS: float) -> float:
+    """Calculates the voltage in a pn junction diode."""
     VD = VT * (log1p(ID / IS + 1))
     return VD
 
 
 # Op-Amp
 def inverting_op_amp(R1: float, R2: float) -> dict:
-    """
-    Calculates the gain and input resistance of an Inverting Op-Amp
-    """
+    """Calculates the gain and input resistance of an Inverting Op-Amp."""
     A = - R2 / R1
     R = R1
     return {"Gain": A, "Input Resistance": R}
 
 
 def non_inverting_op_amp(R1: float, R2: float) -> dict:
-    """
-    Calculates the gain and input resistance of a Non-Inverting Op-Amp
-    """
+    """Calculates the gain and input resistance of a Non-Inverting Op-Amp."""
     A = 1 + R2 / R1
     R = "Infinity"
     return {"Gain": A, "Input Resistance": R}
 
 
 def transimpedence_op_amp(Iin: float, Rf: float) -> float:
-    """
-    Calculates the output voltage of a transimpedence Op-Amp
-    given an input current
+    """Calculates the output voltage of a transimpedence Op-Amp
+    given an input current.
     """
     return Iin * Rf
 
 
 def summing_op_amp(Rf: float, V: "list or tuple", R: "list or tuple") -> float:
-    """
-    Calculates the output voltage of a summing Op-Amp
-    """
+    """Calculates the output voltage of a summing Op-Amp."""
     if not len(V) == len(R):
         raise ValueError("Size of V and R must be equal")
-    Vlist = list()
+    Vlist = []
     for v, r in zip(V, R):
         Vlist.append(Rf * v / r)
     Vo = - sum(Vlist)
@@ -75,27 +67,24 @@ def summing_op_amp(Rf: float, V: "list or tuple", R: "list or tuple") -> float:
 # Transistor
 # BJT
 def BJT_beta(IC: float, IB: float) -> float:
-    """
-    Calculates the β (common-emitter current gain) of a transistor
-    Should be between 50 and 200
+    """Calculates the β (common-emitter current gain) of a transistor
+    Should be between 50 and 200.
     """
     beta = IC / IB
     return beta
 
 
 def BJT_alpha(beta: float) -> float:
-    """
-    Calculates the α common-base current gain
-    Should be slightly less than 1
+    """Calculates the α common-base current gain
+    Should be slightly less than 1.
     """
     alpha = beta / (1 + beta)
     return alpha
 
 
 def BJT_alpha_IE(IC: float, IE: float) -> float:
-    """
-    Calculates the α common-base current gain using IC and IE
-    Should be slightly less than 1
+    """Calculates the α common-base current gain using IC and IE
+    Should be slightly less than 1.
     """
     alpha = IC / IE
     return alpha
@@ -103,26 +92,28 @@ def BJT_alpha_IE(IC: float, IE: float) -> float:
 
 def BJT_mode(VE: float, VB: float, VC: float,
              transistorType: str = "NPN") -> str:
-    """
-    Determines the mode the BJT transistor is operating in given VE, VB and VC
+    """Determines the mode the BJT transistor is operating in given VE, VB
+    and VC.
+
+    TODO: Make use of enumerations.
     """
     # Defining Modes
     modes = ["Active", "Saturation", "Cutoff", "Reverse"]
 
     # Logic
-    if VC > VB and VB > VE:
+    if VE < VB < VC:
         mode = 0
     elif VB > VE and VB > VC:
         mode = 1
     elif VE > VB and VC > VB:
         mode = 2
-    elif VE > VB and VB > VC:
+    elif VC < VB < VE:
         mode = 3
 
     if transistorType.upper() == "PNP":
         mode = -(mode + 1)
     elif transistorType.upper() == "NPN":
-        mode = mode
+        pass
     else:
         raise ValueError("Invalid BJT type")
     return modes[mode]
@@ -130,9 +121,8 @@ def BJT_mode(VE: float, VB: float, VC: float,
 
 # MOSFET
 def MOSFET_mode_NMOS(VGS: float, VTN: float, VDS: float) -> str:
-    """
-    Determines the mode the NMOS MOSFET transistor is operating in
-    given VGS, VTN and VDS
+    """Determines the mode the NMOS MOSFET transistor is operating in
+    given VGS, VTN and VDS.
     """
     # Defining Modes
     modes = ["Cutoff", "Saturation", "Non-Saturation"]
@@ -149,9 +139,8 @@ def MOSFET_mode_NMOS(VGS: float, VTN: float, VDS: float) -> str:
 
 
 def MOSFET_mode_PMOS(VSG: float, VTP: float, VSD: float) -> str:
-    """
-    Determines the mode the PMOS MOSFET transistor is operating in
-    given VSG, VTP and VSD
+    """Determines the mode the PMOS MOSFET transistor is operating in
+    given VSG, VTP and VSD.
     """
     # Defining Modes
     modes = ["Cutoff", "Saturation", "Non-Saturation"]
@@ -169,9 +158,7 @@ def MOSFET_mode_PMOS(VSG: float, VTP: float, VSD: float) -> str:
 
 def drain_current_NMOS(Kn: float, VGS: float, VTN: float, VDS: float,
                        mode: str = "Saturation") -> float:
-    """
-    Calculates the drain current (ID) of an NMOS MOSFET
-    """
+    """Calculates the drain current (ID) of an NMOS MOSFET."""
     if mode == "Cutoff":
         ID = 0
     elif mode == "Saturation":
@@ -183,9 +170,7 @@ def drain_current_NMOS(Kn: float, VGS: float, VTN: float, VDS: float,
 
 def drain_current_PMOS(Kp: float, VSG: float, VTP: float, VSD: float,
                        mode: str = "Saturation") -> float:
-    """
-    Calculates the drain current (ID) of an PMOS MOSFET
-    """
+    """Calculates the drain current (ID) of an PMOS MOSFET."""
     if mode == "Cutoff":
         ID = 0
     elif mode == "Saturation":
@@ -199,10 +184,11 @@ def drain_current_PMOS(Kp: float, VSG: float, VTP: float, VSD: float,
 # Commit # 0110 1001  Nice
 # BCD
 def decimal_to_bcd(number: float) -> str:
+    """Converts Decimal Number to BCD.
+
+    TODO: Rewrite to make use of format strings
     """
-    Converts Decimal Number to BCD
-    """
-    if not (type(number) == int or type(number) == float):
+    if not isinstance(number, Union[int, float]):
         raise TypeError("Input number must be an integer")
 
     numberString = str(number)
@@ -218,21 +204,19 @@ def decimal_to_bcd(number: float) -> str:
     BCD = BCD.rstrip()
     BCD = BCD.replace("0b", "")
     splitedBCD = BCD.split(" ")
-    for i in range(len(splitedBCD)):
-        if splitedBCD[i] == ".":
+    for i, digit in enumerate(splitedBCD):
+        if digit == ".":
             continue
-        while len(splitedBCD[i]) < 4:
-            splitedBCD[i] = "0" + splitedBCD[i]
+        while len(digit) < 4:
+            splitedBCD[i] = "0" + digit
     BCD = " ".join(splitedBCD)
 
     return BCD
 
 
 def bcd_to_decimal(number: str) -> float:
-    """
-    Converts BCD Number to Decimal
-    """
-    splittedNumber: list[str] = number.split(" ")
+    """Converts BCD Number to Decimal."""
+    splittedNumber: list = number.split(" ")
     number = ""
     for digit in splittedNumber:
         if digit == ".":
@@ -245,9 +229,7 @@ def bcd_to_decimal(number: str) -> float:
 
 # Gray Code
 def binary_to_gray(number: str) -> str:
-    """
-    Converts binary number to gray code
-    """
+    """Converts binary number to gray code."""
     grayCode = "1"
     for i in range(len(number) - 1):
         binary = int(number[i + 1])
@@ -257,9 +239,7 @@ def binary_to_gray(number: str) -> str:
 
 
 def gray_to_binary(number: str) -> str:
-    """
-    Converts gray code number to binary
-    """
+    """Converts gray code number to binary."""
     binaryNumber = "1"
     for i in range(len(number) - 1):
         binary = int(number[i + 1])
@@ -270,9 +250,7 @@ def gray_to_binary(number: str) -> str:
 
 # Signed Number
 def invert_binary(number: str) -> str:
-    """
-    Inverts all the binary number
-    """
+    """Inverts all the binary number."""
     tmpBinary = str()
     for i in number:
         tmpBinary += str(int(not int(i)))
@@ -281,9 +259,8 @@ def invert_binary(number: str) -> str:
 
 
 def add_signed_binary(number: int, binary: str) -> str:
-    """
-    Adds a 1 to the beginning of binary if number is >= 0 adds a 0 other wise
-    """
+    """Adds a 1 to the beginning of binary if number is >= 0 adds
+    a 0 other wise."""
     if number >= 0:
         binary = "0" + binary
     else:
@@ -293,9 +270,7 @@ def add_signed_binary(number: int, binary: str) -> str:
 
 # Signed magnitude system
 def decimal_to_singed_binary(number: int, bits: int = 0) -> str:
-    """
-    Converts a decimal number using the sign magnitude system
-    """
+    """Converts a decimal number using the sign magnitude system."""
     binary = ""
     # Converting it to binary
     if number >= 0:
@@ -307,9 +282,9 @@ def decimal_to_singed_binary(number: int, bits: int = 0) -> str:
         if len(binary) + 1 > bits:
             raise ValueError(f"{number} cannot be represent by a"
                              f"{bits}-bit signed binary number")
-        else:
-            while len(binary) + 1 < bits:
-                binary = "0" + binary
+
+        while len(binary) + 1 < bits:
+            binary = "0" + binary
     # Adding the signed binary
     binary = add_signed_binary(number, binary)
     # Returning number
@@ -317,9 +292,7 @@ def decimal_to_singed_binary(number: int, bits: int = 0) -> str:
 
 
 def singed_binary_to_decimal(number: str) -> int:
-    """
-    Converts a signed binary number to a decimal number
-    """
+    """Converts a signed binary number to a decimal number."""
     # Converting back to integer
     integer = int(number[1:], 2)
     # Adding sign
@@ -330,9 +303,7 @@ def singed_binary_to_decimal(number: str) -> int:
 
 
 def decimal_to_1s_complement(number: int, bits: int = 0) -> str:
-    """
-    Converts a decimal number using the 1's compliment system
-    """
+    """Converts a decimal number using the 1's compliment system."""
     # Converting to binary
     binary = bin(number).replace("0b", "")
     # Inverting bits if negative
@@ -343,9 +314,9 @@ def decimal_to_1s_complement(number: int, bits: int = 0) -> str:
         if len(binary) + 1 > bits:
             raise ValueError(f"{number} cannot be represent by a"
                              f"{bits}-bit signed binary number")
-        else:
-            while len(binary) + 1 < bits:
-                binary = add_signed_binary(number, binary)
+
+        while len(binary) + 1 < bits:
+            binary = add_signed_binary(number, binary)
     # Adding the signed binary
     binary = add_signed_binary(number, binary)
     # Returning number
@@ -353,9 +324,7 @@ def decimal_to_1s_complement(number: int, bits: int = 0) -> str:
 
 
 def ones_complement_to_decimal(number: str) -> int:
-    """
-    Converts a 1's compliment number to a decimal number
-    """
+    """Converts a 1's compliment number to a decimal number."""
     # Converting back to decimal
     integer = 0
     if number[0] == "0":
@@ -369,9 +338,7 @@ def ones_complement_to_decimal(number: str) -> int:
 
 
 def decimal_to_2s_complement(number: int, bits: int = 0) -> str:
-    """
-    Converts a decimal number using the 2's compliment system
-    """
+    """Converts a decimal number using the 2's compliment system."""
     # Getting 1's complement
     binary = decimal_to_1s_complement(number, bits)
     # Adding one to binary
@@ -382,9 +349,7 @@ def decimal_to_2s_complement(number: int, bits: int = 0) -> str:
 
 
 def twos_complement_to_decimal(number: str) -> int:
-    """
-    Converts a 2's compliment number to a decimal number
-    """
+    """Converts a 2's compliment number to a decimal number."""
     # Getting number if 1's complement
     integer = ones_complement_to_decimal(number)
     # Subtracting one if negative
@@ -394,13 +359,12 @@ def twos_complement_to_decimal(number: str) -> int:
 
 
 # Combinational Logic Circuit
-def kMap(size, equation):
-    pass
+def kMap(_size, _equation):
+    """Minimize the equation using k-map."""
 
 
 def letter_to_binary(equation: str) -> str:
-    """
-    Convert equations writen in letters into it's binary form
+    """Convert equations writen in letters into it's binary form.
 
     Parameters
     ----------
@@ -413,11 +377,10 @@ def letter_to_binary(equation: str) -> str:
         The equation converted to binary
     """
     eq = ""
-    for i in range(len(equation)):
-        letter = equation[i]
+    for i, letter in enumerate(equation):
         if letter in ascii_uppercase:
             try:
-                if (equation[i + 1] == '\''):
+                if equation[i + 1] == '\'':
                     letter = "0"
                 else:
                     letter = "1"
@@ -432,9 +395,8 @@ def letter_to_binary(equation: str) -> str:
 
 # A2D or ADC
 def nyquist_shanon_sampling_frequency(fmax: float = 0, B: float = 0) -> float:
-    """
-    Find the minimum sampling frequency required to digitize an analogue signal
-    """
+    """Find the minimum sampling frequency required to digitize an analogue
+    signal."""
     fs = 0
     if fmax > 0:
         fs = 2 * fmax
@@ -444,38 +406,31 @@ def nyquist_shanon_sampling_frequency(fmax: float = 0, B: float = 0) -> float:
 
 
 def quantization_level(b: int) -> int:
-    """
-    Find the number of quantization level for a b amount of bits ADC
-    """
+    """Find the number of quantization level for a b amount of bits ADC."""
     return 2**b
 
 
 def quantization_level_reverse(m: int) -> int:
-    """
-    Find the number of bits an ADC has given it has
-    m number of quantization level
+    """Find the number of bits an ADC has given it has
+    m number of quantization level.
     """
     return log2(m)
 
 
 # BW
 def bandwidth(fmax: float, fmin: float) -> float:
-    """
-    Calculates the bandwidth of a signal
-    """
+    """Calculates the bandwidth of a signal."""
     return fmax - fmin
 
 
 # Information
 def information_content(N: int, b: int = 0, P: float = 0) -> float:
-    """
-    Calculates the information content (H) of a digitalize signal
-    """
+    """Calculates the information content (H) of a digitalize signal."""
     H = 0
     if P == 0:
         H = N * b
     elif b == 0:
-        H = (N * P * -log2(P))
+        H = N * P * -log2(P)
     else:
         raise ValueError("No b or P is given")
     return H
@@ -483,11 +438,12 @@ def information_content(N: int, b: int = 0, P: float = 0) -> float:
 
 # AM
 def AM_modulating_index(Vm: float = 0, Vc: float = 0,
-                        Vmax: float = 0, Vmin: float = 0,
+                        V_range: Union[list, tuple] = (0, 0),
                         Pt: float = 0, Pc: float = 0) -> float:
-    """
-    Calculates the modulating index of an AM signal
-    """
+    """Calculates the modulating index of an AM signal."""
+    Vmin = V_range[0]
+    Vmax = V_range[1]
+
     m = 0
     if Vm > 0 and Vc > 0:
         m = Vm / Vc
@@ -503,57 +459,44 @@ def AM_modulating_index(Vm: float = 0, Vc: float = 0,
 
 
 def AM_Vm(Vmax: float, Vmin: float) -> float:
-    """
-    Calculates the Voltage of the modulating signal (Vm)
-    """
+    """Calculates the Voltage of the modulating signal (Vm)."""
     return (Vmax - Vmin) / 2
 
 
 def AM_Vc(Vmax: float, Vmin: float) -> float:
-    """
-    Calculates the Voltage of the carrier signal (Vc)
-    """
+    """Calculates the Voltage of the carrier signal (Vc)."""
     return (Vmax + Vmin) / 2
 
 
 def AM_BW(fm: float) -> float:
-    """
-    Calculates the bandwidth of an AM signal
-    """
+    """Calculates the bandwidth of an AM signal."""
     return 2 * fm
 
 
-def AM_sidebands(fc: float, fm: float) -> tuple[float, float]:
-    """
-    Calculates the sidebands of an AM signal
-    """
+def AM_sidebands(fc: float, fm: float) -> tuple:
+    """Calculates the sidebands of an AM signal."""
     return (fc - fm, fc + fm)
 
 
 def AM_power_transmitted(Pc: float, m: float) -> float:
-    """
-    Calculates the power of the transmitted AM signal
-    """
+    """Calculates the power of the transmitted AM signal."""
     return Pc * (1 + m**2 / 2)
 
 
 def AM_power_carrier(Pt: float, m: float) -> float:
-    """
-    Calculates the power of the carrier of an AM signal
-    """
+    """Calculates the power of the carrier of an AM signal."""
     return Pt / (1 + m**2 / 2)
 
 
-def AM_modulating_index_sum(m: list | tuple, *argc: tuple[float]) -> float:
+def AM_modulating_index_sum(m: Union[list, tuple], *argc) -> float:
+    """Calculates the total modulating index of mutiple AM singal
+    simultaneously.
     """
-    Calculates the total modulating index of mutiple AM singal simultaneously
-    """
-    mType = type(m)
     mt: float = 0
-    if mType == list or mType == tuple:
+    if isinstance(m, Union[list, tuple]):
         for i in m:
             mt += i**2
-    elif mType == int or mType == float:
+    elif isinstance(m, Union[int, float]):
         mt += m**2
         for i in argc:
             mt += i**2
@@ -561,18 +504,16 @@ def AM_modulating_index_sum(m: list | tuple, *argc: tuple[float]) -> float:
     return mt**0.5
 
 
-def AM_modulating_index_sum_voltage(Vc: float, Vm: list | tuple,
-                                    *argc: tuple[float]) -> float:
+def AM_modulating_index_sum_voltage(Vc: float, Vm: Union[list, tuple],
+                                    *argc) -> float:
+    """Calculates the total modulating index of mutiple AM singal
+    simultaneously given the voltages.
     """
-    Calculates the total modulating index of mutiple AM singal simultaneously
-    given the voltages
-    """
-    VType = type(Vm)
     mt: float = 0
-    if VType == list or VType == tuple:
+    if isinstance(Vm, Union[list, tuple]):
         for i in Vm:
             mt += i**2
-    elif VType == int or VType == float:
+    elif isinstance(Vm, Union[int, float]):
         mt += Vm**2
         for i in argc:
             mt += i**2
@@ -582,31 +523,25 @@ def AM_modulating_index_sum_voltage(Vc: float, Vm: list | tuple,
 
 # Angle Modulation
 def FM_PM_deviation_sensitivity(deviation: float, em: float) -> float:
-    """
-    Calculates the deviation sensitivity of the modulator of a
-    FM or PM signal (kf/kp)
+    """Calculates the deviation sensitivity of the modulator of a
+    FM or PM signal (kf/kp).
     """
     return deviation / em
 
 
 def FM_modulating_index(delta: float, fm: float) -> float:
-    """
-    Calculates the modulating index of a FM signal
-    """
+    """Calculates the modulating index of a FM signal."""
     return delta / fm
 
 
 def PM_modulating_index(kp: float, em: float) -> float:
-    """
-    Calculates the modulating index of a PM signal
-    """
+    """Calculates the modulating index of a PM signal."""
     return kp * em
 
 
 def bessel_function(x: float, v: int) -> float:
-    """
-    Calculates the J value of a given order v with the β value x
-    Jv(x)
+    """Calculates the J value of a given order v with the β value x
+    Jv(x).
     """
     if v < 0:
         raise ValueError("v must be a positive integer number")
@@ -629,20 +564,18 @@ def bessel_function(x: float, v: int) -> float:
     return J
 
 
-def FM_PM_J_values(m: float, cached: bool = True) -> tuple[float]:
-    """
-    Find the J values of a given modulating index
-    """
-    J = list()
+def FM_PM_J_values(m: float, cached: bool = True) -> tuple:
+    """Find the J values of a given modulating index."""
+    J = []
     # Getting items from cached
     if m <= 5 and cached:
         m = round(m, 1)
-        with open('bessel.csv', 'r') as csvfile:
+        with open('bessel.csv', 'r', encoding='utf-8') as csvfile:
             bessel = csv.reader(csvfile)
             for i in bessel:
-                for j in range(len(i)):
+                for index, value in enumerate(i):
                     try:
-                        i[j] = float(i[j])
+                        i[index] = float(value)
                     except ValueError:
                         pass
                 if i[0] == m:
@@ -665,15 +598,15 @@ def FM_PM_bandwidth_bessel(fm: float, n: float = 0, m: float = 0) -> float:
     Find the bandwith of a given FM or PM signal using
     Bessel's frequency spectrum
     """
-    bandwidth: float = 0
+    bw: float = 0
     if n > 0:
-        bandwidth = 2 * (n * fm)
+        bw = 2 * (n * fm)
     elif m > 0:
         n = len(FM_PM_J_values(m)) - 1
-        bandwidth = 2 * (n * fm)
+        bw = 2 * (n * fm)
     else:
         raise ValueError("No n or m given")
-    return bandwidth
+    return bw
 
 
 def FM_PM_bandwidth_carson(fm: float, delta: float) -> float:
@@ -684,7 +617,7 @@ def FM_PM_bandwidth_carson(fm: float, delta: float) -> float:
 
 
 def FM_PM_power_transmitted(R: float, Vcrms: float = 0,
-                            J: tuple[float] | list[float] = tuple()) -> float:
+                            J: Union[tuple, list] = tuple()) -> float:
     """
     Find the transmitted power of a FM or PM signal
     """
@@ -717,11 +650,9 @@ def shanon_hartleys_formula(BW: float, M: int) -> float:
     return 2 * BW * log2(M)
 
 
-def shanon_limit(BW: float, SNR: float) -> float:
-    """
-    Calculates the maximum data that can be sent in a given bandwidth
-    """
-    return BW * log2(1 + SNR)
+def shanon_limit(BW: float, signal_noise_ratio: float) -> float:
+    """Calculates the maximum data that can be sent in a given bandwidth."""
+    return BW * log2(1 + signal_noise_ratio)
 
 
 # Fourier Analysis
@@ -783,8 +714,8 @@ def low_pass_filter_capacitor(R: float, fc: float) -> float:
     return 1 / (2 * pi * R * fc)
 
 
-def second_order_low_pass_filter_cutoff_frequency(R: list[float],
-                                                  C: list[float]) -> float:
+def second_order_low_pass_filter_cutoff_frequency(R: list,
+                                                  C: list) -> float:
     """
     Calculates the cut-off frequency of a second order low pass filter
     """
@@ -792,27 +723,6 @@ def second_order_low_pass_filter_cutoff_frequency(R: list[float],
 
 
 # Digital Filter
-def filter(b: list, a: list, x: list) -> list:
-    """
-    Filters the input data x using "FIR or IIR"
-
-    Parameters
-    ----------
-    b
-        Numerator coefficient
-    a
-        Denominator coefficient
-    x
-        An array that contains the intput data
-
-    Returns
-    -------
-    list
-        The output of the filter
-    """
-    pass
-
-
 def moving_average_filter(x: list, n: int) -> list:
     """
     Find the mean average filter for data x
@@ -831,7 +741,7 @@ def moving_average_filter(x: list, n: int) -> list:
     """
     # Getting the impulse response needed for convolution
     h = []
-    for i in range(n):
+    for _ in range(n):
         h.append(1 / n)
 
     # Getting the moving average result array
@@ -845,11 +755,13 @@ def moving_average_filter(x: list, n: int) -> list:
 
 # Noise
 def thermal_noise(T: float, B: float, k: float = kBolzman) -> float:
+    """Calculates the thermal noise."""
     return k * T * B
 
 
 # SNR
 def SNR(S: float, N: float, dB: bool = True, power: bool = True) -> float:
+    """Calculates the Signal-to-Noise Ratio (SNR)."""
     returnValue = 0
     if dB:
         if power:
@@ -866,6 +778,7 @@ def SNR(S: float, N: float, dB: bool = True, power: bool = True) -> float:
 def NF(inputSNR: float = 0, outputSNR: float = 0,
        Nai: float = 0, Ni: float = 0,
        NoiseFigure: bool = True) -> float:
+    """Noise Factor."""
     returnValue = 0
     if inputSNR > 0 and outputSNR > 0:
         returnValue = inputSNR / outputSNR
@@ -879,30 +792,31 @@ def NF(inputSNR: float = 0, outputSNR: float = 0,
     return returnValue
 
 
-def NF_cascade(gain: list | tuple, NF: list | tuple,
+def NF_cascade(gain: Union[list, tuple], noise_factor: Union[list, tuple],
                NoiseFigureIn: bool = True,
                NoiseFigureReturn: bool = True) -> float:
+    """Cascated Noise Factor."""
     # Checking for conditions
-    if not len(gain) == len(NF):
+    if not len(gain) == len(noise_factor):
         raise ValueError("Size of gain and NF aren't equal")
 
     # Changing to noise figure into noise factor
     if NoiseFigureIn:
-        for i in range(len(gain)):
-            gain[i] = db_power_reverse(gain[i], 1)
+        for i, val in enumerate(gain):
+            gain[i] = db_power_reverse(val, 1)
     # Using absolute values
-    for i in range(len(gain)):
-        gain[i] = abs(gain[i])
-        NF[i] = abs(NF[i])
+    for i, val in enumerate(gain):
+        gain[i] = abs(val)
+        noise_factor[i] = abs(noise_factor[i])
 
     # Sorting values
     gain.sort()
-    NF.sort()
+    noise_factor.sort()
 
     # Calculating NF
-    totalNF = NF[0]
+    totalNF = noise_factor[0]
     for i in range(len(NF) - 1):
-        totalNF += (NF[i + 1] - 1) / product(gain[:i + 1])
+        totalNF += (noise_factor[i + 1] - 1) / product(gain[:i + 1])
 
     returnNF = 0
     if NoiseFigureReturn:
@@ -913,22 +827,25 @@ def NF_cascade(gain: list | tuple, NF: list | tuple,
     return returnNF
 
 
-def effective_noise_temperature_NF(T: float, NF: float,
+def effective_noise_temperature_NF(T: float, noise_factor: float,
                                    kelvin: bool = True,
                                    NoiseFigure: bool = True) -> float:
+    """Effective Noise Temperature."""
     if not kelvin:
         T = C_to_kelvin(T)
     if NoiseFigure:
-        NF = db_power_reverse(NF, 1)
+        noise_factor = db_power_reverse(noise_factor, 1)
 
-    return T * (NF - 1)
+    return T * (noise_factor - 1)
 
 
-def effective_noise_temperature_gain(T: list | tuple, gain: list | tuple,
+def effective_noise_temperature_gain(T: Union[list, tuple],
+                                     gain: Union[list, tuple],
                                      kelvin: bool = True) -> float:
+    """Effective Noise Temperature Gain."""
     if not kelvin:
-        for i in range(len(T)):
-            T[i] = C_to_kelvin(T[i])
+        for i, val in enumerate(T):
+            T[i] = C_to_kelvin(val)
 
     totalT = T[0]
     for i in range(len(T) - 1):

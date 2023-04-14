@@ -23,3 +23,9 @@ version = { attr = "eeepy.__version__" }
 
 [tool.pylint.'MESSAGES CONTROL']
 disable = "invalid-name"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
+pythonpath = "src"

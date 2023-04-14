@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 """Noise Example Sheet using eeepy."""
-from eeepy.year_1.InfoandSystem import (SNR, NF_cascade, db_power,
-                                        db_power_reverse,
-                                        effective_noise_temperature_NF,
-                                        thermal_noise)
+from eeepy.year_1.ins import (SNR, NF_cascade, db_power,
+                              db_power_reverse, effective_noise_temperature_NF,
+                              thermal_noise)
 
 if __name__ == '__main__':
     # Q1

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-from ...utils.Constants import pi
-from ...utils.helper import sqrt
+"""Functions and equations related to oscilators."""
+from eeepy.utils.Constants import pi
+from eeepy.utils.helper import sqrt
 
 
 def wein_bridge_resonance_freq(R: float, C: float) -> float:
