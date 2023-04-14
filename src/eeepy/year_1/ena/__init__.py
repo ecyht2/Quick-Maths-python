@@ -291,8 +291,7 @@ class Vector():
     """
     mag = 0
 
-    def __init__(self, vector: Union[list[Union[int, float]],
-                                     tuple[Union[int, float]]]):
+    def __init__(self, vector: Union[list, tuple]):
         # Checking if parameter is valid
         # Type
         if not isinstance(type(vector), Union[list, tuple, Vector]):

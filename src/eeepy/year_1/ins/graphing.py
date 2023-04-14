@@ -23,6 +23,10 @@ def plot_digital_as_digital(signal, modulation: str,
     Returns
     -------
     None
+
+    TODO
+    ----
+    Use Enums instead of numbers.
     """
     # Setting up ID for each type of modulation
     modulation_key = {
@@ -50,17 +54,15 @@ def plot_digital_as_digital(signal, modulation: str,
     # x values
     xs = np.arange(0, len(signal_array) + 1, 0.5)
     # Required for RZ bipolar
-    ys = plot_ys(modulation_type)
+    ys = plot_ys(modulation_type, signal_array)
 
     # Formatting function
-    def format_fn(tick_val, tick_pos):
-        # pylint: disable = unused-arguments
+    def format_fn(tick_val, _):
         if int(tick_val) == 1:
             return "V+"
         if int(tick_val) == -1:
             return "V-"
-        else:
-            return '0'
+        return '0'
 
     # Setting up axis
     ax.axis([0, len(xs) / 2 - 1, min(ys) - 0.1, max(ys) + 0.1])
@@ -79,41 +81,77 @@ def plot_digital_as_digital(signal, modulation: str,
     plt.show()
 
 
-def plot_ys(modulation_type: int, signal_array: list[int]):
+def nrz_unipolar(signal: list) -> None:
+    """Return the y value of NRZ Unipolar."""
+    if signal == 0:
+        append_no = [0, 0]
+    else:
+        append_no = [1, 1]
+
+    return append_no
+
+
+def nrz_bipolar(signal: list) -> int:
+    """Return the y value of NRZ Bipolar."""
+    if signal == 0:
+        append_no = [-1, -1]
+    else:
+        append_no = [1, 1]
+
+    return append_no
+
+
+def rz_unipolar(signal: list) -> int:
+    """Return the y value of RZ Unipolar."""
+    if signal == 0:
+        append_no = [0, 0]
+    else:
+        append_no = [1, 0]
+
+    return append_no
+
+
+def rz_bipolar(signal: list, state: bool) -> tuple:
+    """Return the y value of RZ Bipolar."""
+    if signal == 0:
+        append_no = [0, 0]
+    else:
+        if state:
+            append_no = [1, 0]
+        else:
+            append_no = [-1, 0]
+        state = not state
+
+    return (append_no, state)
+
+
+def manchester(signal: list) -> int:
+    """Return the y value of Manchester."""
+    if signal == 0:
+        append_no = [0, 1]
+    else:
+        append_no = [1, 0]
+
+    return append_no
+
+
+def plot_ys(modulation_type: int, signal_array: list):
+    """Plot the y values."""
     state = True
     # y values
     ys = [0]
     for i in signal_array:
         # Decides what to append
         if modulation_type == 0:
-            if i == 0:
-                append_no = [0, 0]
-            else:
-                append_no = [1, 1]
+            append_no = nrz_unipolar(i)
         elif modulation_type == 1:
-            if i == 0:
-                append_no = [-1, -1]
-            else:
-                append_no = [1, 1]
+            append_no = nrz_bipolar(i)
         elif modulation_type == 2:
-            if i == 0:
-                append_no = [0, 0]
-            else:
-                append_no = [1, 0]
+            append_no = rz_unipolar(i)
         elif modulation_type == 3:
-            if i == 0:
-                append_no = [0, 0]
-            else:
-                if state:
-                    append_no = [1, 0]
-                else:
-                    append_no = [-1, 0]
-                state = not state
+            append_no, state = rz_bipolar(i, state)
         elif modulation_type == 4:
-            if i == 0:
-                append_no = [0, 1]
-            else:
-                append_no = [1, 0]
+            append_no = manchester(i)
 
         # Appending numbers to y list
         for j in append_no:

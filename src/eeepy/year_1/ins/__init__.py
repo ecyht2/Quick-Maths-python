@@ -216,7 +216,7 @@ def decimal_to_bcd(number: float) -> str:
 
 def bcd_to_decimal(number: str) -> float:
     """Converts BCD Number to Decimal."""
-    splittedNumber: list[str] = number.split(" ")
+    splittedNumber: list = number.split(" ")
     number = ""
     for digit in splittedNumber:
         if digit == ".":
@@ -473,7 +473,7 @@ def AM_BW(fm: float) -> float:
     return 2 * fm
 
 
-def AM_sidebands(fc: float, fm: float) -> tuple[float, float]:
+def AM_sidebands(fc: float, fm: float) -> tuple:
     """Calculates the sidebands of an AM signal."""
     return (fc - fm, fc + fm)
 
@@ -505,7 +505,7 @@ def AM_modulating_index_sum(m: Union[list, tuple], *argc) -> float:
 
 
 def AM_modulating_index_sum_voltage(Vc: float, Vm: Union[list, tuple],
-                                    *argc: tuple[float]) -> float:
+                                    *argc) -> float:
     """Calculates the total modulating index of mutiple AM singal
     simultaneously given the voltages.
     """
@@ -564,7 +564,7 @@ def bessel_function(x: float, v: int) -> float:
     return J
 
 
-def FM_PM_J_values(m: float, cached: bool = True) -> tuple[float]:
+def FM_PM_J_values(m: float, cached: bool = True) -> tuple:
     """Find the J values of a given modulating index."""
     J = []
     # Getting items from cached
@@ -714,8 +714,8 @@ def low_pass_filter_capacitor(R: float, fc: float) -> float:
     return 1 / (2 * pi * R * fc)
 
 
-def second_order_low_pass_filter_cutoff_frequency(R: list[float],
-                                                  C: list[float]) -> float:
+def second_order_low_pass_filter_cutoff_frequency(R: list,
+                                                  C: list) -> float:
     """
     Calculates the cut-off frequency of a second order low pass filter
     """

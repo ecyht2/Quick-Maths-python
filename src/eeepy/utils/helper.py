@@ -30,7 +30,7 @@ class Complex():
         else:
             self.phi = degrees(cmath.phase(Z))
 
-    def polar(self) -> tuple[float, float]:
+    def polar(self) -> tuple:
         """Returns the polar form of the Complex number."""
         return cmath.polar(self.cartesian)
 
@@ -45,7 +45,7 @@ class Complex():
         return cls(Z)
 
     @classmethod
-    def from_polar_tuple(cls, Z: tuple[float, float], radian: bool = True):
+    def from_polar_tuple(cls, Z: tuple, radian: bool = True):
         """Creates a Complex class from polar form in a tuple.
 
         This classmethod treats the first item in the tuple as the radius from
