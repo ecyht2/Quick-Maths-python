@@ -49,7 +49,7 @@ class VTAInductor(float):
     def __new__(cls, d: float, T: float, V_o):
         return super().__new__(cls, (1 - d) * T * V_o)
 
-    def __init__(cls, _d: float, _T: float, _V_o):
+    def __init__(self, _d: float, _T: float, _V_o):
         super().__init__()
 
 
