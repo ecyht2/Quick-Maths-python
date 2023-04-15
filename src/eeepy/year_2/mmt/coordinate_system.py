@@ -49,14 +49,14 @@ class Point:
         point = cls(x, y)
         return point
 
-    def cartesian(self) -> tuple[float, float]:
+    def cartesian(self) -> tuple:
         """The Point in cartesian form.
 
         :return: (x, y)
         """
         return (self.x, self.y)
 
-    def polar(self) -> tuple[float, float]:
+    def polar(self) -> tuple:
         """The Point in polar form.
 
         :return: (r, ɸ)
@@ -123,21 +123,21 @@ class Point3D:
         """The radial distance of the point."""
         return math.sqrt(self.x**2 + self.y**2)
 
-    def cartesian(self) -> tuple[float, float, float]:
+    def cartesian(self) -> tuple:
         """The Point in cartesian form.
 
         :return: (x, y, z)
         """
         return (self.x, self.y, self.z)
 
-    def spherical(self) -> tuple[float, float, float]:
+    def spherical(self) -> tuple:
         """The Point in spherical form.
 
         :return: (r, ɸ, θ)
         """
         return (self.r_spherical, self.phi, self.theta)
 
-    def cylindrical(self) -> tuple[float, float, float]:
+    def cylindrical(self) -> tuple:
         """The Point in cylindrical form.
 
         :return: (r, ɸ, z)
