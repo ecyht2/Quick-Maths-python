@@ -22,7 +22,7 @@ authors = [
 version = { attr = "eeepy.__version__" }
 
 [tool.pylint.'MESSAGES CONTROL']
-disable = "invalid-name"
+disable = "invalid-name, too-many-arguments"
 
 [tool.pytest.ini_options]
 addopts = [
