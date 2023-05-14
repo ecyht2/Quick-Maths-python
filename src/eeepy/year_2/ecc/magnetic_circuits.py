@@ -8,7 +8,13 @@ from eeepy.utils.constants import mu0
 class AmperesLaw:
     """The Ampere's Law.
 
-    MMF = N * I
+    Formula: :math:`MMF = N I`
+
+    MMF is the magneto motive force.
+
+    N is the number of turns.
+
+    I is the current through the turns.
     """
     @staticmethod
     def mmf(N: int, I: float) -> float:
@@ -44,47 +50,68 @@ class AmperesLaw:
 class HopkinsonLaw:
     """The Hopkinson's law equation.
 
-    MMF = ɸR
-    --------------------------------
+    Formula: :math:`MMF = \\Phi R`
+
     MMF is the magneto motive force.
+
     R is the reluctance.
-    ɸ is the total flux.
+
+    :math:`\\Phi` is the total flux.
     """
     @staticmethod
     def reluctance(mmf: float, total_flux: float) -> float:
-        """Calculates the reluctance from mmf (MMF) and total_flux (ɸ)."""
+        """Calculates the reluctance from mmf (MMF) and
+        total_flux (:math:`\\Phi`)."""
         return mmf / total_flux
 
     @staticmethod
     def total_flux(mmf: float, reluctance: float) -> float:
-        """Calculates the total flux from mmf (MMF) and reluctance (R)."""
+        """Calculates the total flux (:math:`\\Phi`) from mmf (MMF) and
+        reluctance (R)."""
         return mmf / reluctance
 
     @staticmethod
     def mmf(total_flux: float, reluctance: float) -> float:
-        """Calculates the MMF from total_flux (ɸ) and reluctance (R)."""
+        """Calculates the MMF from total_flux (:math:`\\Phi`) and
+        reluctance (R)."""
         return total_flux * reluctance
 
 
 class ReluctanceEquation:
     """The reluctance of a magnetic circuit.
 
-    R = l / (μ * A)
-    ----------------------------------------------------
+    Formula: :math:`R = l / (\\mu A)`
+
     R is the reluctance.
+
     l is the length of the circuit.
-    μ is the permeability of the material (μ = μ_0 μ_r).
+
+    :math:`\\mu` is the permeability of the material
+        (:math:`\\mu = {\\mu}_0 {\\mu}_r`).
+
     A is the cross-sectional area of the circuit.
     """
     @staticmethod
     def reluctance(l: float, mu: float, A: float) -> float:
-        """Calculates the reluctance from permeability."""
+        """Calculates the reluctance from permeability.
+
+        :param l: The length of the circuit.
+        :param mu: The permeability of the material.
+        :param A: The cross-sectional area of the circuit.
+        :returns: The reluctance.
+        """
         return l / (mu * A)
 
     @staticmethod
     def reluctance_relative_permeability(l: float,
                                          mu_r: float, A: float) -> float:
-        """Calculates the reluctance from permeability."""
+        """Calculates the reluctance from permeability.
+
+        :param l: The length of the circuit.
+        :param mu_r: The relative permeability of the material.
+        :param A: The cross-sectional area of the circuit.
+        :returns: The reluctance.
+        """
         return l / (mu_r * mu0 * A)
 
     @staticmethod
