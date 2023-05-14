@@ -89,4 +89,11 @@ class ReluctanceEquation:
 
     @staticmethod
     def length(reluctance: float, mu: float, A: float) -> float:
-        ...
+        """Calculates the length of the circuit.
+
+        :param reluctance: The reluctance.
+        :param mu: The permeability of the material.
+        :param A: The cross-sectional area of the circuit.
+        :returns: The length of the circuit.
+        """
+        return reluctance * mu * A
