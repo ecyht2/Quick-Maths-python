@@ -124,7 +124,7 @@ class InducedTorque:
         :param T: The induced torque.
         :param N: The number of slots.
         :param Z: The number of windings per slot.
-        :param flux: The flux of the poles (:math:`ɸ_p`).
+        :param flux: The flux of the poles (:math:`\\Phi_p`).
         :returns: The armature current (:math:`I_a`).
         """
         return T * 2 * math.pi / N / Z / flux
@@ -149,7 +149,7 @@ class EMFInduced:
 
         :param N: The number of slots.
         :param Z: The number of windings per slot.
-        :param flux: The flux of the poles (:math:`ɸ_p`).
+        :param flux: The flux of the poles (:math:`\\Phi_p`).
         :param f_m: The mechanical frequency.
         :returns: The EMF induced.
         """
