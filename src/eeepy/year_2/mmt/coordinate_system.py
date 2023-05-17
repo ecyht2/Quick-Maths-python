@@ -168,3 +168,11 @@ class Point3D:
         x = r * math.cos(phi)
         y = r * math.sin(phi)
         return cls(x, y, z)
+
+    def __repr__(self) -> str:
+        """The representation of a Point3D."""
+        return str({
+            "cartesian": self.cartesian(),
+            "cylindrical": self.cylindrical(),
+            "spherical": self.spherical(),
+        })
