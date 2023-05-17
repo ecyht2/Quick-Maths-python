@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Functions and Equations relating to numerical integration."""
+"""Functions and Equations relating to solving integration numerically."""
 from typing import Callable
 
 
