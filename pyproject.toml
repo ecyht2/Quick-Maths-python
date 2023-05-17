@@ -8,8 +8,8 @@ description = """A module that provides functions and classes to calculate Elect
 Electronic circuits and values."""
 readme = "README.md"
 license = { text = "MIT LICENSE" }
-requires-python = ">=3.10"
-dependencies = ["matplotlib"]
+requires-python = ">=3.8"
+dependencies = ["matplotlib", "scipy"]
 dynamic = ["version"]
 authors = [
     { name = "ecyht2", email = "ecyht2@nottingham.edu.my" }
