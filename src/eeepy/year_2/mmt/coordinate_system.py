@@ -4,8 +4,16 @@
 import math
 
 
-class Point:
+class Point(tuple):
     """A Point in a 2D plane."""
+    def __new__(cls, x: float, y: float):
+        """Constructor for Point.
+
+        :param x: The x coordinate of the point.
+        :param y: The y coordinate of the point.
+        """
+        return super().__new__(cls, (x, y))
+
     def __init__(self, x: float, y: float):
         """Creates a Point in a 2D plane.
 
@@ -75,8 +83,16 @@ class Point:
         return self.r
 
 
-class Point3D:
+class Point3D(tuple):
     """A Point in a 3D plane."""
+    def __new__(cls, x: float, y: float, z: float):
+        """Constructor for Point.
+
+        :param x: The x coordinate of the point.
+        :param y: The y coordinate of the point.
+        """
+        return super().__new__(cls, (x, y, z))
+
     def __init__(self, x: float, y: float, z: float):
         """Creates a Point in a 2D plane.
 
