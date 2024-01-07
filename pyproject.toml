@@ -15,6 +15,9 @@ authors = [
     { name = "ecyht2", email = "ecyht2@nottingham.edu.my" }
 ]
 
+[project.optional-dependencies]
+"dev" = ["pytest", "python-lsp-server", "pylsp-mypy", "python-lsp-ruff"]
+
 [project.urls]
 "Homepage" = "https://github.com/ecyht2/quick-maths"
 
@@ -29,3 +32,23 @@ addopts = [
     "--import-mode=importlib",
 ]
 pythonpath = "src"
+
+[tool.mypy]
+check_untyped_defs = true
+plugins = "numpy.typing.mypy_plugin"
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]

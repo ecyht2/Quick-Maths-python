@@ -8,5 +8,6 @@ matplotlib = "*"
 
 [dev-packages]
 pytest = "*"
-pylint = "*"
-flake8 = "*"
+python-lsp-server = {extras = ["pylint"], version = "*"}
+pylsp-mypy = "*"
+python-lsp-ruff = "*"
