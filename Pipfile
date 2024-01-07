@@ -5,9 +5,14 @@ name = "pypi"
 
 [packages]
 matplotlib = "*"
+numpy = "*"
+pint = "*"
 
 [dev-packages]
 pytest = "*"
 python-lsp-server = {extras = ["pylint"], version = "*"}
 pylsp-mypy = "*"
 python-lsp-ruff = "*"
+
+[requires]
+python_version = "3.10"

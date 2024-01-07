@@ -9,7 +9,7 @@ Electronic circuits and values."""
 readme = "README.md"
 license = { text = "MIT LICENSE" }
 requires-python = ">=3.10"
-dependencies = ["matplotlib"]
+dependencies = ["matplotlib", "numpy", "pint"]
 dynamic = ["version"]
 authors = [
     { name = "ecyht2", email = "ecyht2@nottingham.edu.my" }
