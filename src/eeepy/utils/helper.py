@@ -3,7 +3,6 @@
 import cmath
 import itertools
 import numbers
-
 from collections.abc import Iterator
 from math import degrees, radians
 
@@ -255,3 +254,26 @@ def product(iterable: Iterator[numbers.Complex], /, start: int = 0) -> float:
     for i in itertools.islice(iterable, start, None):
         result *= i
     return result
+
+
+def quadratic(a: float, b: float, c: float) -> tuple[Complex, Complex]:
+    """Find the roots of a quadratic equation.
+
+    The quardatic formula:
+
+    $x = \\frac{-b \\pm \\sqrt{b^{2} - 4 a c}}{2 a}$
+
+    The values of the parameters follows the equation:
+
+    $a x^{2} + b x + c$
+
+    :param a: The first value of the quadratic formula.
+    :param b: The second value of the quadratic formula.
+    :param c: The third value of the quadratic formula.
+    :returns: The roots of the equation.
+    """
+    z1 = -b + cmath.sqrt(b**2 - 4 * a * c)
+    z1 /= 2 * a
+    z2 = -b - cmath.sqrt(b**2 - 4 * a * c)
+    z2 /= 2 * a
+    return (Complex(z1), Complex(z2))
