@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Useful classes and functions to perform basic tasks."""
 import cmath
+import itertools
 import numbers
 
 from collections.abc import Iterator
@@ -250,8 +251,7 @@ def product(iterable: Iterator[numbers.Complex], /, start: int = 0) -> float:
     :param start: The nth element to start the product.
     :returns: The product of the iterable.
     """
-    # list | tuple
     result = 1
-    for i in range(len(iterable) + start):
-        result *= iterable[i]
+    for i in itertools.islice(iterable, start, None):
+        result *= i
     return result
