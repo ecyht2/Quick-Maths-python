@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Useful classes and functions to perform basic tasks."""
 import cmath
+import numbers
+
+from collections.abc import Iterator
 from math import degrees, radians
-from typing import Union
 
 
 class Complex():
@@ -241,8 +243,13 @@ class Complex():
 
 
 # Helper
-def product(iterable: Union[list, tuple], start: int = 0) -> float:
-    """Returns the product of all the element of an iterable object."""
+def product(iterable: Iterator[numbers.Complex], /, start: int = 0) -> float:
+    """Returns the product of all the element of an iterable object.
+
+    :param iterable: An iterable object.
+    :param start: The nth element to start the product.
+    :returns: The product of the iterable.
+    """
     # list | tuple
     result = 1
     for i in range(len(iterable) + start):
