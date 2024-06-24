@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-from ...utils.Constants import pi
-from ...utils.helper import sqrt
+"""Functions and equations related to oscilators."""
+from math import pi, sqrt
 
 
-def wein_bridge_resonance_freq(R: float, C: float) -> float:
+def wein_bridge_resonance_freq(_R: float, _C: float) -> float:
     """Calculates the resonance frequency of a Wein Bridge Oscillator."""
 
 
